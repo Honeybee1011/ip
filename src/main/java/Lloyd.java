@@ -22,15 +22,33 @@ public class Lloyd {
         System.out.println();
         Scanner scanner = new Scanner(System.in);
 
+        String[] toDoList = new String[100];
+        int taskCount = 0;
+
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             if ("bye".equals(command)) {
                 break;
             }
-            System.out.println(line);
-            System.out.println(" " + command);
-            System.out.println(line);
-            System.out.println();
+            if ("list".equals(command)) {
+                System.out.println(line);
+                for (int i = 0; i < taskCount; i++) {
+                    if (toDoList[i] == null) {
+                        break;
+                    }
+                    System.out.printf(
+                            "%d. %s%n", i + 1, toDoList[i]
+                    );
+                }
+                System.out.println(line);
+            } else {
+                System.out.println(line);
+                System.out.println("added: " + command);
+                toDoList[taskCount] = command;
+                taskCount++;
+                System.out.println(line);
+                System.out.println();
+            }
         }
         System.out.println(line);
         System.out.println(" Bye. Hope to see you again soon!");
