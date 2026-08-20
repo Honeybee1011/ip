@@ -1,5 +1,7 @@
+import java.util.Scanner;
+
 /**
- * Starts the Lloyd chatbot application.
+ * Starts the Lloyd chatbot application and responds to commands entered by the user.
  */
 public class Lloyd {
     public static void main(String[] args) {
@@ -14,10 +16,24 @@ public class Lloyd {
                 + "                |___/        ";
         System.out.println(line);
         System.out.println(banner);
-        System.out.println("Hello! I'm Lloyd (Water).");
-        System.out.println("What can I get you?");
+        System.out.println(" Hello! I'm Lloyd.");
+        System.out.println(" What can I do for you?");
         System.out.println(line);
-        System.out.println("Bye! Come back soon!");
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            if ("bye".equals(command)) {
+                break;
+            }
+            System.out.println(line);
+            System.out.println(" " + command);
+            System.out.println(line);
+            System.out.println();
+        }
+        System.out.println(line);
+        System.out.println(" Bye. Hope to see you again soon!");
         System.out.println(line);
     }
 }
