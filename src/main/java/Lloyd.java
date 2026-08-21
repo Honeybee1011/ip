@@ -35,6 +35,15 @@ public class Lloyd {
             String[] commandParts = input.split("\\s+", 2);
             String command = commandParts[0];
 
+            boolean isAddCommand = command.equals("todo")
+                    || command.equals("deadline")
+                    || command.equals("event");
+
+            if (isAddCommand && taskCount == toDoList.length) {
+                printResponse(" Your task list is full.");
+                continue;
+            }
+
             switch (command) {
                 case "bye":
                     isRunning = false;
@@ -87,6 +96,78 @@ public class Lloyd {
                     } catch (NumberFormatException e) {
                         printResponse(" Please provide a valid task number.");
                     }
+                    break;
+                case "todo":
+                    toDoList[taskCount] = new Todo(input);
+                    taskCount++;
+                    String response = " Added: " + input + "\n Now you have " + taskCount + " tasks in the list.";
+                    printResponse(response);
+                    break;
+                case "deadline":
+                    if (commandParts.length < 2) {
+                        printResponse(" Please provide a deadline description and /by date.");
+                        break;
+                    }
+
+                    String deadlineDetails = commandParts[1];
+                    int byIndex = deadlineDetails.indexOf(" /by ");
+
+                    if (byIndex < 0) {
+                        printResponse(" Please specify the deadline using /by.");
+                        break;
+                    }
+
+                    String deadlineDescription =
+                            deadlineDetails.substring(0, byIndex).trim();
+                    String by =
+                            deadlineDetails.substring(byIndex + " /by ".length()).trim();
+
+                    if (deadlineDescription.isEmpty() || by.isEmpty()) {
+                        printResponse(" Please provide both a description and a /by date.");
+                        break;
+                    }
+
+                    toDoList[taskCount] = new Deadline(deadlineDescription, by);
+                    taskCount++;
+
+                    printResponse(" Got it. I've added this task:\n"
+                            + toDoList[taskCount - 1]);
+                    break;
+                case "event":
+                    if (commandParts.length < 2) {
+                        printResponse(
+                                " Please provide an event description, /from date, and /to date.");
+                        break;
+                    }
+
+                    String eventDetails = commandParts[1];
+                    int fromIndex = eventDetails.indexOf(" /from ");
+                    int toIndex = eventDetails.indexOf(
+                            " /to ", fromIndex + " /from ".length());
+
+                    if (fromIndex < 0 || toIndex < 0) {
+                        printResponse(" Please specify the event using /from and /to.");
+                        break;
+                    }
+
+                    String eventDescription =
+                            eventDetails.substring(0, fromIndex).trim();
+                    String from = eventDetails.substring(
+                            fromIndex + " /from ".length(), toIndex).trim();
+                    String to =
+                            eventDetails.substring(toIndex + " /to ".length()).trim();
+
+                    if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                        printResponse(
+                                " Please provide a description, /from date, and /to date.");
+                        break;
+                    }
+
+                    toDoList[taskCount] = new Event(eventDescription, from, to);
+                    taskCount++;
+
+                    printResponse(" Got it. I've added this task:\n"
+                            + toDoList[taskCount - 1]);
                     break;
                 default:
                     if (taskCount == toDoList.length) {
