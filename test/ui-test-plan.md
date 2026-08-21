@@ -4,24 +4,37 @@ This file is the source of truth for console UI test cases run with the `test-ui
 
 ## Test configuration
 
-- Program start command: To be recorded before the first test run.
-- Working directory: Project root.
+- Compilation command: `javac -d out src/main/java/*.java`
+- Program start command: `java -cp out Lloyd`
+- Working directory: `C:\Users\joshu\Code\ip`
 - Java version: 25.
-- Session isolation: Start each test case in a fresh process unless a case says otherwise.
+- Session isolation: Start each test case in a fresh process.
 - Comparison: Exact text after normalizing CRLF and LF line endings. Spaces, capitalization, punctuation, divider lines, and blank lines are significant.
+- Indentation used to format examples in chat is not part of the expected output.
 
 ## Test cases
 
-No test cases have been supplied yet. Add each case using the following structure before running it.
+### UI-001: Add and list all task types
 
-### UI-NNN: Short descriptive name
-
-**Aim:** State the behavior this case verifies.
+**Aim:** Verify that todo, deadline, and event commands create the correct task subtype, preserve their details, update the count, and appear correctly in the list.
 
 **Expected startup output:**
 
 ```text
-Exact output emitted before the first input
+____________________________________________________________
+ _      _                 _
+| |    | |               | |
+| |    | | ___  _   _  __| |
+| |    | |/ _ \| | | |/ _` |
+| |____| | (_) | |_| | (_| |
+|______|_|\___/ \__, |\__,_|
+                 __/ |       
+                |___/        
+ Lloyd Frontera, the greatest estate developer, at your service!
+ Got a problem? Excellent. Problems are profits waiting for an engineer.
+ Now, what needs doing?
+____________________________________________________________
+
 ```
 
 #### Step 1
@@ -29,13 +42,1206 @@ Exact output emitted before the first input
 **Input:**
 
 ```text
-command entered by the user
+todo read book
 ```
 
 **Expected output:**
 
 ```text
-Exact output emitted in response
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] read book
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
 ```
 
-Add further numbered steps in input order. Include the command that closes the program and its expected output when shutdown behavior is part of the case.
+#### Step 2
+
+**Input:**
+
+```text
+mark 1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Magnificent! Efficient work means lower costs. This task is officially complete:
+[T][X] read book
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+deadline return book /by June 6th
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] return book (by: June 6th)
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+event project meeting /from Aug 6th 2pm /to 4pm
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+ Tasks currently in the master plan: 3.
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+todo join sports club
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] join sports club
+ Tasks currently in the master plan: 4.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+mark 4
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Magnificent! Efficient work means lower costs. This task is officially complete:
+[T][X] join sports club
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+todo borrow book
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] borrow book
+ Tasks currently in the master plan: 5.
+____________________________________________________________
+
+```
+
+#### Step 8
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][X] read book
+ 2.[D][ ] return book (by: June 6th)
+ 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+ 4.[T][X] join sports club
+ 5.[T][ ] borrow book
+____________________________________________________________
+
+```
+
+#### Step 9
+
+**Input:**
+
+```text
+deadline return book /by Sunday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] return book (by: Sunday)
+ Tasks currently in the master plan: 6.
+____________________________________________________________
+
+```
+
+#### Step 10
+
+**Input:**
+
+```text
+event project meeting /from Mon 2pm /to 4pm
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+ Tasks currently in the master plan: 7.
+____________________________________________________________
+
+```
+
+#### Step 11
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-002: Store arbitrary deadline text
+
+**Aim:** Verify that all text following `/by` is stored as the deadline without requiring a date format.
+
+**Expected startup output:** Same as UI-001.
+
+The first seven setup interactions and their expected outputs are Steps 1–7 of UI-001. They establish five tasks in a fresh process.
+
+#### Step 8
+
+**Input:**
+
+```text
+deadline do homework /by no idea :-p
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] do homework (by: no idea :-p)
+ Tasks currently in the master plan: 6.
+____________________________________________________________
+
+```
+
+#### Step 9
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-003: Show themed command and validation responses
+
+**Aim:** Verify that unmarking and invalid command details produce Lloyd-themed responses without changing their existing behavior.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo inspect foundations
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] inspect foundations
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+unmark 1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ What? Rework? That is terrible for the budget! Fine, this task is back under construction:
+[T][ ] inspect foundations
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+mark
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Even I cannot finish an imaginary task. Give me the task number to mark.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+mark gold
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ A task number needs to be a number. Even Javier knows that.
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+mark 99
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+unmark
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Rework requires paperwork. Give me the task number to unmark.
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+deadline
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Every profitable project needs details. Provide a description and /by date.
+____________________________________________________________
+
+```
+
+#### Step 8
+
+**Input:**
+
+```text
+deadline build bridge tomorrow
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ No deadline, no schedule. Specify it using /by.
+____________________________________________________________
+
+```
+
+#### Step 9
+
+**Input:**
+
+```text
+event
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Every grand event needs a plan. Provide a description, /from date, and /to date.
+____________________________________________________________
+
+```
+
+#### Step 10
+
+**Input:**
+
+```text
+event grand opening tomorrow
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ An event without a schedule invites disaster. Specify it using /from and /to.
+____________________________________________________________
+
+```
+
+#### Step 11
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-004: Reject tasks without a type prefix
+
+**Aim:** Verify that input without a `todo`, `deadline`, or `event` prefix is rejected and is not added to the task list.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+inspect foundations
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ I reject vague contracts. Start every task with todo, deadline, or event.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-005: Preserve the task list after invalid creation commands
+
+**Aim:** Verify that malformed deadline and event commands, plus unprefixed input, are rejected without changing the number, order, or contents of valid tasks.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo survey land
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] survey land
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+deadline build bridge tomorrow
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ No deadline, no schedule. Specify it using /by.
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] survey land
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+deadline build bridge /by Friday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] build bridge (by: Friday)
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+event opening ceremony /from Monday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ An event without a schedule invites disaster. Specify it using /from and /to.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] survey land
+ 2.[D][ ] build bridge (by: Friday)
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+event opening ceremony /from  /to Tuesday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ The project contract is incomplete. Provide a description, /from date, and /to date.
+____________________________________________________________
+
+```
+
+#### Step 8
+
+**Input:**
+
+```text
+event opening ceremony /from Monday /to Tuesday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [E][ ] opening ceremony (from: Monday to: Tuesday)
+ Tasks currently in the master plan: 3.
+____________________________________________________________
+
+```
+
+#### Step 9
+
+**Input:**
+
+```text
+build tunnel
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ I reject vague contracts. Start every task with todo, deadline, or event.
+____________________________________________________________
+
+```
+
+#### Step 10
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] survey land
+ 2.[D][ ] build bridge (by: Friday)
+ 3.[E][ ] opening ceremony (from: Monday to: Tuesday)
+____________________________________________________________
+
+```
+
+#### Step 11
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-006: Preserve completion state after invalid updates
+
+**Aim:** Verify that invalid task numbers and nonnumeric values do not mark or unmark a valid task, while valid updates still work between the rejected commands.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo inspect walls
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] inspect walls
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+mark 1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Magnificent! Efficient work means lower costs. This task is officially complete:
+[T][X] inspect walls
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+mark 0
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][X] inspect walls
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+unmark gold
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ A task number needs to be a number. Even Javier knows that.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][X] inspect walls
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+unmark 1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ What? Rework? That is terrible for the budget! Fine, this task is back under construction:
+[T][ ] inspect walls
+____________________________________________________________
+
+```
+
+#### Step 8
+
+**Input:**
+
+```text
+unmark 2
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 9
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] inspect walls
+____________________________________________________________
+
+```
+
+#### Step 10
+
+**Input:**
+
+```text
+mark -1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 11
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] inspect walls
+____________________________________________________________
+
+```
+
+#### Step 12
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-007: Delete a task and renumber the remaining list
+
+**Aim:** Verify that deleting a task removes the selected object, reports the new task count, and shifts later tasks into consecutive list positions without changing their contents.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo survey land
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] survey land
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+deadline build bridge /by Friday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] build bridge (by: Friday)
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+event opening ceremony /from Monday /to Tuesday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [E][ ] opening ceremony (from: Monday to: Tuesday)
+ Tasks currently in the master plan: 3.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+mark 2
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Magnificent! Efficient work means lower costs. This task is officially complete:
+[D][X] build bridge (by: Friday)
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+delete 2
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Waste eliminated from the budget. I have removed this task:
+[D][X] build bridge (by: Friday)
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] survey land
+ 2.[E][ ] opening ceremony (from: Monday to: Tuesday)
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-008: Reject invalid delete commands without changing the list
+
+**Aim:** Verify that a missing, nonnumeric, zero, negative, or out-of-range task number is rejected and does not remove an existing task.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo inspect foundations
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] inspect foundations
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+delete
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Demolition needs a target. Give me the task number to delete.
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+delete gold
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ A task number needs to be a number. Even Javier knows that.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+delete 0
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+delete -1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+delete 2
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ That task is not in the master plan. Check its number.
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][ ] inspect foundations
+____________________________________________________________
+
+```
+
+#### Step 8
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```

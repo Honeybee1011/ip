@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -28,8 +29,7 @@ public class Lloyd {
                 + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
                 + "\n Now, what needs doing?");
 
-        Task[] toDoList = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> toDoList = new ArrayList<>();
         boolean isRunning = true;
 
         Scanner scanner = new Scanner(System.in);
@@ -37,16 +37,6 @@ public class Lloyd {
             String input = scanner.nextLine().trim();
             String[] commandParts = input.split("\\s+", 2);
             String command = commandParts[0];
-
-            boolean isAddCommand = command.equals("todo")
-                    || command.equals("deadline")
-                    || command.equals("event");
-
-            if (isAddCommand && taskCount == toDoList.length) {
-                printResponse(" My schedule is at maximum capacity."
-                        + " Even the greatest estate developer has limits.");
-                continue;
-            }
 
             switch (command) {
                 case "bye":
@@ -56,9 +46,9 @@ public class Lloyd {
                     StringBuilder taskList = new StringBuilder(
                             " Behold! Here is the master plan:\n"
                     );
-                    for (int i = 0; i < taskCount; i++) {
+                    for (int i = 0; i < toDoList.size(); i++) {
                         taskList.append(String.format(
-                                " %d.%s%n", i + 1, toDoList[i]
+                                " %d.%s%n", i + 1, toDoList.get(i)
                         ));
                     }
                     printResponse(taskList.toString().stripTrailing());
@@ -72,16 +62,16 @@ public class Lloyd {
 
                     try {
                         int taskNumber = Integer.parseInt(commandParts[1]);
-                        if (taskNumber < 1 || taskNumber > taskCount) {
+                        if (taskNumber < 1 || taskNumber > toDoList.size()) {
                             printResponse(" That task is not in the master plan."
                                     + " Check its number.");
                             break;
                         }
 
-                        toDoList[taskNumber - 1].mark();
+                        toDoList.get(taskNumber - 1).mark();
                         printResponse(" Magnificent! Efficient work means lower costs."
                                 + " This task is officially complete:\n"
-                                + toDoList[taskNumber - 1]);
+                                + toDoList.get(taskNumber - 1));
                     } catch (NumberFormatException e) {
                         printResponse(" A task number needs to be a number."
                                 + " Even Javier knows that.");
@@ -96,32 +86,55 @@ public class Lloyd {
 
                     try {
                         int taskNumber = Integer.parseInt(commandParts[1]);
-                        if (taskNumber < 1 || taskNumber > taskCount) {
+                        if (taskNumber < 1 || taskNumber > toDoList.size()) {
                             printResponse(" That task is not in the master plan."
                                     + " Check its number.");
                             break;
                         }
 
-                        toDoList[taskNumber - 1].unmark();
+                        toDoList.get(taskNumber - 1).unmark();
                         printResponse(" What? Rework? That is terrible for the budget!"
                                 + " Fine, this task is back under construction:\n"
-                                + toDoList[taskNumber - 1]);
+                                + toDoList.get(taskNumber - 1));
                     } catch (NumberFormatException e) {
                         printResponse(" A task number needs to be a number."
                                 + " Even Javier knows that.");
                     }
                     break;
+                case "delete":
+                    if (commandParts.length < 2) {
+                        printResponse(" Demolition needs a target."
+                                + " Give me the task number to delete.");
+                        break;
+                    }
+
+                    try {
+                        int taskNumber = Integer.parseInt(commandParts[1]);
+                        if (taskNumber < 1 || taskNumber > toDoList.size()) {
+                            printResponse(" That task is not in the master plan."
+                                    + " Check its number.");
+                            break;
+                        }
+
+                        Task deletedTask = toDoList.remove(taskNumber - 1);
+                        printResponse(" Excellent! Waste eliminated from the budget."
+                                + " I have removed this task:\n"
+                                + deletedTask
+                                + "\n Tasks currently in the master plan: "
+                                + toDoList.size() + ".");
+                    } catch (NumberFormatException e) {
+                        printResponse(" A task number needs to be a number. Even Javier knows that.");
+                    }
+                    break;
                 case "todo":
-                    toDoList[taskCount] = new Todo(commandParts[1]);
-                    taskCount++;
+                    toDoList.add(new Todo(commandParts[1]));
                     printResponse(createTaskAddedMessage(
-                            toDoList[taskCount - 1], taskCount
+                            toDoList.get(toDoList.size() - 1), toDoList.size()
                     ));
                     break;
                 case "deadline":
                     if (commandParts.length < 2) {
-                        printResponse(" Every profitable project needs details."
-                                + " Provide a description and /by date.");
+                        printResponse(" Every profitable project needs details. Provide a description and /by date.");
                         break;
                     }
 
@@ -139,22 +152,19 @@ public class Lloyd {
                             deadlineDetails.substring(byIndex + " /by ".length()).trim();
 
                     if (deadlineDescription.isEmpty() || by.isEmpty()) {
-                        printResponse(" A contract needs both the work and its deadline."
-                                + " Provide a description and /by date.");
+                        printResponse(" A contract needs both the work and its deadline. Provide a description and /by date.");
                         break;
                     }
 
-                    toDoList[taskCount] = new Deadline(deadlineDescription, by);
-                    taskCount++;
+                    toDoList.add(new Deadline(deadlineDescription, by));
 
                     printResponse(createTaskAddedMessage(
-                            toDoList[taskCount - 1], taskCount
+                            toDoList.get(toDoList.size() - 1), toDoList.size()
                     ));
                     break;
                 case "event":
                     if (commandParts.length < 2) {
-                        printResponse(" Every grand event needs a plan."
-                                + " Provide a description, /from date, and /to date.");
+                        printResponse(" Every grand event needs a plan. Provide a description, /from date, and /to date.");
                         break;
                     }
 
@@ -164,8 +174,7 @@ public class Lloyd {
                             " /to ", fromIndex + " /from ".length());
 
                     if (fromIndex < 0 || toIndex < 0) {
-                        printResponse(" An event without a schedule invites disaster."
-                                + " Specify it using /from and /to.");
+                        printResponse(" An event without a schedule invites disaster. Specify it using /from and /to.");
                         break;
                     }
 
@@ -177,28 +186,18 @@ public class Lloyd {
                             eventDetails.substring(toIndex + " /to ".length()).trim();
 
                     if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        printResponse(" The project contract is incomplete."
-                                + " Provide a description, /from date, and /to date.");
+                        printResponse(" The project contract is incomplete. Provide a description, /from date, and /to date.");
                         break;
                     }
 
-                    toDoList[taskCount] = new Event(eventDescription, from, to);
-                    taskCount++;
+                    toDoList.add(new Event(eventDescription, from, to));
 
                     printResponse(createTaskAddedMessage(
-                            toDoList[taskCount - 1], taskCount
+                            toDoList.get(toDoList.size() - 1), toDoList.size()
                     ));
                     break;
                 default:
-                    if (taskCount == toDoList.length) {
-                        printResponse(" My schedule is at maximum capacity."
-                                + " Even the greatest estate developer has limits.");
-                        break;
-                    }
-
-                    toDoList[taskCount] = new Task(input);
-                    taskCount++;
-                    printResponse(" Added to the master plan: " + input);
+                    printResponse(" I reject vague contracts. Start every task with todo, deadline, or event.");
                     break;
             }
         }
