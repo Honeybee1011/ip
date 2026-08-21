@@ -25,8 +25,7 @@ public class Lloyd {
     public static void main(String[] args) {
         printResponse(BANNER + "\n Hello! I'm Lloyd.\n What can I do for you?");
 
-        String[] toDoList = new String[100];
-        int[] markedAsDone = new int[100];
+        Task[] toDoList = new Task[100];
         int taskCount = 0;
         boolean isRunning = true;
 
@@ -43,9 +42,8 @@ public class Lloyd {
                 case "list":
                     StringBuilder taskList = new StringBuilder();
                     for (int i = 0; i < taskCount; i++) {
-                        String status = markedAsDone[i] == 1 ? "X" : " ";
                         taskList.append(String.format(
-                                " %d. [%s] %s%n", i + 1, status, toDoList[i]
+                                " %d. %s%n", i + 1, toDoList[i]
                         ));
                     }
                     printResponse(taskList.toString().stripTrailing());
@@ -63,8 +61,8 @@ public class Lloyd {
                             break;
                         }
 
-                        markedAsDone[taskNumber - 1] = 1;
-                        printResponse(" Nice! I've marked this task as done:\n   [X] "
+                        toDoList[taskNumber - 1].mark();
+                        printResponse(" Nice! I've marked this task as done:\n"
                                 + toDoList[taskNumber - 1]);
                     } catch (NumberFormatException e) {
                         printResponse(" Please provide a valid task number.");
@@ -83,8 +81,8 @@ public class Lloyd {
                             break;
                         }
 
-                        markedAsDone[taskNumber - 1] = 0;
-                        printResponse(" OK, I've marked this task as not done yet:\n   [ ] "
+                        toDoList[taskNumber - 1].unmark();
+                        printResponse(" OK, I've marked this task as not done yet:\n"
                                 + toDoList[taskNumber - 1]);
                     } catch (NumberFormatException e) {
                         printResponse(" Please provide a valid task number.");
@@ -96,8 +94,7 @@ public class Lloyd {
                         break;
                     }
 
-                    toDoList[taskCount] = input;
-                    markedAsDone[taskCount] = 0;
+                    toDoList[taskCount] = new Task(input);
                     taskCount++;
                     printResponse(" Added: " + input);
                     break;
