@@ -23,7 +23,10 @@ public class Lloyd {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        printResponse(BANNER + "\n Hello! I'm Lloyd.\n What can I do for you?");
+        printResponse(BANNER
+                + "\n Lloyd Frontera, the greatest estate developer, at your service!"
+                + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
+                + "\n Now, what needs doing?");
 
         Task[] toDoList = new Task[100];
         int taskCount = 0;
@@ -40,7 +43,8 @@ public class Lloyd {
                     || command.equals("event");
 
             if (isAddCommand && taskCount == toDoList.length) {
-                printResponse(" Your task list is full.");
+                printResponse(" My schedule is at maximum capacity."
+                        + " Even the greatest estate developer has limits.");
                 continue;
             }
 
@@ -49,63 +53,75 @@ public class Lloyd {
                     isRunning = false;
                     break;
                 case "list":
-                    StringBuilder taskList = new StringBuilder();
+                    StringBuilder taskList = new StringBuilder(
+                            " Behold! Here is the master plan:\n"
+                    );
                     for (int i = 0; i < taskCount; i++) {
                         taskList.append(String.format(
-                                " %d. %s%n", i + 1, toDoList[i]
+                                " %d.%s%n", i + 1, toDoList[i]
                         ));
                     }
                     printResponse(taskList.toString().stripTrailing());
                     break;
                 case "mark":
                     if (commandParts.length < 2) {
-                        printResponse(" Please provide the number of the task to mark.");
+                        printResponse(" Even I cannot finish an imaginary task."
+                                + " Give me the task number to mark.");
                         break;
                     }
 
                     try {
                         int taskNumber = Integer.parseInt(commandParts[1]);
                         if (taskNumber < 1 || taskNumber > taskCount) {
-                            printResponse(" That task number does not exist.");
+                            printResponse(" That task is not in the master plan."
+                                    + " Check its number.");
                             break;
                         }
 
                         toDoList[taskNumber - 1].mark();
-                        printResponse(" Nice! I've marked this task as done:\n"
+                        printResponse(" Magnificent! Efficient work means lower costs."
+                                + " This task is officially complete:\n"
                                 + toDoList[taskNumber - 1]);
                     } catch (NumberFormatException e) {
-                        printResponse(" Please provide a valid task number.");
+                        printResponse(" A task number needs to be a number."
+                                + " Even Javier knows that.");
                     }
                     break;
                 case "unmark":
                     if (commandParts.length < 2) {
-                        printResponse(" Please provide the number of the task to unmark.");
+                        printResponse(" Rework requires paperwork."
+                                + " Give me the task number to unmark.");
                         break;
                     }
 
                     try {
                         int taskNumber = Integer.parseInt(commandParts[1]);
                         if (taskNumber < 1 || taskNumber > taskCount) {
-                            printResponse(" That task number does not exist.");
+                            printResponse(" That task is not in the master plan."
+                                    + " Check its number.");
                             break;
                         }
 
                         toDoList[taskNumber - 1].unmark();
-                        printResponse(" OK, I've marked this task as not done yet:\n"
+                        printResponse(" What? Rework? That is terrible for the budget!"
+                                + " Fine, this task is back under construction:\n"
                                 + toDoList[taskNumber - 1]);
                     } catch (NumberFormatException e) {
-                        printResponse(" Please provide a valid task number.");
+                        printResponse(" A task number needs to be a number."
+                                + " Even Javier knows that.");
                     }
                     break;
                 case "todo":
-                    toDoList[taskCount] = new Todo(input);
+                    toDoList[taskCount] = new Todo(commandParts[1]);
                     taskCount++;
-                    String response = " Added: " + input + "\n Now you have " + taskCount + " tasks in the list.";
-                    printResponse(response);
+                    printResponse(createTaskAddedMessage(
+                            toDoList[taskCount - 1], taskCount
+                    ));
                     break;
                 case "deadline":
                     if (commandParts.length < 2) {
-                        printResponse(" Please provide a deadline description and /by date.");
+                        printResponse(" Every profitable project needs details."
+                                + " Provide a description and /by date.");
                         break;
                     }
 
@@ -113,7 +129,7 @@ public class Lloyd {
                     int byIndex = deadlineDetails.indexOf(" /by ");
 
                     if (byIndex < 0) {
-                        printResponse(" Please specify the deadline using /by.");
+                        printResponse(" No deadline, no schedule. Specify it using /by.");
                         break;
                     }
 
@@ -123,20 +139,22 @@ public class Lloyd {
                             deadlineDetails.substring(byIndex + " /by ".length()).trim();
 
                     if (deadlineDescription.isEmpty() || by.isEmpty()) {
-                        printResponse(" Please provide both a description and a /by date.");
+                        printResponse(" A contract needs both the work and its deadline."
+                                + " Provide a description and /by date.");
                         break;
                     }
 
                     toDoList[taskCount] = new Deadline(deadlineDescription, by);
                     taskCount++;
 
-                    printResponse(" Got it. I've added this task:\n"
-                            + toDoList[taskCount - 1]);
+                    printResponse(createTaskAddedMessage(
+                            toDoList[taskCount - 1], taskCount
+                    ));
                     break;
                 case "event":
                     if (commandParts.length < 2) {
-                        printResponse(
-                                " Please provide an event description, /from date, and /to date.");
+                        printResponse(" Every grand event needs a plan."
+                                + " Provide a description, /from date, and /to date.");
                         break;
                     }
 
@@ -146,7 +164,8 @@ public class Lloyd {
                             " /to ", fromIndex + " /from ".length());
 
                     if (fromIndex < 0 || toIndex < 0) {
-                        printResponse(" Please specify the event using /from and /to.");
+                        printResponse(" An event without a schedule invites disaster."
+                                + " Specify it using /from and /to.");
                         break;
                     }
 
@@ -158,32 +177,49 @@ public class Lloyd {
                             eventDetails.substring(toIndex + " /to ".length()).trim();
 
                     if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        printResponse(
-                                " Please provide a description, /from date, and /to date.");
+                        printResponse(" The project contract is incomplete."
+                                + " Provide a description, /from date, and /to date.");
                         break;
                     }
 
                     toDoList[taskCount] = new Event(eventDescription, from, to);
                     taskCount++;
 
-                    printResponse(" Got it. I've added this task:\n"
-                            + toDoList[taskCount - 1]);
+                    printResponse(createTaskAddedMessage(
+                            toDoList[taskCount - 1], taskCount
+                    ));
                     break;
                 default:
                     if (taskCount == toDoList.length) {
-                        printResponse(" Your task list is full.");
+                        printResponse(" My schedule is at maximum capacity."
+                                + " Even the greatest estate developer has limits.");
                         break;
                     }
 
                     toDoList[taskCount] = new Task(input);
                     taskCount++;
-                    printResponse(" Added: " + input);
+                    printResponse(" Added to the master plan: " + input);
                     break;
             }
         }
         scanner.close();
 
-        printResponse(" Bye. Hope to see you again soon!");
+        printResponse(" Leaving already? Fine. Rest while you can; those tasks will not"
+                + " build themselves. Come back when you are ready to work..."
+                + " and remember to bring payment!");
+    }
+
+    /**
+     * Creates the standard response shown after adding any type of task.
+     *
+     * @param task task that was added
+     * @param taskCount number of tasks currently in the list
+     * @return response containing the added task and updated task count
+     */
+    private static String createTaskAddedMessage(Task task, int taskCount) {
+        return " Excellent! Another investment in your future has been approved:\n"
+                + "   " + task
+                + "\n Tasks currently in the master plan: " + taskCount + ".";
     }
 
     /**
