@@ -8,7 +8,8 @@ public class EchoCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
         System.out.println(this.textToEcho);
+        return true;
     }
 }

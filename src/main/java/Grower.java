@@ -10,17 +10,15 @@ public class Grower {
                 "What can I do for you today \n");
 
         Scanner scanner = new Scanner(System.in);
+        boolean continueRun = true;
 
-        while (true) {
+        while (continueRun) {
             String userInput = scanner.nextLine();
 
             Command command = Parser.parse(userInput);
 
             if (command != null) {
-                command.execute();
-            } else if (userInput.equals("bye")) {
-                System.out.println("Bye!");
-                break;
+                continueRun = command.execute();
             } else {
                 System.out.println("Sorry! Didn't get that, this bot ain't so smart.");
             }
