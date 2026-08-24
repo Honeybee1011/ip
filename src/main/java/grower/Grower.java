@@ -2,11 +2,13 @@ package grower;
 
 import java.util.Scanner;
 import grower.commands.Command;
+import grower.growerExceptions.GrowerException;
 
 /**
  * The main class for the Grower application.
  * This class initializes the application and runs the main command loop.
  */
+
 public class Grower {
 
     // This static TaskList serves as the single source of truth for task data.
@@ -24,15 +26,16 @@ public class Grower {
 
         while (continueRun) {
             String userInput = scanner.nextLine();
-            Command command = Parser.parse(userInput);
+            System.out.println("_________________________________");
 
-            if (command != null) {
+            try {
+                Command command = Parser.parse(userInput);
                 continueRun = command.execute();
-            } else {
-                System.out.println("Sorry! Didn't get that, this bot ain't so smart.");
+            } catch (GrowerException e) {
+                System.out.println(" " + e.getMessage());
             }
+            System.out.println("_________________________________");
         }
-
         scanner.close();
     }
 }
