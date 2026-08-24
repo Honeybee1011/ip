@@ -19,7 +19,15 @@ public class ListTask {
             return false;
         }
     }
-    
+
+    public void markTask(int index) {
+        ListTask.listOfTasks[index].unmark();
+    }
+
+    public void unmarkTask(int index) {
+        ListTask.listOfTasks[index].unmark();
+    }
+
     public void printTask() {
         for (int i = 0; i < numberOfTasks; i++) {
             System.out.println(" " + (i + 1) + ". " + listOfTasks[i]);
