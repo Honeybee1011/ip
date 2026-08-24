@@ -21,7 +21,7 @@ public class ListTask {
     }
 
     public void markTask(int index) {
-        ListTask.listOfTasks[index].unmark();
+        ListTask.listOfTasks[index].mark();
     }
 
     public void unmarkTask(int index) {
@@ -32,5 +32,9 @@ public class ListTask {
         for (int i = 0; i < numberOfTasks; i++) {
             System.out.println(" " + (i + 1) + ". " + listOfTasks[i]);
         }
+    }
+
+    public void printTask(int index) {
+        System.out.println(ListTask.listOfTasks[index]);
     }
 }

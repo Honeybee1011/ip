@@ -11,6 +11,8 @@ public class UnmarkCommand extends Command{
     @Override
     public boolean execute() {
         Grower.taskList.unmarkTask(index);
+        System.out.println("Marking following task as not done :(");
+        Grower.taskList.printTask(index);
         return true;
     }
 }

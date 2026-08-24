@@ -12,6 +12,14 @@ public class Parser {
             return new ByeCommand();
         } else if (userInput.equals("list")) {
             return new ListCommand();
+        } else if (userInput.startsWith("mark ")) {
+            String stringIndex = userInput.substring(5);
+            int index = Integer.parseInt(stringIndex) - 1;
+            return new MarkCommand(index);
+        } else if (userInput.startsWith("unmark ")) {
+            String stringIndex = userInput.substring(7);
+            int index = Integer.parseInt(stringIndex) - 1;
+            return new UnmarkCommand(index);
         } else {
             return new AddCommand(userInput);
         }

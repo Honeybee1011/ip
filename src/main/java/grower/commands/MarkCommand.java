@@ -11,6 +11,8 @@ public class MarkCommand extends Command{
     @Override
     public boolean execute() {
         Grower.taskList.markTask(index);
+        System.out.println("Marking following task as done!");
+        Grower.taskList.printTask(index);
         return true;
     }
 }
