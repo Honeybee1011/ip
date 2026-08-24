@@ -23,11 +23,18 @@ public class Parser {
         } else if (userInput.startsWith("todo")) {
             String description = userInput.substring(5);
             return new ToDoCommand(description);
-        } else if (userInput.startsWith("deadline")){
+        } else if (userInput.startsWith("deadline")) {
             int startOfDeadline = userInput.indexOf("/");
             String description = userInput.substring(9, startOfDeadline);
             String deadline = userInput.substring(startOfDeadline + 4);
             return new DeadlineCommand(description, deadline);
+        } else if (userInput.startsWith("event")) {
+            int startOfStart = userInput.indexOf("/");
+            int startofEnd = userInput.indexOf('/', userInput.indexOf('/') + 1);
+            String description = userInput.substring(6, startOfStart);
+            String start = userInput.substring(startOfStart + 6, startofEnd - 1);
+            String end = userInput.substring(startofEnd + 4);
+            return new EventCommand(description, start, end);
         }
         return null;
     }
