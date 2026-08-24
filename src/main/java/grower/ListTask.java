@@ -24,8 +24,16 @@ public class ListTask {
         this.listOfTasks.get(index).unmark();
     }
 
+    public void deleteTask(int index) {
+        Task removedTask = this.listOfTasks.remove(index);
+        System.out.println("Removed: \n" + removedTask);
+    }
+
 
     public void printTask() {
+        if (listOfTasks.size() == 0) {
+            System.out.println(" List of tasks is empty! \n Start adding tasks with: todo, event, deadline");
+        }
         for (int i = 0; i < this.listOfTasks.size(); i++) {
             System.out.println(" " + (i + 1) + ". " + listOfTasks.get(i));
         }

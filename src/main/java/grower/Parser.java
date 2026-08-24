@@ -68,6 +68,11 @@ public class Parser {
                 throw new MissingDescriptionException("There is nothing to echo!");
             }
             return new EchoCommand(args);
+        case "delete":
+            if (args.isEmpty()) {
+                throw new MissingDescriptionException("Please add index to delete");
+            }
+            return new DeleteCommand(args);
         default:
             // If the command is not recognized, throw an exception.
             throw new UnknownCommandException("I'm sorry, but I don't know what that means :-(");
