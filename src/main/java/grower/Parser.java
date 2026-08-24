@@ -23,8 +23,11 @@ public class Parser {
         } else if (userInput.startsWith("todo")) {
             String description = userInput.substring(5);
             return new ToDoCommand(description);
-        } else {
-            //return new AddCommand(userInput);
+        } else if (userInput.startsWith("deadline")){
+            int startOfDeadline = userInput.indexOf("/");
+            String description = userInput.substring(9, startOfDeadline);
+            String deadline = userInput.substring(startOfDeadline + 1);
+            return new DeadlineCommand(description, deadline);
         }
         return null;
     }
