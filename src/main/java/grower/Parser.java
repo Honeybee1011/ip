@@ -26,7 +26,7 @@ public class Parser {
         } else if (userInput.startsWith("deadline")){
             int startOfDeadline = userInput.indexOf("/");
             String description = userInput.substring(9, startOfDeadline);
-            String deadline = userInput.substring(startOfDeadline + 1);
+            String deadline = userInput.substring(startOfDeadline + 4);
             return new DeadlineCommand(description, deadline);
         }
         return null;
