@@ -1,4 +1,4 @@
-package commands;
+package grower.commands;
 
 public class ByeCommand extends Command {
     @Override

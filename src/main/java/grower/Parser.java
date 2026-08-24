@@ -1,6 +1,7 @@
-import commands.Command;
-import commands.EchoCommand;
-import commands.ByeCommand;
+package grower;
+
+import grower.commands.*;
+
 
 public class Parser {
     public static Command parse(String userInput) {
@@ -9,7 +10,11 @@ public class Parser {
             return new EchoCommand(text);
         } else if (userInput.equalsIgnoreCase("bye")) {
             return new ByeCommand();
+        } else if (userInput.equals("list")) {
+            return new ListCommand();
+        } else {
+            return new AddCommand(userInput);
         }
-        return null;
+        //return null;
     }
 }

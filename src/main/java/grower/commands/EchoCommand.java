@@ -1,4 +1,4 @@
-package commands;
+package grower.commands;
 
 public class EchoCommand extends Command {
     private final String textToEcho;
