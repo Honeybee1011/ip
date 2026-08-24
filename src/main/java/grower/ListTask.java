@@ -1,42 +1,37 @@
 package grower;
 
+import java.util.ArrayList;
 import grower.tasks.Task;
 
 public class ListTask {
-    private static Task[] listOfTasks;
-    private static int numberOfTasks;
+    private final ArrayList<Task> listOfTasks;
 
     public ListTask() {
-        listOfTasks = new Task[100];
-        numberOfTasks = 0;
+        listOfTasks = new ArrayList<>();
     }
 
     public boolean addTask(Task newTask) {
-        if (numberOfTasks < 100) {
-            ListTask.listOfTasks[numberOfTasks] = newTask;
-            System.out.println(" added: " + ListTask.listOfTasks[numberOfTasks]);
-            ListTask.numberOfTasks++;
-            return true;
-        } else {
-            return false;
-        }
+        this.listOfTasks.add(newTask);
+        System.out.println(" added: " + newTask);
+        return true;
     }
 
     public void markTask(int index) {
-        ListTask.listOfTasks[index].mark();
+        this.listOfTasks.get(index).mark();
     }
 
     public void unmarkTask(int index) {
-        ListTask.listOfTasks[index].unmark();
+        this.listOfTasks.get(index).unmark();
     }
 
+
     public void printTask() {
-        for (int i = 0; i < numberOfTasks; i++) {
-            System.out.println(" " + (i + 1) + ". " + listOfTasks[i]);
+        for (int i = 0; i < this.listOfTasks.size(); i++) {
+            System.out.println(" " + (i + 1) + ". " + listOfTasks.get(i));
         }
     }
 
     public void printTask(int index) {
-        System.out.println(ListTask.listOfTasks[index]);
+        System.out.println(this.listOfTasks.get(index));
     }
 }
