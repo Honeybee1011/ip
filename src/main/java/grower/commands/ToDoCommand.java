@@ -1,30 +1,23 @@
 package grower.commands;
 
 import grower.Grower;
-import grower.Task;
+import grower.tasks.Task;
+import grower.tasks.ToDo;
 
-/**
- * Represents a command to add a new task to the task list.
- */
-public class AddCommand extends Command {
-    private final String description;
+public class ToDoCommand extends Command {
+    private String description;
 
-    /**
-     * Creates an AddCommand.
-     *
-     * @param description The description of the task to add.
-     */
-    public AddCommand (String description) {
+    public ToDoCommand(String description) {
         this.description = description;
     }
 
     @Override
     public boolean execute() {
         // Create a new Task object from the description.
-        Task newTask = new Task(this.description);
+        Task newTask = new ToDo(this.description);
         // Use the static taskList from the Grower class to add the new task.
         Grower.taskList.addTask(newTask);
         // Return true to indicate that the application should continue running.
-        return true; 
+        return true;
     }
 }

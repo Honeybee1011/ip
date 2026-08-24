@@ -5,6 +5,7 @@ This repository is a starter template for a greenfield Java project used in an i
 # Default user context
 
 Unless the user says otherwise, assume that you are assisting a student working on a project in this repository. If the user identifies themselves as an instructor or another project stakeholder, adapt your response to that role.
+Do not edit any file in this project unless explicitly told to by the user. 
 
 # Student profile
 

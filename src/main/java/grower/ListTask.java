@@ -1,5 +1,7 @@
 package grower;
 
+import grower.tasks.Task;
+
 public class ListTask {
     private static Task[] listOfTasks;
     private static int numberOfTasks;

@@ -20,9 +20,12 @@ public class Parser {
             String stringIndex = userInput.substring(7);
             int index = Integer.parseInt(stringIndex) - 1;
             return new UnmarkCommand(index);
+        } else if (userInput.startsWith("todo")) {
+            String description = userInput.substring(5);
+            return new ToDoCommand(description);
         } else {
-            return new AddCommand(userInput);
+            //return new AddCommand(userInput);
         }
-        //return null;
+        return null;
     }
 }

@@ -1,6 +1,7 @@
-package grower;
+package grower.tasks;
 
-public class Task {
+//Task should never be initialized
+public abstract class Task {
     //Description of task
     private String description;
 
