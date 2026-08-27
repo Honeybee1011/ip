@@ -6,6 +6,21 @@ import grower.growerExceptions.*;
 
 public class Parser {
     /**
+     * Represents the command words recognized by the parser.
+     */
+    private enum CommandType {
+        BYE,
+        LIST,
+        MARK,
+        UNMARK,
+        TODO,
+        DEADLINE,
+        EVENT,
+        ECHO,
+        DELETE
+    }
+
+    /**
      * Parses user input into a command for execution.
      *
      * @param userInput The full user input string.
@@ -19,29 +34,36 @@ public class Parser {
         String commandWord = parts[0].toLowerCase();
         String args = parts.length > 1 ? parts[1] : "";
 
-        switch (commandWord) {
-        case "bye":
-            return new ByeCommand();
-        case "list":
-            return new ListCommand();
-        case "mark":
+        CommandType commandType;
+        try {
+            commandType = CommandType.valueOf(commandWord.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new UnknownCommandException("I'm sorry, but I don't know what that means :-(");
+        }
 
-        case "unmark":
+        switch (commandType) {
+        case BYE:
+            return new ByeCommand();
+        case LIST:
+            return new ListCommand();
+        case MARK:
+
+        case UNMARK:
             if (args.isEmpty()) {
                 throw new GrowerException("You must provide a task number to " + commandWord + ".");
             }
             try {
                 int index = Integer.parseInt(args) - 1;
-                return commandWord.equals("mark") ? new MarkCommand(index) : new UnmarkCommand(index);
+                return commandType == CommandType.MARK ? new MarkCommand(index) : new UnmarkCommand(index);
             } catch (NumberFormatException e) {
                 throw new GrowerException("The task number must be an integer.");
             }
-        case "todo":
+        case TODO:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("The description for a todo cannot be empty.");
             }
             return new ToDoCommand(args);
-        case "deadline":
+        case DEADLINE:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("The description for a deadline cannot be empty.");
             }
@@ -50,7 +72,7 @@ public class Parser {
                 throw new GrowerException("Invalid deadline format. Use: deadline <description> /by <date>");
             }
             return new DeadlineCommand(deadlineParts[0], deadlineParts[1]);
-        case "event":
+        case EVENT:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("The description for an event cannot be empty.");
             }
@@ -63,19 +85,17 @@ public class Parser {
                 throw new GrowerException("Invalid event format. Use: event <desc> /from <start> /to <end>");
             }
             return new EventCommand(eventParts[0], timeParts[0], timeParts[1]);
-        case "echo":
+        case ECHO:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("There is nothing to echo!");
             }
             return new EchoCommand(args);
-        case "delete":
+        case DELETE:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("Please add index to delete");
             }
             return new DeleteCommand(args);
-        default:
-            // If the command is not recognized, throw an exception.
-            throw new UnknownCommandException("I'm sorry, but I don't know what that means :-(");
         }
+        throw new UnknownCommandException("I'm sorry, but I don't know what that means :-(");
     }
 }
