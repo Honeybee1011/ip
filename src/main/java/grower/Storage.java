@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import grower.tasks.Task;
+import grower.tasks.ToDo;
+import grower.tasks.Deadline;
+import grower.tasks.Event;
 
 /**
  * Handles saving tasks to file and loading tasks from file
@@ -38,6 +42,39 @@ public class Storage {
         }
 
         return Files.readAllLines(filePath);
+    }
+
+    /**
+     * Parses input file from string to tasks
+     */
+    public Task parseTask(String line) {
+        String[] parts = line.split(" \\| ", -1);
+
+        String type = parts[0];
+        boolean completed = parts[1].equals("1");
+        String description = parts[2];
+
+        Task task;
+
+        switch (type) {
+            case "T":
+                task = new ToDo(description);
+                break;
+            case "D":
+                task = new Deadline(description, parts[3]);
+                break;
+            case "E":
+                task = new Event(description, parts[3], parts[4]);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown task type: " + type);
+        }
+
+        if (completed) {
+            task.mark();
+        }
+
+        return task;
     }
 }
 

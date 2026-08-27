@@ -17,6 +17,10 @@ public class ListTask {
         return true;
     }
 
+    public void addLoadedTask(Task task) {
+        listOfTasks.add(task);
+    }
+
     public void markTask(int index) {
         this.listOfTasks.get(index).mark();
     }
