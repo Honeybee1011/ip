@@ -6,10 +6,10 @@ import java.util.List;
 import grower.growerExceptions.InvalidTaskNumberException;
 import grower.tasks.Task;
 
-public class ListTask {
+public class TaskList {
     private final ArrayList<Task> listOfTasks;
 
-    public ListTask() {
+    public TaskList() {
         listOfTasks = new ArrayList<>();
     }
 

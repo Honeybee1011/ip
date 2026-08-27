@@ -1,15 +1,17 @@
 package grower.commands;
 
+import java.time.LocalDateTime;
+
 import grower.Grower;
-import grower.tasks.Task;
 import grower.tasks.Event;
+import grower.tasks.Task;
 
 public class EventCommand extends Command {
-    private String description;
-    private String start;
-    private String end;
+    private final String description;
+    private final LocalDateTime start;
+    private final LocalDateTime end;
 
-    public EventCommand(String description, String start, String end) {
+    public EventCommand(String description, LocalDateTime start, LocalDateTime end) {
         this.description = description;
         this.start = start;
         this.end = end;
