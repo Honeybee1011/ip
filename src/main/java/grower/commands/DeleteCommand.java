@@ -5,6 +5,7 @@ package grower.commands;
  */
 
 import grower.Grower;
+import grower.growerExceptions.InvalidTaskNumberException;
 
 public class DeleteCommand extends Command {
     private int index;
@@ -14,10 +15,9 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public boolean execute() {
+    public boolean execute() throws InvalidTaskNumberException {
         Grower.taskList.deleteTask(index - 1);
         return true;
     }
 }
-
 

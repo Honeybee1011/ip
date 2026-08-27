@@ -1,7 +1,9 @@
 package grower;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import grower.growerExceptions.InvalidTaskNumberException;
 import grower.tasks.Task;
 
 public class ListTask {
@@ -21,15 +23,18 @@ public class ListTask {
         listOfTasks.add(task);
     }
 
-    public void markTask(int index) {
+    public void markTask(int index) throws InvalidTaskNumberException {
+        validateIndex(index);
         this.listOfTasks.get(index).mark();
     }
 
-    public void unmarkTask(int index) {
+    public void unmarkTask(int index) throws InvalidTaskNumberException {
+        validateIndex(index);
         this.listOfTasks.get(index).unmark();
     }
 
-    public void deleteTask(int index) {
+    public void deleteTask(int index) throws InvalidTaskNumberException {
+        validateIndex(index);
         Task removedTask = this.listOfTasks.remove(index);
         System.out.println("Removed: \n" + removedTask);
     }
@@ -44,8 +49,21 @@ public class ListTask {
         }
     }
 
-    public void printTask(int index) {
+    public void printTask(int index) throws InvalidTaskNumberException {
+        validateIndex(index);
         System.out.println(this.listOfTasks.get(index));
+    }
+
+    /**
+     * Checks that an index refers to an existing task.
+     *
+     * @param index the zero-based index to check
+     * @throws InvalidTaskNumberException if the index is outside the task list
+     */
+    private void validateIndex(int index) throws InvalidTaskNumberException {
+        if (index < 0 || index >= listOfTasks.size()) {
+            throw new InvalidTaskNumberException(index, listOfTasks.size());
+        }
     }
 
     /**
