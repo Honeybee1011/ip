@@ -25,6 +25,20 @@ public abstract class Task {
         this.completed = true;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public boolean isCompleted() {
+        return this.completed;
+    }
+
+    /**
+     * A fixed method for reliably writing tasks to a file
+     * @return String representing the task for writing to a file
+     */
+    public abstract String toFileString();
+
     @Override
     public String toString() {
         String tick;

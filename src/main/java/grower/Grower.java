@@ -1,5 +1,6 @@
 package grower;
 
+import java.io.IOException;
 import java.util.Scanner;
 import grower.commands.Command;
 import grower.growerExceptions.GrowerException;
@@ -20,8 +21,11 @@ public class Grower {
                 "your accountability partner! \n" +
                 "i'm here to support your growth! \n" +
                 "What can I do for you today \n");
-        
+
         Scanner scanner = new Scanner(System.in);
+        Storage storage = new Storage("./data/grower.txt");
+
+        //Boolean controlling if the chatbot should terminate or continue looping for user input cycle
         boolean continueRun = true;
 
         while (continueRun) {
@@ -31,8 +35,12 @@ public class Grower {
             try {
                 Command command = Parser.parse(userInput);
                 continueRun = command.execute();
+
+                storage.saveTasks(taskList.getTaskData());
             } catch (GrowerException e) {
                 System.out.println(" " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Could not access the task data file, pls try again blud");
             }
             System.out.println("_________________________________");
         }

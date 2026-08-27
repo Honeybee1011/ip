@@ -1,5 +1,6 @@
 package grower;
 
+import java.util.List;
 import java.util.ArrayList;
 import grower.tasks.Task;
 
@@ -41,5 +42,14 @@ public class ListTask {
 
     public void printTask(int index) {
         System.out.println(this.listOfTasks.get(index));
+    }
+
+    /**
+     * Gets all task data and writes each task as a string in a List so as to write to file
+     */
+    public List<String> getTaskData() {
+        return listOfTasks.stream()
+                .map(Task::toFileString)
+                .toList();
     }
 }
