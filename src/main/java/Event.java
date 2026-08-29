@@ -12,6 +12,24 @@ public class Event extends Task{
         this.to = to;
     }
 
+    /**
+     * Returns when the event starts.
+     *
+     * @return event start entered by the user
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns when the event ends.
+     *
+     * @return event end entered by the user
+     */
+    public String getTo() {
+        return to;
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString()

@@ -14,6 +14,26 @@ This file is the source of truth for console UI test cases run with the `test-ui
 
 ## Test cases
 
+### STORAGE-001: Save and load all task types
+
+**Aim:** Verify that the standalone storage class writes the specified delimited format, creates parent directories, restores task types and completion states, treats a missing file as an empty list, and rejects malformed or ambiguous data.
+
+**Compilation command:** `javac -d out src/main/java/*.java test/StorageTest.java`
+
+**Program start command:** `java -cp out StorageTest`
+
+**Expected startup output:**
+
+```text
+Storage save format: PASSED
+Storage load: PASSED
+Missing storage file: PASSED
+Invalid storage data: PASSED
+Reserved delimiter validation: PASSED
+```
+
+This test has no user input. The process must exit successfully immediately after printing the expected output.
+
 ### UI-001: Add and list all task types
 
 **Aim:** Verify that todo, deadline, and event commands create the correct task subtype, preserve their details, update the count, and appear correctly in the list.
