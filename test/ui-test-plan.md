@@ -34,6 +34,189 @@ Reserved delimiter validation: PASSED
 
 This test has no user input. The process must exit successfully immediately after printing the expected output.
 
+### UI-009: Save after every successful task-list change
+
+**Aim:** Verify that the chatbot writes the complete task list after adding, marking,
+unmarking, and deleting tasks.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-save-test`
+
+**Program start command:** `java -cp ..\..\out Lloyd`
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo survey land
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] survey land
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:**
+
+```text
+T | 0 | survey land
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+deadline build bridge /by Friday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] build bridge (by: Friday)
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:**
+
+```text
+T | 0 | survey land
+D | 0 | build bridge | Friday
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+mark 2
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Magnificent! Efficient work means lower costs. This task is officially complete:
+[D][X] build bridge (by: Friday)
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:**
+
+```text
+T | 0 | survey land
+D | 1 | build bridge | Friday
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+event opening ceremony /from Monday /to Tuesday
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [E][ ] opening ceremony (from: Monday to: Tuesday)
+ Tasks currently in the master plan: 3.
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:**
+
+```text
+T | 0 | survey land
+D | 1 | build bridge | Friday
+E | 0 | opening ceremony | Monday | Tuesday
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+unmark 2
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ What? Rework? That is terrible for the budget! Fine, this task is back under construction:
+[D][ ] build bridge (by: Friday)
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:**
+
+```text
+T | 0 | survey land
+D | 0 | build bridge | Friday
+E | 0 | opening ceremony | Monday | Tuesday
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+delete 1
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Waste eliminated from the budget. I have removed this task:
+[T][ ] survey land
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:**
+
+```text
+D | 0 | build bridge | Friday
+E | 0 | opening ceremony | Monday | Tuesday
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
 ### UI-001: Add and list all task types
 
 **Aim:** Verify that todo, deadline, and event commands create the correct task subtype, preserve their details, update the count, and appear correctly in the list.

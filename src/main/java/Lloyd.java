@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,14 +25,16 @@ public class Lloyd {
      * Runs the chatbot until the user enters the {@code bye} command.
      *
      * @param args command-line arguments, which are not used
+     * @throws IOException if the task list cannot be saved
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         printResponse(BANNER
                 + "\n Lloyd Frontera, the greatest estate developer, at your service!"
                 + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
                 + "\n Now, what needs doing?");
 
         ArrayList<Task> toDoList = new ArrayList<>();
+        Storage storage = new Storage(Path.of("data", "lloyd.txt"));
         boolean isRunning = true;
 
         Scanner scanner = new Scanner(System.in);
@@ -70,6 +74,7 @@ public class Lloyd {
                         }
 
                         toDoList.get(taskNumber - 1).mark();
+                        storage.save(toDoList);
                         printResponse(" Magnificent! Efficient work means lower costs."
                                 + " This task is officially complete:\n"
                                 + toDoList.get(taskNumber - 1));
@@ -94,6 +99,7 @@ public class Lloyd {
                         }
 
                         toDoList.get(taskNumber - 1).unmark();
+                        storage.save(toDoList);
                         printResponse(" What? Rework? That is terrible for the budget!"
                                 + " Fine, this task is back under construction:\n"
                                 + toDoList.get(taskNumber - 1));
@@ -118,6 +124,7 @@ public class Lloyd {
                         }
 
                         Task deletedTask = toDoList.remove(taskNumber - 1);
+                        storage.save(toDoList);
                         printResponse(" Excellent! Waste eliminated from the budget."
                                 + " I have removed this task:\n"
                                 + deletedTask
@@ -129,6 +136,7 @@ public class Lloyd {
                     break;
                 case TODO:
                     toDoList.add(new Todo(commandParts[1]));
+                    storage.save(toDoList);
                     printResponse(createTaskAddedMessage(
                             toDoList.getLast(), toDoList.size()
                     ));
@@ -158,6 +166,7 @@ public class Lloyd {
                     }
 
                     toDoList.add(new Deadline(deadlineDescription, by));
+                    storage.save(toDoList);
 
                     printResponse(createTaskAddedMessage(
                             toDoList.getLast(), toDoList.size()
@@ -192,6 +201,7 @@ public class Lloyd {
                     }
 
                     toDoList.add(new Event(eventDescription, from, to));
+                    storage.save(toDoList);
 
                     printResponse(createTaskAddedMessage(
                             toDoList.getLast(), toDoList.size()
