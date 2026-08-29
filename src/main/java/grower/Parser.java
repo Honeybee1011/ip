@@ -1,10 +1,19 @@
 package grower;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+
 import grower.commands.*;
 import grower.growerExceptions.*;
 
 
 public class Parser {
+    private static final DateTimeFormatter INPUT_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("d/M/uuuu HHmm")
+                    .withResolverStyle(ResolverStyle.STRICT);
+
     /**
      * Represents the command words recognized by the parser.
      */
@@ -69,9 +78,17 @@ public class Parser {
             }
             String[] deadlineParts = args.split(" /by ", 2);
             if (deadlineParts.length < 2) {
-                throw new GrowerException("Invalid deadline format. Use: deadline <description> /by <date>");
+                throw new GrowerException(
+                        "Invalid deadline format. Use: deadline <description> /by <d/M/yyyy HHmm>");
             }
-            return new DeadlineCommand(deadlineParts[0], deadlineParts[1]);
+            try {
+                LocalDateTime deadline = LocalDateTime.parse(
+                        deadlineParts[1], INPUT_DATE_TIME_FORMATTER);
+                return new DeadlineCommand(deadlineParts[0], deadline);
+            } catch (DateTimeParseException e) {
+                throw new GrowerException(
+                        "Use the date format d/M/yyyy HHmm, for example: 28/8/2026 1800.");
+            }
         case EVENT:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("The description for an event cannot be empty.");
@@ -84,7 +101,19 @@ public class Parser {
             if (timeParts.length < 2) {
                 throw new GrowerException("Invalid event format. Use: event <desc> /from <start> /to <end>");
             }
-            return new EventCommand(eventParts[0], timeParts[0], timeParts[1]);
+            try {
+                LocalDateTime start = LocalDateTime.parse(timeParts[0], INPUT_DATE_TIME_FORMATTER);
+                LocalDateTime end = LocalDateTime.parse(timeParts[1], INPUT_DATE_TIME_FORMATTER);
+
+                if (!end.isAfter(start)) {
+                    throw new GrowerException("The event end must be after its start.");
+                }
+
+                return new EventCommand(eventParts[0], start, end);
+            } catch (DateTimeParseException e) {
+                throw new GrowerException(
+                        "Use the date format d/M/yyyy HHmm, for example: 28/8/2026 1800.");
+            }
         case ECHO:
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("There is nothing to echo!");

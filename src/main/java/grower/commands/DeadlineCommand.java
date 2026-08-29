@@ -1,14 +1,16 @@
 package grower.commands;
 
+import java.time.LocalDateTime;
+
 import grower.Grower;
-import grower.tasks.Task;
 import grower.tasks.Deadline;
+import grower.tasks.Task;
 
 public class DeadlineCommand extends Command {
-    private String description;
-    private String deadline;
+    private final String description;
+    private final LocalDateTime deadline;
 
-    public DeadlineCommand(String description, String deadline) {
+    public DeadlineCommand(String description, LocalDateTime deadline) {
         this.description = description;
         this.deadline = deadline;
     }

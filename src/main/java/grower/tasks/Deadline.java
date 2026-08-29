@@ -1,9 +1,21 @@
 package grower.tasks;
 
-public class Deadline extends Task {
-    String deadline;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public Deadline(String description, String deadline){
+public class Deadline extends Task {
+    private static final DateTimeFormatter DISPLAY_FORMATTER =
+            DateTimeFormatter.ofPattern("MMM d yyyy, h:mm a");
+
+    private final LocalDateTime deadline;
+
+    /**
+     * Creates a deadline task with its due date and time.
+     *
+     * @param description description of the task
+     * @param deadline date and time by which the task must be completed
+     */
+    public Deadline(String description, LocalDateTime deadline) {
         super(description);
         this.deadline = deadline;
     }
@@ -14,12 +26,12 @@ public class Deadline extends Task {
                 "D | %d | %s | %s",
                 isCompleted() ? 1 : 0,
                 getDescription(),
-                this.deadline
+                deadline.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         );
     }
 
     @Override
     public String toString() {
-        return String.format("[D]%s (by: %s)", super.toString(), deadline);
+        return String.format("[D]%s (by: %s)", super.toString(), deadline.format(DISPLAY_FORMATTER));
     }
 }

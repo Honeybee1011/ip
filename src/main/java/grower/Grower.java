@@ -16,7 +16,7 @@ public class Grower {
 
     // This static TaskList serves as the single source of truth for task data.
     // It is declared here so other parts of the application (like commands) can access it.
-    public static final ListTask taskList = new ListTask();
+    public static final TaskList taskList = new TaskList();
 
     public static void main(String[] args) {
         System.out.println("Goodday to you, I am Grow-er \n" +
@@ -32,8 +32,12 @@ public class Grower {
             List<String> savedTasks = storage.loadTasks();
 
             for (String taskData : savedTasks) {
-                Task task = storage.parseTask(taskData);
-                taskList.addLoadedTask(task);
+                try {
+                    Task task = storage.parseTask(taskData);
+                    taskList.addLoadedTask(task);
+                } catch (GrowerException e) {
+                    System.out.println(e.getMessage());
+                }
             }
         } catch (IOException e) {
             System.out.println("Could not load saved tasks.");

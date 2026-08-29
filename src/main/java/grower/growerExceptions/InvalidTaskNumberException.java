@@ -20,7 +20,7 @@ public class InvalidTaskNumberException extends GrowerException {
         }
 
         return String.format(
-                "Task number %d is invalid. Please choose a number from 1 to %d.",
+                "Task number %d is invalid. Please choose a number from 1 to %d pls.",
                 index + 1,
                 numberOfTasks
         );
