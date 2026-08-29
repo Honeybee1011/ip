@@ -1,5 +1,10 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,6 +12,13 @@ import java.util.Scanner;
  * Starts the Lloyd chatbot application and responds to commands entered by the user.
  */
 public class Lloyd {
+    private static final DateTimeFormatter DEADLINE_FORMAT =
+            DateTimeFormatter.ofPattern("dd/MM/uuuu")
+                    .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter EVENT_FORMAT =
+            DateTimeFormatter.ofPattern("dd/MM/uuuu HHmm")
+                    .withResolverStyle(ResolverStyle.STRICT);
+
     private static final String DIVIDER =
             "____________________________________________________________";
 
@@ -197,7 +209,13 @@ public class Lloyd {
                         break;
                     }
 
-                    toDoList.add(new Deadline(deadlineDescription, by));
+                    try {
+                        LocalDate deadlineDate = LocalDate.parse(by, DEADLINE_FORMAT);
+                        toDoList.add(new Deadline(deadlineDescription, deadlineDate));
+                    } catch (DateTimeParseException e) {
+                        printResponse(" Enter the deadline in dd/MM/yyyy format.");
+                        break;
+                    }
                     if (!saveTasks(storage, toDoList)) {
                         toDoList.removeLast();
                         break;
@@ -235,7 +253,17 @@ public class Lloyd {
                         break;
                     }
 
-                    toDoList.add(new Event(eventDescription, from, to));
+                    try {
+                        LocalDateTime start = LocalDateTime.parse(from, EVENT_FORMAT);
+                        LocalDateTime end = LocalDateTime.parse(to, EVENT_FORMAT);
+                        toDoList.add(new Event(eventDescription, start, end));
+                    } catch (DateTimeParseException e) {
+                        printResponse(" Enter event dates and times in dd/MM/yyyy HHmm format.");
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        printResponse(" The event end cannot be before its start.");
+                        break;
+                    }
                     if (!saveTasks(storage, toDoList)) {
                         toDoList.removeLast();
                         break;

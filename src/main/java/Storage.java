@@ -4,6 +4,9 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,11 +128,12 @@ public class Storage {
         }
         if (task instanceof Deadline deadline) {
             return String.join(DELIMITER, "D", status, description,
-                    validateField(deadline.getBy()));
+                    validateField(deadline.getBy().toString()));
         }
         if (task instanceof Event event) {
             return String.join(DELIMITER, "E", status, description,
-                    validateField(event.getFrom()), validateField(event.getTo()));
+                    validateField(event.getFrom().toString()),
+                    validateField(event.getTo().toString()));
         }
 
         throw new IllegalArgumentException(
@@ -151,12 +155,13 @@ public class Storage {
                 case "D" -> {
                     requireFieldCount(fields, 4);
                     yield new Deadline(requireValidField(fields[2]),
-                            requireValidField(fields[3]));
+                            LocalDate.parse(requireValidField(fields[3])));
                 }
                 case "E" -> {
                     requireFieldCount(fields, 5);
                     yield new Event(requireValidField(fields[2]),
-                            requireValidField(fields[3]), requireValidField(fields[4]));
+                            LocalDateTime.parse(requireValidField(fields[3])),
+                            LocalDateTime.parse(requireValidField(fields[4])));
                 }
                 default -> throw new IllegalArgumentException("unknown task type");
             };
@@ -167,7 +172,8 @@ public class Storage {
                 throw new IllegalArgumentException("status must be 0 or 1");
             }
             return task;
-        } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+        } catch (DateTimeParseException | IllegalArgumentException
+                | ArrayIndexOutOfBoundsException e) {
             throw new IOException("Invalid task data on line " + lineNumber + ": " + line, e);
         }
     }

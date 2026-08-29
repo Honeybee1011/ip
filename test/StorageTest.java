@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,16 +33,18 @@ public class StorageTest {
     /** Verifies the exact text format and automatic parent-directory creation. */
     private static void testSaveFormat(Path filePath) throws IOException {
         Todo todo = new Todo("read book");
-        Deadline deadline = new Deadline("return book", "Sunday");
+        Deadline deadline = new Deadline("return book", LocalDate.of(2026, 9, 6));
         deadline.mark();
-        Event event = new Event("project meeting", "Monday 2pm", "Monday 4pm");
+        Event event = new Event("project meeting",
+                LocalDateTime.of(2026, 9, 7, 14, 0),
+                LocalDateTime.of(2026, 9, 7, 16, 0));
 
         new Storage(filePath).save(List.of(todo, deadline, event));
 
         List<String> expected = List.of(
                 "T | 0 | read book",
-                "D | 1 | return book | Sunday",
-                "E | 0 | project meeting | Monday 2pm | Monday 4pm"
+                "D | 1 | return book | 2026-09-06",
+                "E | 0 | project meeting | 2026-09-07T14:00 | 2026-09-07T16:00"
         );
         requireEquals(expected,
                 Files.readAllLines(filePath, StandardCharsets.UTF_8),
@@ -52,17 +56,18 @@ public class StorageTest {
     private static void testLoad(Path filePath) throws IOException {
         Files.write(filePath, List.of(
                 "T | 1 | read book",
-                "D | 0 | return book | Sunday",
-                "E | 1 | project meeting | Monday 2pm | Monday 4pm"
+                "D | 0 | return book | 2026-09-06",
+                "E | 1 | project meeting | 2026-09-07T14:00 | 2026-09-07T16:00"
         ), StandardCharsets.UTF_8);
 
         ArrayList<Task> tasks = new Storage(filePath).load();
 
         requireEquals(3, tasks.size(), "loaded task count");
         requireEquals("[T][X] read book", tasks.get(0).toString(), "loaded todo");
-        requireEquals("[D][ ] return book (by: Sunday)",
+        requireEquals("[D][ ] return book (by: Sep 6 2026)",
                 tasks.get(1).toString(), "loaded deadline");
-        requireEquals("[E][X] project meeting (from: Monday 2pm to: Monday 4pm)",
+        requireEquals("[E][X] project meeting (from: Sep 7 2026, 2:00 PM"
+                        + " to: Sep 7 2026, 4:00 PM)",
                 tasks.get(2).toString(), "loaded event");
         System.out.println("Storage load: PASSED");
     }
@@ -83,6 +88,8 @@ public class StorageTest {
                 "X | 0 | unknown type",
                 "D | 0 | missing deadline",
                 "E | 0 | meeting | Monday",
+                "D | 0 | task | not-a-date",
+                "E | 0 | meeting | 2026-09-07T14:00 | not-a-date-time",
                 "T | 0 |    ",
                 "T | 0 | compare A|B"
         );
