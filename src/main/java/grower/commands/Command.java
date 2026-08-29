@@ -1,5 +1,7 @@
 package grower.commands;
 
+import grower.TaskList;
+import grower.Ui;
 import grower.growerExceptions.GrowerException;
 
 /**
@@ -8,5 +10,13 @@ import grower.growerExceptions.GrowerException;
  */
 
 public abstract class Command {
-    public abstract boolean execute() throws GrowerException;
+    /**
+     * Executes this command using the application's task data and user interface.
+     *
+     * @param tasks task list to read or modify
+     * @param ui user interface used to display the command result
+     * @return true if the application should continue accepting commands
+     * @throws GrowerException if the command cannot be completed
+     */
+    public abstract boolean execute(TaskList tasks, Ui ui) throws GrowerException;
 }

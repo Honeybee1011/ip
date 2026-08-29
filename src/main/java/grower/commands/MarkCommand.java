@@ -1,19 +1,20 @@
 package grower.commands;
 
-import grower.Grower;
+import grower.TaskList;
+import grower.Ui;
 import grower.growerExceptions.InvalidTaskNumberException;
+import grower.tasks.Task;
 
-public class MarkCommand extends Command{
-    private int index;
+public class MarkCommand extends Command {
+    private final int index;
 
     public MarkCommand(int index) {
         this.index = index;
     }
     @Override
-    public boolean execute() throws InvalidTaskNumberException {
-        Grower.taskList.markTask(index);
-        System.out.println("Marking following task as done!");
-        Grower.taskList.printTask(index);
+    public boolean execute(TaskList tasks, Ui ui) throws InvalidTaskNumberException {
+        Task markedTask = tasks.markTask(index);
+        ui.showTaskMarked(markedTask);
         return true;
     }
 }

@@ -7,51 +7,42 @@ import grower.growerExceptions.InvalidTaskNumberException;
 import grower.tasks.Task;
 
 public class TaskList {
-    private final ArrayList<Task> listOfTasks;
+    private final List<Task> listOfTasks;
 
     public TaskList() {
         listOfTasks = new ArrayList<>();
     }
 
-    public boolean addTask(Task newTask) {
-        this.listOfTasks.add(newTask);
-        System.out.println(" added: " + newTask);
-        return true;
-    }
-
-    public void addLoadedTask(Task task) {
+    public void addTask(Task task) {
         listOfTasks.add(task);
     }
 
-    public void markTask(int index) throws InvalidTaskNumberException {
+    public Task markTask(int index) throws InvalidTaskNumberException {
         validateIndex(index);
-        this.listOfTasks.get(index).mark();
+        Task task = listOfTasks.get(index);
+        task.mark();
+        return task;
     }
 
-    public void unmarkTask(int index) throws InvalidTaskNumberException {
+    public Task unmarkTask(int index) throws InvalidTaskNumberException {
         validateIndex(index);
-        this.listOfTasks.get(index).unmark();
+        Task task = listOfTasks.get(index);
+        task.unmark();
+        return task;
     }
 
-    public void deleteTask(int index) throws InvalidTaskNumberException {
+    public Task deleteTask(int index) throws InvalidTaskNumberException {
         validateIndex(index);
-        Task removedTask = this.listOfTasks.remove(index);
-        System.out.println("Removed: \n" + removedTask);
+        return listOfTasks.remove(index);
     }
 
-
-    public void printTask() {
-        if (listOfTasks.size() == 0) {
-            System.out.println(" List of tasks is empty! \n Start adding tasks with: todo, event, deadline");
-        }
-        for (int i = 0; i < this.listOfTasks.size(); i++) {
-            System.out.println(" " + (i + 1) + ". " + listOfTasks.get(i));
-        }
-    }
-
-    public void printTask(int index) throws InvalidTaskNumberException {
-        validateIndex(index);
-        System.out.println(this.listOfTasks.get(index));
+    /**
+     * Returns a read-only snapshot of the tasks currently in the list.
+     *
+     * @return tasks in their current order
+     */
+    public List<Task> getTasks() {
+        return List.copyOf(listOfTasks);
     }
 
     /**

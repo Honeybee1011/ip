@@ -1,23 +1,22 @@
 package grower.commands;
 
-import grower.Grower;
+import grower.TaskList;
+import grower.Ui;
 import grower.tasks.Task;
 import grower.tasks.ToDo;
 
 public class ToDoCommand extends Command {
-    private String description;
+    private final String description;
 
     public ToDoCommand(String description) {
         this.description = description;
     }
 
     @Override
-    public boolean execute() {
-        // Create a new Task object from the description.
+    public boolean execute(TaskList tasks, Ui ui) {
         Task newTask = new ToDo(this.description);
-        // Use the static taskList from the Grower class to add the new task.
-        Grower.taskList.addTask(newTask);
-        // Return true to indicate that the application should continue running.
+        tasks.addTask(newTask);
+        ui.showTaskAdded(newTask);
         return true;
     }
 }

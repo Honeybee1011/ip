@@ -1,5 +1,8 @@
 package grower.commands;
 
+import grower.TaskList;
+import grower.Ui;
+
 public class EchoCommand extends Command {
     private final String textToEcho;
 
@@ -8,8 +11,8 @@ public class EchoCommand extends Command {
     }
 
     @Override
-    public boolean execute() {
-        System.out.println(this.textToEcho);
+    public boolean execute(TaskList tasks, Ui ui) {
+        ui.showMessage(this.textToEcho);
         return true;
     }
 }

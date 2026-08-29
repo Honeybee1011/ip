@@ -123,7 +123,12 @@ public class Parser {
             if (args.isEmpty()) {
                 throw new MissingDescriptionException("Please add index to delete");
             }
-            return new DeleteCommand(args);
+            try {
+                int index = Integer.parseInt(args) - 1;
+                return new DeleteCommand(index);
+            } catch (NumberFormatException e) {
+                throw new GrowerException("The task number must be an integer.");
+            }
         }
         throw new UnknownCommandException("I'm sorry, but I don't know what that means :-(");
     }

@@ -1,11 +1,12 @@
 package grower.commands;
 
-import grower.Grower;
+import grower.TaskList;
+import grower.Ui;
 
 public class ListCommand extends Command {
     @Override
-    public boolean execute() {
-        Grower.taskList.printTask();
+    public boolean execute(TaskList tasks, Ui ui) {
+        ui.showTaskList(tasks.getTasks());
         return true;
     }
 }

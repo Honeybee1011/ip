@@ -2,7 +2,8 @@ package grower.commands;
 
 import java.time.LocalDateTime;
 
-import grower.Grower;
+import grower.TaskList;
+import grower.Ui;
 import grower.tasks.Event;
 import grower.tasks.Task;
 
@@ -18,12 +19,10 @@ public class EventCommand extends Command {
     }
 
     @Override
-    public boolean execute() {
-        // Create a new Task object from the description.
+    public boolean execute(TaskList tasks, Ui ui) {
         Task newTask = new Event(this.description, this.start, this.end);
-        // Use the static taskList from the Grower class to add the new task.
-        Grower.taskList.addTask(newTask);
-        // Return true to indicate that the application should continue running.
+        tasks.addTask(newTask);
+        ui.showTaskAdded(newTask);
         return true;
     }
 }

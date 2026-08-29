@@ -1,23 +1,24 @@
 package grower.commands;
 
-/**
- * Represents a user command to delete an item from the list
- */
-
-import grower.Grower;
+import grower.TaskList;
+import grower.Ui;
 import grower.growerExceptions.InvalidTaskNumberException;
+import grower.tasks.Task;
 
+/**
+ * Represents a user command to delete an item from the list.
+ */
 public class DeleteCommand extends Command {
-    private int index;
+    private final int index;
 
-    public DeleteCommand(String index) {
-        this.index = Integer.parseInt(index);
+    public DeleteCommand(int index) {
+        this.index = index;
     }
 
     @Override
-    public boolean execute() throws InvalidTaskNumberException {
-        Grower.taskList.deleteTask(index - 1);
+    public boolean execute(TaskList tasks, Ui ui) throws InvalidTaskNumberException {
+        Task deletedTask = tasks.deleteTask(index);
+        ui.showTaskDeleted(deletedTask);
         return true;
     }
 }
-
