@@ -9,14 +9,15 @@ public class Lloyd {
             "____________________________________________________________";
 
     private static final String BANNER =
-            " _      _                 _\n"
-            + "| |    | |               | |\n"
-            + "| |    | | ___  _   _  __| |\n"
-            + "| |    | |/ _ \\| | | |/ _` |\n"
-            + "| |____| | (_) | |_| | (_| |\n"
-            + "|______|_|\\___/ \\__, |\\__,_|\n"
-            + "                 __/ |       \n"
-            + "                |___/        ";
+            """
+                     _      _                 _
+                    | |    | |               | |
+                    | |    | | ___  _   _  __| |
+                    | |    | |/ _ \\| | | |/ _` |
+                    | |____| | (_) | |_| | (_| |
+                    |______|_|\\___/ \\__, |\\__,_|
+                                     __/ |      \s
+                                    |___/       \s""";
 
     /**
      * Runs the chatbot until the user enters the {@code bye} command.
@@ -36,13 +37,13 @@ public class Lloyd {
         while (isRunning && scanner.hasNextLine()) {
             String input = scanner.nextLine().trim();
             String[] commandParts = input.split("\\s+", 2);
-            String command = commandParts[0];
+            CommandType commandType = CommandType.from(commandParts[0]);
 
-            switch (command) {
-                case "bye":
+            switch (commandType) {
+                case BYE:
                     isRunning = false;
                     break;
-                case "list":
+                case LIST:
                     StringBuilder taskList = new StringBuilder(
                             " Behold! Here is the master plan:\n"
                     );
@@ -53,7 +54,7 @@ public class Lloyd {
                     }
                     printResponse(taskList.toString().stripTrailing());
                     break;
-                case "mark":
+                case MARK:
                     if (commandParts.length < 2) {
                         printResponse(" Even I cannot finish an imaginary task."
                                 + " Give me the task number to mark.");
@@ -77,7 +78,7 @@ public class Lloyd {
                                 + " Even Javier knows that.");
                     }
                     break;
-                case "unmark":
+                case UNMARK:
                     if (commandParts.length < 2) {
                         printResponse(" Rework requires paperwork."
                                 + " Give me the task number to unmark.");
@@ -101,7 +102,7 @@ public class Lloyd {
                                 + " Even Javier knows that.");
                     }
                     break;
-                case "delete":
+                case DELETE:
                     if (commandParts.length < 2) {
                         printResponse(" Demolition needs a target."
                                 + " Give me the task number to delete.");
@@ -126,13 +127,13 @@ public class Lloyd {
                         printResponse(" A task number needs to be a number. Even Javier knows that.");
                     }
                     break;
-                case "todo":
+                case TODO:
                     toDoList.add(new Todo(commandParts[1]));
                     printResponse(createTaskAddedMessage(
-                            toDoList.get(toDoList.size() - 1), toDoList.size()
+                            toDoList.getLast(), toDoList.size()
                     ));
                     break;
-                case "deadline":
+                case DEADLINE:
                     if (commandParts.length < 2) {
                         printResponse(" Every profitable project needs details. Provide a description and /by date.");
                         break;
@@ -159,10 +160,10 @@ public class Lloyd {
                     toDoList.add(new Deadline(deadlineDescription, by));
 
                     printResponse(createTaskAddedMessage(
-                            toDoList.get(toDoList.size() - 1), toDoList.size()
+                            toDoList.getLast(), toDoList.size()
                     ));
                     break;
-                case "event":
+                case EVENT:
                     if (commandParts.length < 2) {
                         printResponse(" Every grand event needs a plan. Provide a description, /from date, and /to date.");
                         break;
@@ -193,7 +194,7 @@ public class Lloyd {
                     toDoList.add(new Event(eventDescription, from, to));
 
                     printResponse(createTaskAddedMessage(
-                            toDoList.get(toDoList.size() - 1), toDoList.size()
+                            toDoList.getLast(), toDoList.size()
                     ));
                     break;
                 default:
