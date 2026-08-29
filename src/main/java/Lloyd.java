@@ -7,7 +7,6 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Scanner;
 
 /**
  * Starts the Lloyd chatbot application and responds to commands entered by the user.
@@ -21,9 +20,6 @@ public class Lloyd {
                     .withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter CHECK_DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
-
-    private static final String DIVIDER =
-            "____________________________________________________________";
 
     private static final String BANNER =
             """
@@ -42,6 +38,7 @@ public class Lloyd {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
+        Ui ui = new Ui();
         printResponse(BANNER
                 + "\n Lloyd Frontera, the greatest estate developer, at your service!"
                 + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
@@ -54,13 +51,13 @@ public class Lloyd {
         } catch (IOException e) {
             printResponse(" I could not load the task file. Check that data/lloyd.txt"
                     + " contains valid task data and can be read.");
+            ui.close();
             return;
         }
         boolean isRunning = true;
 
-        Scanner scanner = new Scanner(System.in);
-        while (isRunning && scanner.hasNextLine()) {
-            String input = scanner.nextLine().trim();
+        while (isRunning && ui.hasNextCommand()) {
+            String input = ui.readCommand();
             String[] commandParts = input.split("\\s+", 2);
             CommandType commandType = CommandType.from(commandParts[0]);
 
@@ -314,7 +311,7 @@ public class Lloyd {
                     break;
             }
         }
-        scanner.close();
+        ui.close();
 
         printResponse(" Leaving already? Fine. Rest while you can; those tasks will not"
                 + " build themselves. Come back when you are ready to work..."
@@ -379,9 +376,6 @@ public class Lloyd {
      * @param message response to display
      */
     private static void printResponse(String message) {
-        System.out.println(DIVIDER);
-        System.out.println(message);
-        System.out.println(DIVIDER);
-        System.out.println();
+        Ui.showResponse(message);
     }
 }
