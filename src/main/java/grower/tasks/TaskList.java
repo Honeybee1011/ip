@@ -1,10 +1,9 @@
-package grower;
+package grower.tasks;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import grower.growerExceptions.InvalidTaskNumberException;
-import grower.tasks.Task;
 
 public class TaskList {
     private final List<Task> listOfTasks;

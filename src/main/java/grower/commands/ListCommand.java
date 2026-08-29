@@ -1,7 +1,7 @@
 package grower.commands;
 
-import grower.TaskList;
-import grower.Ui;
+import grower.tasks.TaskList;
+import grower.ui.Ui;
 
 public class ListCommand extends Command {
     @Override

@@ -1,4 +1,4 @@
-package grower;
+package grower.ui;
 
 import java.util.List;
 import java.util.Scanner;
