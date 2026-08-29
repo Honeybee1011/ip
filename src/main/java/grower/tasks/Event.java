@@ -3,6 +3,9 @@ package grower.tasks;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a task that occurs between specified start and end times.
+ */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM d yyyy, h:mm a");
@@ -13,9 +16,9 @@ public class Event extends Task {
     /**
      * Creates an event with a start and end date and time.
      *
-     * @param description description of the event
-     * @param start date and time at which the event begins
-     * @param end date and time at which the event ends
+     * @param description Description of the event.
+     * @param start Date and time at which the event begins.
+     * @param end Date and time at which the event ends.
      */
     public Event(String description, LocalDateTime start, LocalDateTime end) {
         super(description);
@@ -34,6 +37,11 @@ public class Event extends Task {
         );
     }
 
+    /**
+     * Returns a display string containing the task and its start and end times.
+     *
+     * @return Display representation of this event task.
+     */
     @Override
     public String toString() {
         return String.format(

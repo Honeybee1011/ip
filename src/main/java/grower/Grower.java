@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import grower.commands.Command;
-import grower.growerExceptions.GrowerException;
+import grower.exceptions.GrowerException;
 import grower.parser.Parser;
 import grower.storage.Storage;
 import grower.tasks.Task;
@@ -12,11 +12,14 @@ import grower.tasks.TaskList;
 import grower.ui.Ui;
 
 /**
- * The main class for the Grower application.
- * This class initializes the application and runs the main command loop.
+ * Runs the Grower task-management application.
  */
-
 public class Grower {
+    /**
+     * Starts the application and runs its command loop.
+     *
+     * @param args Command-line arguments; currently unused.
+     */
     public static void main(String[] args) {
         Ui ui = new Ui();
         TaskList taskList = new TaskList();

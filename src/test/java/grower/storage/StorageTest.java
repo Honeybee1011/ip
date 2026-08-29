@@ -14,7 +14,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import grower.growerExceptions.GrowerException;
+import grower.exceptions.GrowerException;
 import grower.tasks.Deadline;
 import grower.tasks.Event;
 import grower.tasks.Task;
