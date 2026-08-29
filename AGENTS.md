@@ -29,6 +29,10 @@ Do not edit any file in this project unless explicitly told to by the user.
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Testing
+
+Maintain a JUnit test coverage target of at least 50%, prioritizing complex, core, and critical business logic. After every production code change, review and update the relevant JUnit tests as needed to continue meeting this target, then run the test suite to verify that it passes.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
