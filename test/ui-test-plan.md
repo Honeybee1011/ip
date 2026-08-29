@@ -84,7 +84,7 @@ T | 0 | survey land
 **Input:**
 
 ```text
-deadline build bridge /by Friday
+deadline build bridge /by 29/08/2026
 ```
 
 **Expected output:**
@@ -92,7 +92,7 @@ deadline build bridge /by Friday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [D][ ] build bridge (by: Friday)
+   [D][ ] build bridge (by: Aug 29 2026)
  Tasks currently in the master plan: 2.
 ____________________________________________________________
 
@@ -102,7 +102,7 @@ ____________________________________________________________
 
 ```text
 T | 0 | survey land
-D | 0 | build bridge | Friday
+D | 0 | build bridge | 2026-08-29
 ```
 
 #### Step 3
@@ -118,7 +118,7 @@ mark 2
 ```text
 ____________________________________________________________
  Magnificent! Efficient work means lower costs. This task is officially complete:
-[D][X] build bridge (by: Friday)
+[D][X] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
 ```
@@ -127,7 +127,7 @@ ____________________________________________________________
 
 ```text
 T | 0 | survey land
-D | 1 | build bridge | Friday
+D | 1 | build bridge | 2026-08-29
 ```
 
 #### Step 4
@@ -135,7 +135,7 @@ D | 1 | build bridge | Friday
 **Input:**
 
 ```text
-event opening ceremony /from Monday /to Tuesday
+event opening ceremony /from 31/08/2026 0900 /to 31/08/2026 1000
 ```
 
 **Expected output:**
@@ -143,7 +143,7 @@ event opening ceremony /from Monday /to Tuesday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [E][ ] opening ceremony (from: Monday to: Tuesday)
+   [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
  Tasks currently in the master plan: 3.
 ____________________________________________________________
 
@@ -153,8 +153,8 @@ ____________________________________________________________
 
 ```text
 T | 0 | survey land
-D | 1 | build bridge | Friday
-E | 0 | opening ceremony | Monday | Tuesday
+D | 1 | build bridge | 2026-08-29
+E | 0 | opening ceremony | 2026-08-31T09:00 | 2026-08-31T10:00
 ```
 
 #### Step 5
@@ -170,7 +170,7 @@ unmark 2
 ```text
 ____________________________________________________________
  What? Rework? That is terrible for the budget! Fine, this task is back under construction:
-[D][ ] build bridge (by: Friday)
+[D][ ] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
 ```
@@ -179,8 +179,8 @@ ____________________________________________________________
 
 ```text
 T | 0 | survey land
-D | 0 | build bridge | Friday
-E | 0 | opening ceremony | Monday | Tuesday
+D | 0 | build bridge | 2026-08-29
+E | 0 | opening ceremony | 2026-08-31T09:00 | 2026-08-31T10:00
 ```
 
 #### Step 6
@@ -205,8 +205,8 @@ ____________________________________________________________
 **Expected `data/lloyd.txt`:**
 
 ```text
-D | 0 | build bridge | Friday
-E | 0 | opening ceremony | Monday | Tuesday
+D | 0 | build bridge | 2026-08-29
+E | 0 | opening ceremony | 2026-08-31T09:00 | 2026-08-31T10:00
 ```
 
 #### Step 7
@@ -239,8 +239,8 @@ including their completion states and task-specific information.
 
 ```text
 T | 1 | read book
-D | 0 | return book | June 6th
-E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm
+D | 0 | return book | 2026-06-06
+E | 0 | project meeting | 2026-08-06T14:00 | 2026-08-06T16:00
 ```
 
 **Expected startup output:** Same as UI-001.
@@ -259,8 +259,8 @@ list
 ____________________________________________________________
  Behold! Here is the master plan:
  1.[T][X] read book
- 2.[D][ ] return book (by: June 6th)
- 3.[E][ ] project meeting (from: Aug 6th 2pm to: Aug 6th 4pm)
+ 2.[D][ ] return book (by: Jun 6 2026)
+ 3.[E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
 ____________________________________________________________
 
 ```
@@ -459,7 +459,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-deadline return book /by June 6th
+deadline return book /by 06/06/2026
 ```
 
 **Expected output:**
@@ -467,7 +467,7 @@ deadline return book /by June 6th
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [D][ ] return book (by: June 6th)
+   [D][ ] return book (by: Jun 6 2026)
  Tasks currently in the master plan: 2.
 ____________________________________________________________
 
@@ -478,7 +478,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-event project meeting /from Aug 6th 2pm /to 4pm
+event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
 ```
 
 **Expected output:**
@@ -486,7 +486,7 @@ event project meeting /from Aug 6th 2pm /to 4pm
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+   [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
  Tasks currently in the master plan: 3.
 ____________________________________________________________
 
@@ -562,8 +562,8 @@ list
 ____________________________________________________________
  Behold! Here is the master plan:
  1.[T][X] read book
- 2.[D][ ] return book (by: June 6th)
- 3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+ 2.[D][ ] return book (by: Jun 6 2026)
+ 3.[E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
  4.[T][X] join sports club
  5.[T][ ] borrow book
 ____________________________________________________________
@@ -575,7 +575,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 30/08/2026
 ```
 
 **Expected output:**
@@ -583,7 +583,7 @@ deadline return book /by Sunday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [D][ ] return book (by: Sunday)
+   [D][ ] return book (by: Aug 30 2026)
  Tasks currently in the master plan: 6.
 ____________________________________________________________
 
@@ -594,7 +594,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 07/08/2026 1400 /to 07/08/2026 1600
 ```
 
 **Expected output:**
@@ -602,7 +602,7 @@ event project meeting /from Mon 2pm /to 4pm
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+   [E][ ] project meeting (from: Aug 7 2026, 2:00 PM to: Aug 7 2026, 4:00 PM)
  Tasks currently in the master plan: 7.
 ____________________________________________________________
 
@@ -625,9 +625,141 @@ ____________________________________________________________
 
 ```
 
-### UI-002: Store arbitrary deadline text
+### UI-013: Check deadlines and event endpoints by date
 
-**Aim:** Verify that all text following `/by` is stored as the deadline without requiring a date format.
+**Aim:** Verify that `check` lists deadlines due on the requested date and events
+that start or end on that date, while excluding todos and dates strictly between
+the endpoints of a multi-day event. Also verify missing, invalid, and empty-result
+responses.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-check-test`
+
+**Program start command:** `java -cp ..\..\out Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 0 | inspect foundations
+D | 0 | submit permit | 2026-08-29
+D | 0 | pay supplier | 2026-08-30
+E | 0 | council meeting | 2026-08-29T09:00 | 2026-08-29T10:00
+E | 0 | building works | 2026-08-29T08:00 | 2026-09-02T18:00
+E | 0 | site survey | 2026-08-27T08:00 | 2026-08-29T18:00
+```
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+check 29/08/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Deadlines and event endpoints on Aug 29 2026:
+ 2.[D][ ] submit permit (by: Aug 29 2026)
+ 4.[E][ ] council meeting (from: Aug 29 2026, 9:00 AM to: Aug 29 2026, 10:00 AM)
+ 5.[E][ ] building works (from: Aug 29 2026, 8:00 AM to: Sep 2 2026, 6:00 PM)
+ 6.[E][ ] site survey (from: Aug 27 2026, 8:00 AM to: Aug 29 2026, 6:00 PM)
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+check 30/08/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Deadlines and event endpoints on Aug 30 2026:
+ 3.[D][ ] pay supplier (by: Aug 30 2026)
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+check 31/08/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ No deadlines or event endpoints fall on Aug 31 2026.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+check
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Tell me which date to inspect using dd/MM/yyyy.
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+check 31/02/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Enter the date to check in dd/MM/yyyy format.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-002: Reject an invalid deadline date
+
+**Aim:** Verify that a deadline not written in `dd/MM/yyyy` format is rejected
+without changing the task list.
 
 **Expected startup output:** Same as UI-001.
 
@@ -645,9 +777,7 @@ deadline do homework /by no idea :-p
 
 ```text
 ____________________________________________________________
- Excellent! Another investment in your future has been approved:
-   [D][ ] do homework (by: no idea :-p)
- Tasks currently in the master plan: 6.
+ Enter the deadline in dd/MM/yyyy format.
 ____________________________________________________________
 
 ```
@@ -987,7 +1117,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-deadline build bridge /by Friday
+deadline build bridge /by 29/08/2026
 ```
 
 **Expected output:**
@@ -995,7 +1125,7 @@ deadline build bridge /by Friday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [D][ ] build bridge (by: Friday)
+   [D][ ] build bridge (by: Aug 29 2026)
  Tasks currently in the master plan: 2.
 ____________________________________________________________
 
@@ -1032,7 +1162,7 @@ list
 ____________________________________________________________
  Behold! Here is the master plan:
  1.[T][ ] survey land
- 2.[D][ ] build bridge (by: Friday)
+ 2.[D][ ] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
 ```
@@ -1059,7 +1189,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-event opening ceremony /from Monday /to Tuesday
+event opening ceremony /from 31/08/2026 0900 /to 31/08/2026 1000
 ```
 
 **Expected output:**
@@ -1067,7 +1197,7 @@ event opening ceremony /from Monday /to Tuesday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [E][ ] opening ceremony (from: Monday to: Tuesday)
+   [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
  Tasks currently in the master plan: 3.
 ____________________________________________________________
 
@@ -1104,8 +1234,8 @@ list
 ____________________________________________________________
  Behold! Here is the master plan:
  1.[T][ ] survey land
- 2.[D][ ] build bridge (by: Friday)
- 3.[E][ ] opening ceremony (from: Monday to: Tuesday)
+ 2.[D][ ] build bridge (by: Aug 29 2026)
+ 3.[E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
 ____________________________________________________________
 
 ```
@@ -1375,7 +1505,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-deadline build bridge /by Friday
+deadline build bridge /by 29/08/2026
 ```
 
 **Expected output:**
@@ -1383,7 +1513,7 @@ deadline build bridge /by Friday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [D][ ] build bridge (by: Friday)
+   [D][ ] build bridge (by: Aug 29 2026)
  Tasks currently in the master plan: 2.
 ____________________________________________________________
 
@@ -1394,7 +1524,7 @@ ____________________________________________________________
 **Input:**
 
 ```text
-event opening ceremony /from Monday /to Tuesday
+event opening ceremony /from 31/08/2026 0900 /to 31/08/2026 1000
 ```
 
 **Expected output:**
@@ -1402,7 +1532,7 @@ event opening ceremony /from Monday /to Tuesday
 ```text
 ____________________________________________________________
  Excellent! Another investment in your future has been approved:
-   [E][ ] opening ceremony (from: Monday to: Tuesday)
+   [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
  Tasks currently in the master plan: 3.
 ____________________________________________________________
 
@@ -1421,7 +1551,7 @@ mark 2
 ```text
 ____________________________________________________________
  Magnificent! Efficient work means lower costs. This task is officially complete:
-[D][X] build bridge (by: Friday)
+[D][X] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
 ```
@@ -1439,7 +1569,7 @@ delete 2
 ```text
 ____________________________________________________________
  Excellent! Waste eliminated from the budget. I have removed this task:
-[D][X] build bridge (by: Friday)
+[D][X] build bridge (by: Aug 29 2026)
  Tasks currently in the master plan: 2.
 ____________________________________________________________
 
@@ -1459,7 +1589,7 @@ list
 ____________________________________________________________
  Behold! Here is the master plan:
  1.[T][ ] survey land
- 2.[E][ ] opening ceremony (from: Monday to: Tuesday)
+ 2.[E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
 ____________________________________________________________
 
 ```
