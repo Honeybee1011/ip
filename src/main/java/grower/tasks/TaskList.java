@@ -64,4 +64,11 @@ public class TaskList {
                 .map(Task::toFileString)
                 .toList();
     }
+
+    public List<Task> findTasks(String keyword) {
+        return listOfTasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .toList();
+    }
 }
+
