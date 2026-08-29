@@ -100,6 +100,39 @@ public class TaskListTest {
                 tasks.getTaskData());
     }
 
+    @Test
+    public void findTasks_keywordInMultipleDescriptions_returnsMatchesInInsertionOrder() {
+        TaskList tasks = new TaskList();
+        Task firstMatch = new ToDo("read book");
+        Task nonMatch = new ToDo("submit assignment");
+        Task secondMatch = new ToDo("return library book");
+        tasks.addTask(firstMatch);
+        tasks.addTask(nonMatch);
+        tasks.addTask(secondMatch);
+
+        List<Task> matches = tasks.findTasks("book");
+
+        assertEquals(List.of(firstMatch, secondMatch), matches);
+    }
+
+    @Test
+    public void findTasks_keywordNotInAnyDescription_returnsEmptyList() {
+        TaskList tasks = createTwoTaskList();
+
+        List<Task> matches = tasks.findTasks("third");
+
+        assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    public void findTasks_emptyTaskList_returnsEmptyList() {
+        TaskList tasks = new TaskList();
+
+        List<Task> matches = tasks.findTasks("book");
+
+        assertTrue(matches.isEmpty());
+    }
+
     private TaskList createTwoTaskList() {
         TaskList tasks = new TaskList();
         tasks.addTask(new ToDo("first"));

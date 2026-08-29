@@ -148,4 +148,15 @@ public class Ui {
     public void close() {
         scanner.close();
     }
+
+    public void showSearchResults(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            System.out.println("No results!!!!");
+            return;
+        }
+
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + ". " + tasks.get(i));
+        }
+    }
 }

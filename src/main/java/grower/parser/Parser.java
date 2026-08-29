@@ -39,7 +39,8 @@ public class Parser {
         DEADLINE,
         EVENT,
         ECHO,
-        DELETE
+        DELETE,
+        FIND
     }
 
     /**
@@ -142,6 +143,11 @@ public class Parser {
                 } catch (NumberFormatException e) {
                     throw new GrowerException("The task number must be an integer.");
                 }
+            case FIND:
+                if (args.isEmpty()) {
+                    throw new MissingDescriptionException("Please add a string to search!");
+                }
+                return new FindCommand(args.trim());
             default:
                 throw new UnknownCommandException("I'm sorry, but I don't know what that means :-(");
         }
