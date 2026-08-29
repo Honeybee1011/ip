@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import grower.growerExceptions.InvalidTaskNumberException;
+import grower.exceptions.InvalidTaskNumberException;
 
 public class TaskListTest {
     @Test

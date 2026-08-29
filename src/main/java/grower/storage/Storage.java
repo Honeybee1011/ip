@@ -8,25 +8,32 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import grower.growerExceptions.GrowerException;
-import grower.tasks.Task;
-import grower.tasks.ToDo;
+import grower.exceptions.GrowerException;
 import grower.tasks.Deadline;
 import grower.tasks.Event;
+import grower.tasks.Task;
+import grower.tasks.ToDo;
 
 /**
- * Handles saving tasks to file and loading tasks from file
+ * Stores tasks in a data file and restores them from that file.
  */
-
 public class Storage {
     private final Path filePath;
 
+    /**
+     * Creates storage backed by the specified file.
+     *
+     * @param filePath Path of the data file.
+     */
     public Storage(String filePath) {
         this.filePath = Path.of(filePath);
     }
 
     /**
      * Saves the serialized tasks, replacing the previous file contents.
+     *
+     * @param taskData Serialized tasks to save.
+     * @throws IOException If the data file cannot be written.
      */
     public void saveTasks(List<String> taskData) throws IOException {
         Path parentDirectory = filePath.getParent();
@@ -39,7 +46,10 @@ public class Storage {
     }
 
     /**
-     * Reads all serialized tasks from the data file.
+     * Returns all serialized tasks from the data file.
+     *
+     * @return Serialized tasks, or an empty list if the file does not exist.
+     * @throws IOException If the data file cannot be read.
      */
     public List<String> loadTasks() throws IOException {
         if (!Files.exists(filePath)) {
@@ -50,7 +60,11 @@ public class Storage {
     }
 
     /**
-     * Parses input file from string to tasks
+     * Returns the task represented by a serialized line.
+     *
+     * @param line Serialized task data.
+     * @return Parsed task.
+     * @throws GrowerException If the serialized data is invalid.
      */
     public Task parseTask(String line) throws GrowerException {
         String[] parts = line.split(" \\| ", -1);
@@ -103,6 +117,11 @@ public class Storage {
 
     /**
      * Checks that a serialized task contains every field required by its type.
+     *
+     * @param parts Fields in the serialized task.
+     * @param requiredCount Minimum number of required fields.
+     * @param line Complete serialized task data.
+     * @throws GrowerException If the serialized task has too few fields.
      */
     private void ensureFieldCount(String[] parts, int requiredCount, String line) throws GrowerException {
         if (parts.length < requiredCount) {

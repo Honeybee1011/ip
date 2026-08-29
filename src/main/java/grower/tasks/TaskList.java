@@ -3,19 +3,37 @@ package grower.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import grower.growerExceptions.InvalidTaskNumberException;
+import grower.exceptions.InvalidTaskNumberException;
 
+/**
+ * Manages tasks in their display order.
+ */
 public class TaskList {
     private final List<Task> listOfTasks;
 
+    /**
+     * Creates an empty task list.
+     */
     public TaskList() {
         listOfTasks = new ArrayList<>();
     }
 
+    /**
+     * Adds a task to the end of the list.
+     *
+     * @param task Task to add.
+     */
     public void addTask(Task task) {
         listOfTasks.add(task);
     }
 
+    /**
+     * Marks the task at the specified index as completed.
+     *
+     * @param index Zero-based index of the task to mark.
+     * @return Task that was marked.
+     * @throws InvalidTaskNumberException If the index is outside the task list.
+     */
     public Task markTask(int index) throws InvalidTaskNumberException {
         validateIndex(index);
         Task task = listOfTasks.get(index);
@@ -23,6 +41,13 @@ public class TaskList {
         return task;
     }
 
+    /**
+     * Marks the task at the specified index as not completed.
+     *
+     * @param index Zero-based index of the task to unmark.
+     * @return Task that was unmarked.
+     * @throws InvalidTaskNumberException If the index is outside the task list.
+     */
     public Task unmarkTask(int index) throws InvalidTaskNumberException {
         validateIndex(index);
         Task task = listOfTasks.get(index);
@@ -30,6 +55,13 @@ public class TaskList {
         return task;
     }
 
+    /**
+     * Deletes the task at the specified index.
+     *
+     * @param index Zero-based index of the task to delete.
+     * @return Task that was deleted.
+     * @throws InvalidTaskNumberException If the index is outside the task list.
+     */
     public Task deleteTask(int index) throws InvalidTaskNumberException {
         validateIndex(index);
         return listOfTasks.remove(index);
@@ -38,7 +70,7 @@ public class TaskList {
     /**
      * Returns a read-only snapshot of the tasks currently in the list.
      *
-     * @return tasks in their current order
+     * @return Tasks in their current order.
      */
     public List<Task> getTasks() {
         return List.copyOf(listOfTasks);
@@ -47,8 +79,8 @@ public class TaskList {
     /**
      * Checks that an index refers to an existing task.
      *
-     * @param index the zero-based index to check
-     * @throws InvalidTaskNumberException if the index is outside the task list
+     * @param index Zero-based index to check.
+     * @throws InvalidTaskNumberException If the index is outside the task list.
      */
     private void validateIndex(int index) throws InvalidTaskNumberException {
         if (index < 0 || index >= listOfTasks.size()) {
@@ -57,7 +89,9 @@ public class TaskList {
     }
 
     /**
-     * Gets all task data and writes each task as a string in a List so as to write to file
+     * Returns serialized data for all tasks in their current order.
+     *
+     * @return Serialized task data.
      */
     public List<String> getTaskData() {
         return listOfTasks.stream()
