@@ -4,6 +4,7 @@
 public enum CommandType {
     BYE("bye"),
     LIST("list"),
+    CHECK("check"),
     MARK("mark"),
     UNMARK("unmark"),
     DELETE("delete"),

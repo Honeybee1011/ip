@@ -624,6 +624,138 @@ ____________________________________________________________
 ____________________________________________________________
 
 ```
+
+### UI-013: Check deadlines and event endpoints by date
+
+**Aim:** Verify that `check` lists deadlines due on the requested date and events
+that start or end on that date, while excluding todos and dates strictly between
+the endpoints of a multi-day event. Also verify missing, invalid, and empty-result
+responses.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-check-test`
+
+**Program start command:** `java -cp ..\..\out Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 0 | inspect foundations
+D | 0 | submit permit | 2026-08-29
+D | 0 | pay supplier | 2026-08-30
+E | 0 | council meeting | 2026-08-29T09:00 | 2026-08-29T10:00
+E | 0 | building works | 2026-08-29T08:00 | 2026-09-02T18:00
+E | 0 | site survey | 2026-08-27T08:00 | 2026-08-29T18:00
+```
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+check 29/08/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Deadlines and event endpoints on Aug 29 2026:
+ 2.[D][ ] submit permit (by: Aug 29 2026)
+ 4.[E][ ] council meeting (from: Aug 29 2026, 9:00 AM to: Aug 29 2026, 10:00 AM)
+ 5.[E][ ] building works (from: Aug 29 2026, 8:00 AM to: Sep 2 2026, 6:00 PM)
+ 6.[E][ ] site survey (from: Aug 27 2026, 8:00 AM to: Aug 29 2026, 6:00 PM)
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+check 30/08/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Deadlines and event endpoints on Aug 30 2026:
+ 3.[D][ ] pay supplier (by: Aug 30 2026)
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+check 31/08/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ No deadlines or event endpoints fall on Aug 31 2026.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+check
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Tell me which date to inspect using dd/MM/yyyy.
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+check 31/02/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Enter the date to check in dd/MM/yyyy format.
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
 ### UI-002: Reject an invalid deadline date
 
 **Aim:** Verify that a deadline not written in `dd/MM/yyyy` format is rejected

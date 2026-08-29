@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -18,6 +19,8 @@ public class Lloyd {
     private static final DateTimeFormatter EVENT_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/uuuu HHmm")
                     .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter CHECK_DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
 
     private static final String DIVIDER =
             "____________________________________________________________";
@@ -75,6 +78,39 @@ public class Lloyd {
                         ));
                     }
                     printResponse(taskList.toString().stripTrailing());
+                    break;
+                case CHECK:
+                    if (commandParts.length < 2 || commandParts[1].isBlank()) {
+                        printResponse(" Tell me which date to inspect using dd/MM/yyyy.");
+                        break;
+                    }
+
+                    try {
+                        LocalDate checkedDate = LocalDate.parse(
+                                commandParts[1], DEADLINE_FORMAT);
+                        StringBuilder scheduledTasks = new StringBuilder(
+                                " Deadlines and event endpoints on "
+                                        + checkedDate.format(CHECK_DISPLAY_FORMAT)
+                                        + ":\n");
+                        int matchCount = 0;
+                        for (int i = 0; i < toDoList.size(); i++) {
+                            Task task = toDoList.get(i);
+                            if (isScheduledOn(task, checkedDate)) {
+                                scheduledTasks.append(String.format(
+                                        " %d.%s%n", i + 1, task));
+                                matchCount++;
+                            }
+                        }
+
+                        if (matchCount == 0) {
+                            printResponse(" No deadlines or event endpoints fall on "
+                                    + checkedDate.format(CHECK_DISPLAY_FORMAT) + ".");
+                        } else {
+                            printResponse(scheduledTasks.toString().stripTrailing());
+                        }
+                    } catch (DateTimeParseException e) {
+                        printResponse(" Enter the date to check in dd/MM/yyyy format.");
+                    }
                     break;
                 case MARK:
                     if (commandParts.length < 2) {
@@ -296,6 +332,26 @@ public class Lloyd {
         return " Excellent! Another investment in your future has been approved:\n"
                 + "   " + task
                 + "\n Tasks currently in the master plan: " + taskCount + ".";
+    }
+
+    /**
+     * Reports whether a task belongs in the result for a checked date.
+     * Deadlines match their due date. Events match only their start or end date,
+     * so dates strictly between the endpoints of a multi-day event are excluded.
+     *
+     * @param task task to inspect
+     * @param checkedDate date requested by the user
+     * @return {@code true} if the deadline or an event endpoint matches the date
+     */
+    private static boolean isScheduledOn(Task task, LocalDate checkedDate) {
+        if (task instanceof Deadline deadline) {
+            return deadline.getBy().equals(checkedDate);
+        }
+        if (task instanceof Event event) {
+            return event.getFrom().toLocalDate().equals(checkedDate)
+                    || event.getTo().toLocalDate().equals(checkedDate);
+        }
+        return false;
     }
 
     /**
