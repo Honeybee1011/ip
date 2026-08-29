@@ -28,6 +28,24 @@ public class Task {
     }
 
     /**
+     * Returns the task description for storage and other non-display uses.
+     *
+     * @return task description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Reports whether this task has been completed.
+     *
+     * @return {@code true} when the task is complete
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
      * Returns a displayable representation of this task.
      *
      * @return task status and description
