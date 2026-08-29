@@ -14,6 +14,7 @@ import grower.commands.DeadlineCommand;
 import grower.commands.DeleteCommand;
 import grower.commands.EchoCommand;
 import grower.commands.EventCommand;
+import grower.commands.FindCommand;
 import grower.commands.ListCommand;
 import grower.commands.MarkCommand;
 import grower.commands.ToDoCommand;
@@ -44,7 +45,8 @@ public class ParserTest {
                         EventCommand.class,
                         Parser.parse("event meeting /from 31/8/2026 1000 /to 31/8/2026 1100")),
                 () -> assertInstanceOf(EchoCommand.class, Parser.parse("echo hello")),
-                () -> assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"))
+                () -> assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1")),
+                () -> assertInstanceOf(FindCommand.class, Parser.parse("find book"))
         );
     }
 
@@ -106,7 +108,9 @@ public class ParserTest {
                 () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("deadline")),
                 () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("event")),
                 () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("echo")),
-                () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("delete"))
+                () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("delete")),
+                () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("find")),
+                () -> assertThrows(MissingDescriptionException.class, () -> Parser.parse("find   "))
         );
     }
 
