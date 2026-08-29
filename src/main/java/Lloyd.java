@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -45,9 +44,9 @@ public class Lloyd {
                 + "\n Now, what needs doing?");
 
         Storage storage = new Storage(Path.of("data", "lloyd.txt"));
-        ArrayList<Task> toDoList;
+        TaskList toDoList;
         try {
-            toDoList = storage.load();
+            toDoList = new TaskList(storage.load());
         } catch (IOException e) {
             printResponse(" I could not load the task file. Check that data/lloyd.txt"
                     + " contains valid task data and can be read.");
@@ -358,9 +357,9 @@ public class Lloyd {
      * @param tasks current task list
      * @return {@code true} when the save succeeds
      */
-    private static boolean saveTasks(Storage storage, ArrayList<Task> tasks) {
+    private static boolean saveTasks(Storage storage, TaskList tasks) {
         try {
-            storage.save(tasks);
+            storage.save(tasks.asList());
             return true;
         } catch (IOException | IllegalArgumentException e) {
             printResponse(" I could not save that change. The task list was left unchanged."
