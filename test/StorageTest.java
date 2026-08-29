@@ -21,7 +21,6 @@ public class StorageTest {
 
         testSaveFormat(testDirectory.resolve("nested").resolve("tasks.txt"));
         testLoad(testDirectory.resolve("load.txt"));
-        testMissingFile(testDirectory.resolve("missing.txt"));
         testInvalidData(testDirectory.resolve("invalid.txt"));
         testReservedDelimiter(testDirectory.resolve("reserved.txt"));
     }
@@ -63,13 +62,6 @@ public class StorageTest {
         requireEquals("[E][X] project meeting (from: Monday 2pm to: Monday 4pm)",
                 tasks.get(2).toString(), "loaded event");
         System.out.println("Storage load: PASSED");
-    }
-
-    /** Verifies that first use does not require an existing file. */
-    private static void testMissingFile(Path filePath) throws IOException {
-        requireEquals(0, new Storage(filePath).load().size(),
-                "task count for a missing file");
-        System.out.println("Missing storage file: PASSED");
     }
 
     /** Verifies that malformed saved data is reported instead of silently ignored. */

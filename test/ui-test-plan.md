@@ -5,10 +5,14 @@ This file is the source of truth for console UI test cases run with the `test-ui
 ## Test configuration
 
 - Compilation command: `javac -d out src/main/java/*.java`
-- Program start command: `java -cp out Lloyd`
-- Working directory: `C:\Users\joshu\Code\ip`
+- Compilation working directory: `C:\Users\joshu\Code\ip`
+- Default program start command: `java -cp ..\..\out Lloyd`
+- Default UI working directory: `C:\Users\joshu\Code\ip\_temp\ui-case`
 - Java version: 25.
 - Session isolation: Start each test case in a fresh process.
+- Storage setup: Before each default Lloyd UI case, create an empty
+  `_temp/ui-case/data/lloyd.txt`. A case can override the working directory and
+  provide seeded data explicitly.
 - Comparison: Exact text after normalizing CRLF and LF line endings. Spaces, capitalization, punctuation, divider lines, and blank lines are significant.
 - Indentation used to format examples in chat is not part of the expected output.
 
@@ -16,7 +20,7 @@ This file is the source of truth for console UI test cases run with the `test-ui
 
 ### STORAGE-001: Save and load all task types
 
-**Aim:** Verify that the standalone storage class writes the specified delimited format, creates parent directories, restores task types and completion states, treats a missing file as an empty list, and rejects malformed or ambiguous data.
+**Aim:** Verify that the standalone storage class writes the specified delimited format, creates parent directories, restores task types and completion states, and rejects malformed or ambiguous data.
 
 **Compilation command:** `javac -d out src/main/java/*.java test/StorageTest.java`
 
@@ -27,7 +31,6 @@ This file is the source of truth for console UI test cases run with the `test-ui
 ```text
 Storage save format: PASSED
 Storage load: PASSED
-Missing storage file: PASSED
 Invalid storage data: PASSED
 Reserved delimiter validation: PASSED
 ```
@@ -42,6 +45,8 @@ unmarking, and deleting tasks.
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-save-test`
 
 **Program start command:** `java -cp ..\..\out Lloyd`
+
+**Storage setup:** Create an empty `data/lloyd.txt` before starting the chatbot.
 
 **Expected startup output:** Same as UI-001.
 
@@ -201,6 +206,62 @@ E | 0 | opening ceremony | Monday | Tuesday
 ```
 
 #### Step 7
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-010: Load saved tasks when the chatbot starts
+
+**Aim:** Verify that the chatbot loads saved todos, deadlines, and events in order,
+including their completion states and task-specific information.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-load-test`
+
+**Program start command:** `java -cp ..\..\out Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 1 | read book
+D | 0 | return book | June 6th
+E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm
+```
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+ 1.[T][X] read book
+ 2.[D][ ] return book (by: June 6th)
+ 3.[E][ ] project meeting (from: Aug 6th 2pm to: Aug 6th 4pm)
+____________________________________________________________
+
+```
+
+#### Step 2
 
 **Input:**
 

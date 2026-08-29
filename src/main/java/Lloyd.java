@@ -33,8 +33,8 @@ public class Lloyd {
                 + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
                 + "\n Now, what needs doing?");
 
-        ArrayList<Task> toDoList = new ArrayList<>();
         Storage storage = new Storage(Path.of("data", "lloyd.txt"));
+        ArrayList<Task> toDoList = storage.load();
         boolean isRunning = true;
 
         Scanner scanner = new Scanner(System.in);

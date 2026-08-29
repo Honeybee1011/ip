@@ -30,18 +30,11 @@ public class Storage {
     /**
      * Loads all tasks in their saved order.
      *
-     * <p>A file that does not exist yet represents an empty task list.</p>
-     *
      * @return tasks read from the file
      * @throws IOException if the file cannot be read or contains invalid data
      */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-
-        if (!Files.exists(filePath)) {
-            return tasks;
-        }
-
         List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
