@@ -10,9 +10,8 @@ This file is the source of truth for console UI test cases run with the `test-ui
 - Default UI working directory: `C:\Users\joshu\Code\ip\_temp\ui-case`
 - Java version: 25.
 - Session isolation: Start each test case in a fresh process.
-- Storage setup: Before each default Lloyd UI case, create an empty
-  `_temp/ui-case/data/lloyd.txt`. A case can override the working directory and
-  provide seeded data explicitly.
+- Storage setup: Before each default Lloyd UI case, use a fresh working directory
+  without a `data` directory. A case can provide seeded data explicitly.
 - Comparison: Exact text after normalizing CRLF and LF line endings. Spaces, capitalization, punctuation, divider lines, and blank lines are significant.
 - Indentation used to format examples in chat is not part of the expected output.
 
@@ -20,7 +19,9 @@ This file is the source of truth for console UI test cases run with the `test-ui
 
 ### STORAGE-001: Save and load all task types
 
-**Aim:** Verify that the standalone storage class writes the specified delimited format, creates parent directories, restores task types and completion states, and rejects malformed or ambiguous data.
+**Aim:** Verify that the standalone storage class initializes missing storage,
+writes the specified delimited format safely, restores task data, preserves an
+existing file after rejected data, and reports malformed data and write failures.
 
 **Compilation command:** `javac -d out src/main/java/*.java test/StorageTest.java`
 
@@ -31,7 +32,10 @@ This file is the source of truth for console UI test cases run with the `test-ui
 ```text
 Storage save format: PASSED
 Storage load: PASSED
+Missing storage initialization: PASSED
 Invalid storage data: PASSED
+Rejected save preservation: PASSED
+Storage write failure reporting: PASSED
 Reserved delimiter validation: PASSED
 ```
 
@@ -46,7 +50,7 @@ unmarking, and deleting tasks.
 
 **Program start command:** `java -cp ..\..\out Lloyd`
 
-**Storage setup:** Create an empty `data/lloyd.txt` before starting the chatbot.
+**Storage setup:** Ensure the working directory does not contain a `data` directory.
 
 **Expected startup output:** Same as UI-001.
 
@@ -277,6 +281,118 @@ ____________________________________________________________
 ____________________________________________________________
 
 ```
+
+### UI-011: Recover from missing storage and rejected task data
+
+**Aim:** Verify that startup creates missing storage, a todo without a description
+is rejected, and unsavable task data is rolled back without terminating the chatbot.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-storage-errors`
+
+**Program start command:** `java -cp ..\..\out Lloyd`
+
+**Storage setup:** Ensure the working directory does not contain a `data` directory.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Every task needs a description. Tell me what needs doing.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+todo compare A | B
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ I could not save that change. The task list was left unchanged. Check that data/lloyd.txt can be written and task details do not contain the | character.
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+____________________________________________________________
+
+```
+
+**Expected `data/lloyd.txt`:** An empty file.
+
+#### Step 4
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-012: Report malformed saved data cleanly
+
+**Aim:** Verify that malformed task data produces a clear error without a Java
+stack trace or an accidental overwrite of the storage file.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-corrupt-storage`
+
+**Program start command:** `java -cp ..\..\out Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 2 | invalid status
+```
+
+**Expected startup output:** Same as UI-001.
+
+**Expected output immediately after startup:**
+
+```text
+____________________________________________________________
+ I could not load the task file. Check that data/lloyd.txt contains valid task data and can be read.
+____________________________________________________________
+
+```
+
+The process must exit successfully without accepting input, and the seeded file
+must remain unchanged.
 
 ### UI-001: Add and list all task types
 

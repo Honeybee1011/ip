@@ -21,7 +21,10 @@ public class StorageTest {
 
         testSaveFormat(testDirectory.resolve("nested").resolve("tasks.txt"));
         testLoad(testDirectory.resolve("load.txt"));
+        testMissingFile(testDirectory.resolve("missing").resolve("tasks.txt"));
         testInvalidData(testDirectory.resolve("invalid.txt"));
+        testInvalidSavePreservesFile(testDirectory.resolve("preserved.txt"));
+        testUnwritableLocation(testDirectory.resolve("blocked"));
         testReservedDelimiter(testDirectory.resolve("reserved.txt"));
     }
 
@@ -64,18 +67,67 @@ public class StorageTest {
         System.out.println("Storage load: PASSED");
     }
 
+    /** Verifies that first use creates the directory and an empty storage file. */
+    private static void testMissingFile(Path filePath) throws IOException {
+        ArrayList<Task> tasks = new Storage(filePath).load();
+
+        requireEquals(0, tasks.size(), "new storage task count");
+        requireEquals(true, Files.isRegularFile(filePath), "new storage file creation");
+        System.out.println("Missing storage initialization: PASSED");
+    }
+
     /** Verifies that malformed saved data is reported instead of silently ignored. */
     private static void testInvalidData(Path filePath) throws IOException {
-        Files.writeString(filePath, "T | 2 | invalid status", StandardCharsets.UTF_8);
+        List<String> invalidLines = List.of(
+                "T | 2 | invalid status",
+                "X | 0 | unknown type",
+                "D | 0 | missing deadline",
+                "E | 0 | meeting | Monday",
+                "T | 0 |    ",
+                "T | 0 | compare A|B"
+        );
 
-        try {
-            new Storage(filePath).load();
-            throw new AssertionError("Invalid saved data should cause an IOException");
-        } catch (IOException expected) {
-            requireEquals(true, expected.getMessage().contains("line 1"),
-                    "invalid-data error line number");
+        for (String invalidLine : invalidLines) {
+            Files.writeString(filePath, invalidLine, StandardCharsets.UTF_8);
+            try {
+                new Storage(filePath).load();
+                throw new AssertionError(
+                        "Invalid saved data should cause an IOException: " + invalidLine);
+            } catch (IOException expected) {
+                requireEquals(true, expected.getMessage().contains("line 1"),
+                        "invalid-data error line number");
+            }
         }
         System.out.println("Invalid storage data: PASSED");
+    }
+
+    /** Verifies validation occurs before an existing file can be replaced. */
+    private static void testInvalidSavePreservesFile(Path filePath) throws IOException {
+        Files.writeString(filePath, "T | 0 | original", StandardCharsets.UTF_8);
+
+        try {
+            new Storage(filePath).save(List.of(new Todo("compare A | B")));
+            throw new AssertionError("Invalid task data should be rejected");
+        } catch (IllegalArgumentException expected) {
+            requireEquals("T | 0 | original",
+                    Files.readString(filePath, StandardCharsets.UTF_8),
+                    "storage contents after rejected save");
+        }
+        System.out.println("Rejected save preservation: PASSED");
+    }
+
+    /** Verifies that filesystem write failures are reported as IOExceptions. */
+    private static void testUnwritableLocation(Path blockedPath) throws IOException {
+        Files.writeString(blockedPath, "not a directory", StandardCharsets.UTF_8);
+        Path filePath = blockedPath.resolve("tasks.txt");
+
+        try {
+            new Storage(filePath).save(List.of(new Todo("read book")));
+            throw new AssertionError("An unusable directory should cause an IOException");
+        } catch (IOException expected) {
+            // Expected: the parent path is a regular file rather than a directory.
+        }
+        System.out.println("Storage write failure reporting: PASSED");
     }
 
     /** Verifies that a field cannot contain the reserved delimiter character. */

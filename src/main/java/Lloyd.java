@@ -25,16 +25,22 @@ public class Lloyd {
      * Runs the chatbot until the user enters the {@code bye} command.
      *
      * @param args command-line arguments, which are not used
-     * @throws IOException if the task list cannot be saved
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         printResponse(BANNER
                 + "\n Lloyd Frontera, the greatest estate developer, at your service!"
                 + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
                 + "\n Now, what needs doing?");
 
         Storage storage = new Storage(Path.of("data", "lloyd.txt"));
-        ArrayList<Task> toDoList = storage.load();
+        ArrayList<Task> toDoList;
+        try {
+            toDoList = storage.load();
+        } catch (IOException e) {
+            printResponse(" I could not load the task file. Check that data/lloyd.txt"
+                    + " contains valid task data and can be read.");
+            return;
+        }
         boolean isRunning = true;
 
         Scanner scanner = new Scanner(System.in);
@@ -73,8 +79,15 @@ public class Lloyd {
                             break;
                         }
 
-                        toDoList.get(taskNumber - 1).mark();
-                        storage.save(toDoList);
+                        Task task = toDoList.get(taskNumber - 1);
+                        boolean wasDone = task.isDone();
+                        task.mark();
+                        if (!saveTasks(storage, toDoList)) {
+                            if (!wasDone) {
+                                task.unmark();
+                            }
+                            break;
+                        }
                         printResponse(" Magnificent! Efficient work means lower costs."
                                 + " This task is officially complete:\n"
                                 + toDoList.get(taskNumber - 1));
@@ -98,8 +111,15 @@ public class Lloyd {
                             break;
                         }
 
-                        toDoList.get(taskNumber - 1).unmark();
-                        storage.save(toDoList);
+                        Task task = toDoList.get(taskNumber - 1);
+                        boolean wasDone = task.isDone();
+                        task.unmark();
+                        if (!saveTasks(storage, toDoList)) {
+                            if (wasDone) {
+                                task.mark();
+                            }
+                            break;
+                        }
                         printResponse(" What? Rework? That is terrible for the budget!"
                                 + " Fine, this task is back under construction:\n"
                                 + toDoList.get(taskNumber - 1));
@@ -124,7 +144,10 @@ public class Lloyd {
                         }
 
                         Task deletedTask = toDoList.remove(taskNumber - 1);
-                        storage.save(toDoList);
+                        if (!saveTasks(storage, toDoList)) {
+                            toDoList.add(taskNumber - 1, deletedTask);
+                            break;
+                        }
                         printResponse(" Excellent! Waste eliminated from the budget."
                                 + " I have removed this task:\n"
                                 + deletedTask
@@ -135,8 +158,17 @@ public class Lloyd {
                     }
                     break;
                 case TODO:
+                    if (commandParts.length < 2 || commandParts[1].isBlank()) {
+                        printResponse(" Every task needs a description."
+                                + " Tell me what needs doing.");
+                        break;
+                    }
+
                     toDoList.add(new Todo(commandParts[1]));
-                    storage.save(toDoList);
+                    if (!saveTasks(storage, toDoList)) {
+                        toDoList.removeLast();
+                        break;
+                    }
                     printResponse(createTaskAddedMessage(
                             toDoList.getLast(), toDoList.size()
                     ));
@@ -166,7 +198,10 @@ public class Lloyd {
                     }
 
                     toDoList.add(new Deadline(deadlineDescription, by));
-                    storage.save(toDoList);
+                    if (!saveTasks(storage, toDoList)) {
+                        toDoList.removeLast();
+                        break;
+                    }
 
                     printResponse(createTaskAddedMessage(
                             toDoList.getLast(), toDoList.size()
@@ -201,7 +236,10 @@ public class Lloyd {
                     }
 
                     toDoList.add(new Event(eventDescription, from, to));
-                    storage.save(toDoList);
+                    if (!saveTasks(storage, toDoList)) {
+                        toDoList.removeLast();
+                        break;
+                    }
 
                     printResponse(createTaskAddedMessage(
                             toDoList.getLast(), toDoList.size()
@@ -230,6 +268,25 @@ public class Lloyd {
         return " Excellent! Another investment in your future has been approved:\n"
                 + "   " + task
                 + "\n Tasks currently in the master plan: " + taskCount + ".";
+    }
+
+    /**
+     * Saves the current tasks and reports a recoverable error to the user.
+     *
+     * @param storage storage used by the chatbot
+     * @param tasks current task list
+     * @return {@code true} when the save succeeds
+     */
+    private static boolean saveTasks(Storage storage, ArrayList<Task> tasks) {
+        try {
+            storage.save(tasks);
+            return true;
+        } catch (IOException | IllegalArgumentException e) {
+            printResponse(" I could not save that change. The task list was left unchanged."
+                    + " Check that data/lloyd.txt can be written and task details"
+                    + " do not contain the | character.");
+            return false;
+        }
     }
 
     /**

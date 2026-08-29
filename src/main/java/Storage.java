@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +32,21 @@ public class Storage {
     /**
      * Loads all tasks in their saved order.
      *
+     * <p>If the storage file does not exist yet, its parent directory and an
+     * empty file are created.</p>
+     *
      * @return tasks read from the file
      * @throws IOException if the file cannot be read or contains invalid data
      */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
+
+        if (Files.notExists(filePath)) {
+            createParentDirectory();
+            Files.createFile(filePath);
+            return tasks;
+        }
+
         List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
@@ -51,25 +63,60 @@ public class Storage {
      *
      * @param tasks current tasks to save
      * @throws IOException if a directory or file cannot be written
-     * @throws IllegalArgumentException if a task field contains a reserved character
+     * @throws IllegalArgumentException if the task list contains unsupported data
      */
     public void save(List<Task> tasks) throws IOException {
-        Path parentDirectory = filePath.getParent();
-        if (parentDirectory != null) {
-            Files.createDirectories(parentDirectory);
+        if (tasks == null) {
+            throw new IllegalArgumentException("Task list cannot be null");
         }
 
         List<String> lines = new ArrayList<>();
         for (Task task : tasks) {
             lines.add(formatTask(task));
         }
-        Files.write(filePath, lines, StandardCharsets.UTF_8);
+
+        createParentDirectory();
+        Path parentDirectory = filePath.toAbsolutePath().getParent();
+        Path temporaryFile = Files.createTempFile(
+                parentDirectory, filePath.getFileName().toString(), ".tmp");
+
+        try {
+            Files.write(temporaryFile, lines, StandardCharsets.UTF_8);
+            replaceStorageFile(temporaryFile);
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
+    }
+
+    /** Creates the storage file's parent directory when necessary. */
+    private void createParentDirectory() throws IOException {
+        Path parentDirectory = filePath.toAbsolutePath().getParent();
+        if (parentDirectory != null) {
+            Files.createDirectories(parentDirectory);
+        }
+    }
+
+    /**
+     * Replaces the old file atomically when the operating system supports it.
+     */
+    private void replaceStorageFile(Path temporaryFile) throws IOException {
+        try {
+            Files.move(temporaryFile, filePath,
+                    StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(temporaryFile, filePath, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     /**
      * Converts one task to its storage representation.
      */
     private String formatTask(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException("Task list cannot contain null tasks");
+        }
+
         String status = task.isDone() ? "1" : "0";
         String description = validateField(task.getDescription());
 
@@ -99,17 +146,17 @@ public class Storage {
             Task task = switch (fields[0]) {
                 case "T" -> {
                     requireFieldCount(fields, 3);
-                    yield new Todo(requireNonEmpty(fields[2]));
+                    yield new Todo(requireValidField(fields[2]));
                 }
                 case "D" -> {
                     requireFieldCount(fields, 4);
-                    yield new Deadline(requireNonEmpty(fields[2]),
-                            requireNonEmpty(fields[3]));
+                    yield new Deadline(requireValidField(fields[2]),
+                            requireValidField(fields[3]));
                 }
                 case "E" -> {
                     requireFieldCount(fields, 5);
-                    yield new Event(requireNonEmpty(fields[2]),
-                            requireNonEmpty(fields[3]), requireNonEmpty(fields[4]));
+                    yield new Event(requireValidField(fields[2]),
+                            requireValidField(fields[3]), requireValidField(fields[4]));
                 }
                 default -> throw new IllegalArgumentException("unknown task type");
             };
@@ -132,16 +179,16 @@ public class Storage {
         }
     }
 
-    /** Ensures that a required field contains information. */
-    private String requireNonEmpty(String field) {
-        if (field.isEmpty()) {
-            throw new IllegalArgumentException("task fields cannot be empty");
-        }
-        return field;
+    /** Ensures that a field read from disk is valid for this storage format. */
+    private String requireValidField(String field) {
+        return validateField(field);
     }
 
     /** Ensures that task data cannot break the line-oriented storage format. */
     private String validateField(String field) {
+        if (field == null || field.isBlank()) {
+            throw new IllegalArgumentException("Task fields cannot be empty");
+        }
         if (field.contains("|") || field.contains("\n") || field.contains("\r")) {
             throw new IllegalArgumentException(
                     "Task fields cannot contain | or line-break characters");
