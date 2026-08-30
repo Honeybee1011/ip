@@ -1,3 +1,5 @@
+package lloyd.ui;
+
 import java.util.Scanner;
 
 /**

@@ -1,3 +1,5 @@
+package lloyd.storage;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
@@ -9,6 +11,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import lloyd.task.Deadline;
+import lloyd.task.Event;
+import lloyd.task.Task;
+import lloyd.task.Todo;
 
 /**
  * Saves tasks to and loads tasks from a plain-text file.
