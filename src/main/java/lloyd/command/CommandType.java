@@ -1,3 +1,5 @@
+package lloyd.command;
+
 /**
  * Represents the fixed set of commands understood by the Lloyd chatbot.
  */

@@ -1,3 +1,5 @@
+package lloyd;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -6,6 +8,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
+
+import lloyd.command.CommandType;
+import lloyd.command.ParsedCommand;
+import lloyd.command.Parser;
+import lloyd.storage.Storage;
+import lloyd.task.Deadline;
+import lloyd.task.Event;
+import lloyd.task.Task;
+import lloyd.task.TaskList;
+import lloyd.task.Todo;
+import lloyd.ui.Ui;
 
 /**
  * Starts the Lloyd chatbot application and responds to commands entered by the user.

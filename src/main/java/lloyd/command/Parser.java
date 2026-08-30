@@ -1,3 +1,5 @@
+package lloyd.command;
+
 /**
  * Interprets raw user input as a command type and its argument text.
  */
