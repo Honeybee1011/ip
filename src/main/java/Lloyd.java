@@ -54,11 +54,11 @@ public class Lloyd {
             return;
         }
         boolean isRunning = true;
+        Parser parser = new Parser();
 
         while (isRunning && ui.hasNextCommand()) {
-            String input = ui.readCommand();
-            String[] commandParts = input.split("\\s+", 2);
-            CommandType commandType = CommandType.from(commandParts[0]);
+            ParsedCommand command = parser.parse(ui.readCommand());
+            CommandType commandType = command.getCommandType();
 
             switch (commandType) {
                 case BYE:
@@ -76,14 +76,14 @@ public class Lloyd {
                     printResponse(taskList.toString().stripTrailing());
                     break;
                 case CHECK:
-                    if (commandParts.length < 2 || commandParts[1].isBlank()) {
+                    if (!command.hasArguments()) {
                         printResponse(" Tell me which date to inspect using dd/MM/yyyy.");
                         break;
                     }
 
                     try {
                         LocalDate checkedDate = LocalDate.parse(
-                                commandParts[1], DEADLINE_FORMAT);
+                                command.getArguments(), DEADLINE_FORMAT);
                         StringBuilder scheduledTasks = new StringBuilder(
                                 " Deadlines and event endpoints on "
                                         + checkedDate.format(CHECK_DISPLAY_FORMAT)
@@ -109,14 +109,14 @@ public class Lloyd {
                     }
                     break;
                 case MARK:
-                    if (commandParts.length < 2) {
+                    if (!command.hasArguments()) {
                         printResponse(" Even I cannot finish an imaginary task."
                                 + " Give me the task number to mark.");
                         break;
                     }
 
                     try {
-                        int taskNumber = Integer.parseInt(commandParts[1]);
+                        int taskNumber = Integer.parseInt(command.getArguments());
                         if (taskNumber < 1 || taskNumber > toDoList.size()) {
                             printResponse(" That task is not in the master plan."
                                     + " Check its number.");
@@ -141,14 +141,14 @@ public class Lloyd {
                     }
                     break;
                 case UNMARK:
-                    if (commandParts.length < 2) {
+                    if (!command.hasArguments()) {
                         printResponse(" Rework requires paperwork."
                                 + " Give me the task number to unmark.");
                         break;
                     }
 
                     try {
-                        int taskNumber = Integer.parseInt(commandParts[1]);
+                        int taskNumber = Integer.parseInt(command.getArguments());
                         if (taskNumber < 1 || taskNumber > toDoList.size()) {
                             printResponse(" That task is not in the master plan."
                                     + " Check its number.");
@@ -173,14 +173,14 @@ public class Lloyd {
                     }
                     break;
                 case DELETE:
-                    if (commandParts.length < 2) {
+                    if (!command.hasArguments()) {
                         printResponse(" Demolition needs a target."
                                 + " Give me the task number to delete.");
                         break;
                     }
 
                     try {
-                        int taskNumber = Integer.parseInt(commandParts[1]);
+                        int taskNumber = Integer.parseInt(command.getArguments());
                         if (taskNumber < 1 || taskNumber > toDoList.size()) {
                             printResponse(" That task is not in the master plan."
                                     + " Check its number.");
@@ -202,13 +202,13 @@ public class Lloyd {
                     }
                     break;
                 case TODO:
-                    if (commandParts.length < 2 || commandParts[1].isBlank()) {
+                    if (!command.hasArguments()) {
                         printResponse(" Every task needs a description."
                                 + " Tell me what needs doing.");
                         break;
                     }
 
-                    toDoList.add(new Todo(commandParts[1]));
+                    toDoList.add(new Todo(command.getArguments()));
                     if (!saveTasks(storage, toDoList)) {
                         toDoList.removeLast();
                         break;
@@ -218,12 +218,12 @@ public class Lloyd {
                     ));
                     break;
                 case DEADLINE:
-                    if (commandParts.length < 2) {
+                    if (!command.hasArguments()) {
                         printResponse(" Every profitable project needs details. Provide a description and /by date.");
                         break;
                     }
 
-                    String deadlineDetails = commandParts[1];
+                    String deadlineDetails = command.getArguments();
                     int byIndex = deadlineDetails.indexOf(" /by ");
 
                     if (byIndex < 0) {
@@ -258,12 +258,12 @@ public class Lloyd {
                     ));
                     break;
                 case EVENT:
-                    if (commandParts.length < 2) {
+                    if (!command.hasArguments()) {
                         printResponse(" Every grand event needs a plan. Provide a description, /from date, and /to date.");
                         break;
                     }
 
-                    String eventDetails = commandParts[1];
+                    String eventDetails = command.getArguments();
                     int fromIndex = eventDetails.indexOf(" /from ");
                     int toIndex = eventDetails.indexOf(
                             " /to ", fromIndex + " /from ".length());
