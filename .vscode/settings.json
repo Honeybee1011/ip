@@ -1,9 +1,4 @@
 {
-    "java.project.sourcePaths": [
-        "src\\main\\java",
-        "test"
-    ],
-    "java.project.referencedLibraries": [],
     "java.configuration.runtimes": [
         {
         "name": "JavaSE-25",
