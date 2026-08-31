@@ -25,7 +25,7 @@ existing file after rejected data, and reports malformed data and write failures
 
 **Compilation command:** `javac -d out (Get-ChildItem src/main/java,test -Recurse -Filter *.java).FullName`
 
-**Program start command:** `java -cp out lloyd.storage.StorageTest`
+**Program start command:** `java -cp out StorageTest`
 
 **Expected startup output:**
 
