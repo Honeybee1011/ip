@@ -999,6 +999,10 @@ ____________________________________________________________
 
 **Aim:** Verify that input without a `todo`, `deadline`, or `event` prefix is rejected and is not added to the task list.
 
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-invalid-prefix-test`
+
+**Storage setup:** Use a fresh working directory without a `data` directory.
+
 **Expected startup output:** Same as UI-001.
 
 #### Step 1
