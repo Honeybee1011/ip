@@ -30,7 +30,7 @@ public enum CommandType {
     /**
      * Associates a command type with the word entered by the user.
      *
-     * @param commandWord text that selects this command type
+     * @param commandWord Text that selects this command type.
      */
     CommandType(String commandWord) {
         this.commandWord = commandWord;
@@ -39,8 +39,8 @@ public enum CommandType {
     /**
      * Finds the command type represented by a word entered by the user.
      *
-     * @param commandWord first word of the user's input
-     * @return matching command type, or {@link #UNKNOWN} when no command matches
+     * @param commandWord First word of the user's input.
+     * @return Matching command type, or {@link #UNKNOWN} when no command matches.
      */
     public static CommandType from(String commandWord) {
         for (CommandType commandType : values()) {

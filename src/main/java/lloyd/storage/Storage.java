@@ -33,7 +33,7 @@ public class Storage {
     /**
      * Creates storage at the supplied path.
      *
-     * @param filePath path of the text file used to store tasks
+     * @param filePath Path of the text file used to store tasks.
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
@@ -45,8 +45,8 @@ public class Storage {
      * <p>If the storage file does not exist yet, its parent directory and an
      * empty file are created.</p>
      *
-     * @return tasks read from the file
-     * @throws IOException if the file cannot be read or contains invalid data
+     * @return Tasks read from the file.
+     * @throws IOException If the file cannot be read or contains invalid data.
      */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -71,9 +71,9 @@ public class Storage {
     /**
      * Replaces the storage file with the current ordered task list.
      *
-     * @param tasks current tasks to save
-     * @throws IOException if a directory or file cannot be written
-     * @throws IllegalArgumentException if the task list contains unsupported data
+     * @param tasks Current tasks to save.
+     * @throws IOException If a directory or file cannot be written.
+     * @throws IllegalArgumentException If the task list contains unsupported data.
      */
     public void save(List<Task> tasks) throws IOException {
         if (tasks == null) {
@@ -101,7 +101,7 @@ public class Storage {
     /**
      * Creates the storage file's parent directory when necessary.
      *
-     * @throws IOException if the directory cannot be created
+     * @throws IOException If the directory cannot be created.
      */
     private void createParentDirectory() throws IOException {
         Path parentDirectory = filePath.toAbsolutePath().getParent();
@@ -113,8 +113,8 @@ public class Storage {
     /**
      * Replaces the old file atomically when the operating system supports it.
      *
-     * @param temporaryFile fully written temporary file to move into place
-     * @throws IOException if the storage file cannot be replaced
+     * @param temporaryFile Fully written temporary file to move into place.
+     * @throws IOException If the storage file cannot be replaced.
      */
     private void replaceStorageFile(Path temporaryFile) throws IOException {
         try {
@@ -129,9 +129,9 @@ public class Storage {
     /**
      * Converts one task to its storage representation.
      *
-     * @param task task to convert
-     * @return one line in the storage file format
-     * @throws IllegalArgumentException if the task or one of its fields is invalid
+     * @param task Task to convert.
+     * @return One line in the storage file format.
+     * @throws IllegalArgumentException If the task or one of its fields is invalid.
      */
     private String formatTask(Task task) {
         if (task == null) {
@@ -161,10 +161,10 @@ public class Storage {
     /**
      * Recreates one task from a line in the storage file.
      *
-     * @param line saved task line to parse
-     * @param lineNumber one-based source line number used in error messages
-     * @return task represented by the line
-     * @throws IOException if the line does not contain valid task data
+     * @param line Saved task line to parse.
+     * @param lineNumber One-based source line number used in error messages.
+     * @return Task represented by the line.
+     * @throws IOException If the line does not contain valid task data.
      */
     private Task parseTask(String line, int lineNumber) throws IOException {
         String[] fields = line.split(DELIMITER_REGEX, -1);
@@ -204,9 +204,9 @@ public class Storage {
     /**
      * Ensures that a saved line has the correct number of fields.
      *
-     * @param fields fields parsed from the line
-     * @param expectedCount required number of fields
-     * @throws IllegalArgumentException if the field count is incorrect
+     * @param fields Fields parsed from the line.
+     * @param expectedCount Required number of fields.
+     * @throws IllegalArgumentException If the field count is incorrect.
      */
     private void requireFieldCount(String[] fields, int expectedCount) {
         if (fields.length != expectedCount) {
@@ -217,9 +217,9 @@ public class Storage {
     /**
      * Ensures that a field read from disk is valid for this storage format.
      *
-     * @param field field to validate
-     * @return the unchanged valid field
-     * @throws IllegalArgumentException if the field cannot be stored safely
+     * @param field Field to validate.
+     * @return The unchanged valid field.
+     * @throws IllegalArgumentException If the field cannot be stored safely.
      */
     private String requireValidField(String field) {
         return validateField(field);
@@ -228,9 +228,9 @@ public class Storage {
     /**
      * Ensures that task data cannot break the line-oriented storage format.
      *
-     * @param field field to validate
-     * @return the unchanged valid field
-     * @throws IllegalArgumentException if the field is empty or contains a reserved character
+     * @param field Field to validate.
+     * @return The unchanged valid field.
+     * @throws IllegalArgumentException If the field is empty or contains a reserved character.
      */
     private String validateField(String field) {
         if (field == null || field.isBlank()) {

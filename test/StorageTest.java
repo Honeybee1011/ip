@@ -1,3 +1,5 @@
+package lloyd.storage;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -7,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import lloyd.storage.Storage;
 import lloyd.task.Deadline;
 import lloyd.task.Event;
 import lloyd.task.Task;
@@ -21,8 +22,8 @@ public class StorageTest {
     /**
      * Runs the storage checks and prints each successful result.
      *
-     * @param args command-line arguments, which are not used
-     * @throws IOException if the temporary test files cannot be accessed
+     * @param args Command-line arguments, which are not used.
+     * @throws IOException If the temporary test files cannot be accessed.
      */
     public static void main(String[] args) throws IOException {
         Path testDirectory = Files.createTempDirectory("lloyd-storage-test-");

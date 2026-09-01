@@ -36,8 +36,8 @@ public class LloydTest {
     /**
      * Runs Lloyd with simulated user input and returns everything it prints.
      *
-     * @param input commands to send to Lloyd
-     * @return console output produced by Lloyd
+     * @param input Commands to send to Lloyd.
+     * @return Console output produced by Lloyd.
      */
     private String runLloyd(String input) {
         InputStream originalInput = System.in;
