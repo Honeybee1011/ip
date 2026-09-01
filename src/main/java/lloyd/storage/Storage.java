@@ -33,7 +33,7 @@ public class Storage {
     /**
      * Creates storage at the supplied path.
      *
-     * @param filePath path of the text file used to store tasks
+     * @param filePath Path of the text file used to store tasks.
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
@@ -45,8 +45,8 @@ public class Storage {
      * <p>If the storage file does not exist yet, its parent directory and an
      * empty file are created.</p>
      *
-     * @return tasks read from the file
-     * @throws IOException if the file cannot be read or contains invalid data
+     * @return Tasks read from the file.
+     * @throws IOException If the file cannot be read or contains invalid data.
      */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -71,9 +71,9 @@ public class Storage {
     /**
      * Replaces the storage file with the current ordered task list.
      *
-     * @param tasks current tasks to save
-     * @throws IOException if a directory or file cannot be written
-     * @throws IllegalArgumentException if the task list contains unsupported data
+     * @param tasks Current tasks to save.
+     * @throws IOException If a directory or file cannot be written.
+     * @throws IllegalArgumentException If the task list contains unsupported data.
      */
     public void save(List<Task> tasks) throws IOException {
         if (tasks == null) {

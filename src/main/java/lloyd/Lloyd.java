@@ -47,7 +47,7 @@ public class Lloyd {
     /**
      * Runs the chatbot until the user enters the {@code bye} command.
      *
-     * @param args command-line arguments, which are not used
+     * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         Ui ui = new Ui();
@@ -232,7 +232,8 @@ public class Lloyd {
                     break;
                 case DEADLINE:
                     if (!command.hasArguments()) {
-                        printResponse(" Every profitable project needs details. Provide a description and /by date.");
+                        printResponse(" Every profitable project needs details."
+                                + " Provide a description and /by date.");
                         break;
                     }
 
@@ -250,7 +251,8 @@ public class Lloyd {
                             deadlineDetails.substring(byIndex + " /by ".length()).trim();
 
                     if (deadlineDescription.isEmpty() || by.isEmpty()) {
-                        printResponse(" A contract needs both the work and its deadline. Provide a description and /by date.");
+                        printResponse(" A contract needs both the work and its deadline."
+                                + " Provide a description and /by date.");
                         break;
                     }
 
@@ -272,7 +274,8 @@ public class Lloyd {
                     break;
                 case EVENT:
                     if (!command.hasArguments()) {
-                        printResponse(" Every grand event needs a plan. Provide a description, /from date, and /to date.");
+                        printResponse(" Every grand event needs a plan."
+                                + " Provide a description, /from date, and /to date.");
                         break;
                     }
 
@@ -282,7 +285,8 @@ public class Lloyd {
                             " /to ", fromIndex + " /from ".length());
 
                     if (fromIndex < 0 || toIndex < 0) {
-                        printResponse(" An event without a schedule invites disaster. Specify it using /from and /to.");
+                        printResponse(" An event without a schedule invites disaster."
+                                + " Specify it using /from and /to.");
                         break;
                     }
 
@@ -294,7 +298,8 @@ public class Lloyd {
                             eventDetails.substring(toIndex + " /to ".length()).trim();
 
                     if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        printResponse(" The project contract is incomplete. Provide a description, /from date, and /to date.");
+                        printResponse(" The project contract is incomplete."
+                                + " Provide a description, /from date, and /to date.");
                         break;
                     }
 
@@ -319,7 +324,8 @@ public class Lloyd {
                     ));
                     break;
                 default:
-                    printResponse(" I reject vague contracts. Start every task with todo, deadline, or event.");
+                    printResponse(" I reject vague contracts."
+                            + " Start every task with todo, deadline, or event.");
                     break;
             }
         }
@@ -333,9 +339,9 @@ public class Lloyd {
     /**
      * Creates the standard response shown after adding any type of task.
      *
-     * @param task task that was added
-     * @param taskCount number of tasks currently in the list
-     * @return response containing the added task and updated task count
+     * @param task Task that was added.
+     * @param taskCount Number of tasks currently in the list.
+     * @return Response containing the added task and updated task count.
      */
     private static String createTaskAddedMessage(Task task, int taskCount) {
         return " Excellent! Another investment in your future has been approved:\n"
@@ -348,9 +354,9 @@ public class Lloyd {
      * Deadlines match their due date. Events match only their start or end date,
      * so dates strictly between the endpoints of a multi-day event are excluded.
      *
-     * @param task task to inspect
-     * @param checkedDate date requested by the user
-     * @return {@code true} if the deadline or an event endpoint matches the date
+     * @param task Task to inspect.
+     * @param checkedDate Date requested by the user.
+     * @return {@code true} if the deadline or an event endpoint matches the date.
      */
     private static boolean isScheduledOn(Task task, LocalDate checkedDate) {
         if (task instanceof Deadline deadline) {
@@ -366,9 +372,9 @@ public class Lloyd {
     /**
      * Saves the current tasks and reports a recoverable error to the user.
      *
-     * @param storage storage used by the chatbot
-     * @param tasks current task list
-     * @return {@code true} when the save succeeds
+     * @param storage Storage used by the chatbot.
+     * @param tasks Current task list.
+     * @return {@code true} when the save succeeds.
      */
     private static boolean saveTasks(Storage storage, TaskList tasks) {
         try {
@@ -385,7 +391,7 @@ public class Lloyd {
     /**
      * Prints a chatbot response enclosed by divider lines.
      *
-     * @param message response to display
+     * @param message Response to display.
      */
     private static void printResponse(String message) {
         Ui.showResponse(message);

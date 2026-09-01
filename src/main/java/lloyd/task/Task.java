@@ -3,7 +3,6 @@ package lloyd.task;
 /**
  * Represents a task and whether it has been completed.
  */
-
 public class Task {
     private final String description;
     private boolean isDone;
@@ -11,9 +10,8 @@ public class Task {
     /**
      * Creates an incomplete task with the given description.
      *
-     * @param description description of the task
+     * @param description Description of the task.
      */
-
     public Task(String description) {
         this.description = description;
         this.isDone = false;
@@ -32,7 +30,7 @@ public class Task {
     /**
      * Returns the task description for storage and other non-display uses.
      *
-     * @return task description
+     * @return Task description.
      */
     public String getDescription() {
         return description;
@@ -41,7 +39,7 @@ public class Task {
     /**
      * Reports whether this task has been completed.
      *
-     * @return {@code true} when the task is complete
+     * @return {@code true} when the task is complete.
      */
     public boolean isDone() {
         return isDone;
@@ -50,7 +48,7 @@ public class Task {
     /**
      * Returns a displayable representation of this task.
      *
-     * @return task status and description
+     * @return Task status and description.
      */
     @Override
     public String toString() {

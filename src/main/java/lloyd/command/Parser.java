@@ -8,8 +8,8 @@ public class Parser {
     /**
      * Parses one line entered by the user.
      *
-     * @param input raw user input
-     * @return recognized command and its arguments
+     * @param input Raw user input.
+     * @return Recognized command and its arguments.
      */
     public ParsedCommand parse(String input) {
         if (input == null) {

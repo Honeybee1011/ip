@@ -10,8 +10,8 @@ public final class ParsedCommand {
     /**
      * Creates a parsed command.
      *
-     * @param commandType recognized command type
-     * @param arguments text following the command word, or an empty string
+     * @param commandType Recognized command type.
+     * @param arguments Text following the command word, or an empty string.
      */
     public ParsedCommand(CommandType commandType, String arguments) {
         if (commandType == null || arguments == null) {
@@ -25,7 +25,7 @@ public final class ParsedCommand {
     /**
      * Returns the recognized command type.
      *
-     * @return command type, including {@link CommandType#UNKNOWN}
+     * @return Command type, including {@link CommandType#UNKNOWN}.
      */
     public CommandType getCommandType() {
         return commandType;
@@ -34,7 +34,7 @@ public final class ParsedCommand {
     /**
      * Reports whether argument text follows the command word.
      *
-     * @return {@code true} when the command contains arguments
+     * @return {@code true} when the command contains arguments.
      */
     public boolean hasArguments() {
         return !arguments.isBlank();
@@ -43,7 +43,7 @@ public final class ParsedCommand {
     /**
      * Returns the text following the command word.
      *
-     * @return argument text, or an empty string when none was supplied
+     * @return Argument text, or an empty string when none was supplied.
      */
     public String getArguments() {
         return arguments;

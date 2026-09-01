@@ -21,7 +21,7 @@ public class TaskList {
     /**
      * Creates a task list containing the supplied tasks in their current order.
      *
-     * @param tasks tasks with which to initialize the list
+     * @param tasks Tasks with which to initialize the list.
      */
     public TaskList(List<Task> tasks) {
         if (tasks == null) {
@@ -33,7 +33,7 @@ public class TaskList {
     /**
      * Adds a task to the end of the list.
      *
-     * @param task task to add
+     * @param task Task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -45,8 +45,8 @@ public class TaskList {
      * <p>This operation allows the application to restore a deleted task if
      * saving the changed list fails.</p>
      *
-     * @param index zero-based insertion position
-     * @param task task to insert
+     * @param index Zero-based insertion position.
+     * @param task Task to insert.
      */
     public void add(int index, Task task) {
         tasks.add(index, task);
@@ -55,8 +55,8 @@ public class TaskList {
     /**
      * Returns the task at a zero-based position.
      *
-     * @param index zero-based task position
-     * @return task at the requested position
+     * @param index Zero-based task position.
+     * @return Task at the requested position.
      */
     public Task get(int index) {
         return tasks.get(index);
@@ -65,7 +65,7 @@ public class TaskList {
     /**
      * Returns the most recently added task.
      *
-     * @return last task in the list
+     * @return Last task in the list.
      */
     public Task getLast() {
         return tasks.getLast();
@@ -74,8 +74,8 @@ public class TaskList {
     /**
      * Removes and returns the task at a zero-based position.
      *
-     * @param index zero-based task position
-     * @return removed task
+     * @param index Zero-based task position.
+     * @return Removed task.
      */
     public Task remove(int index) {
         return tasks.remove(index);
@@ -89,7 +89,7 @@ public class TaskList {
     /**
      * Returns the current number of tasks.
      *
-     * @return task count
+     * @return Task count.
      */
     public int size() {
         return tasks.size();
@@ -98,7 +98,7 @@ public class TaskList {
     /**
      * Provides a read-only view for saving the current tasks.
      *
-     * @return unmodifiable ordered task view
+     * @return Unmodifiable ordered task view.
      */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);

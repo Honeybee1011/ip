@@ -14,6 +14,14 @@ public class Event extends Task {
     private final LocalDateTime from;
     private final LocalDateTime to;
 
+    /**
+     * Creates an incomplete event with its start and end date-times.
+     *
+     * @param description Description of the event.
+     * @param from Date and time at which the event starts.
+     * @param to Date and time at which the event ends.
+     * @throws IllegalArgumentException If the end is before the start.
+     */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         if (to.isBefore(from)) {
@@ -27,7 +35,7 @@ public class Event extends Task {
     /**
      * Returns when the event starts.
      *
-     * @return event start date and time
+     * @return Event start date and time.
      */
     public LocalDateTime getFrom() {
         return from;
@@ -36,7 +44,7 @@ public class Event extends Task {
     /**
      * Returns when the event ends.
      *
-     * @return event end date and time
+     * @return Event end date and time.
      */
     public LocalDateTime getTo() {
         return to;

@@ -5,6 +5,11 @@ package lloyd.task;
  */
 public class Todo extends Task {
 
+    /**
+     * Creates an incomplete task without a date or time.
+     *
+     * @param description Description of the task.
+     */
     public Todo(String description) {
         super(description);
     }

@@ -13,6 +13,12 @@ public class Deadline extends Task {
 
     private final LocalDate by;
 
+    /**
+     * Creates an incomplete task with a deadline date.
+     *
+     * @param description Description of the task.
+     * @param by Date by which the task should be completed.
+     */
     public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
@@ -21,7 +27,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline date.
      *
-     * @return deadline date
+     * @return Deadline date.
      */
     public LocalDate getBy() {
         return by;
