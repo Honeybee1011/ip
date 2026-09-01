@@ -38,5 +38,5 @@ After every application code update, before reporting the work as complete:
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
+Before proposing a commit message or creating any commit, invoke the project-specific `seedu-git-standard` skill and follow it for the exact changes included in that commit. Use the same skill when naming branches.
 Do not commit or push unless explicitly asked.
