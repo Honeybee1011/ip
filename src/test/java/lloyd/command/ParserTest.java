@@ -1,24 +1,79 @@
 package lloyd.command;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests how {@link Parser} separates command words from their arguments.
+ */
 public class ParserTest {
-    
+
     @Test
-    public void Parser_nullInput_throwsIllegalArgumentException() {
+    public void parse_recognizedCommandWithoutArguments_returnsCommandType() {
         Parser parser = new Parser();
-        assertThrows(IllegalArgumentException.class, () -> parser.parse(null));
+        ParsedCommand parsedCommand = parser.parse("list");
+
+        assertEquals(CommandType.LIST, parsedCommand.getCommandType());
+        assertEquals("", parsedCommand.getArguments());
+        assertFalse(parsedCommand.hasArguments());
     }
 
     @Test
-    public void Parser_emptyInput_returnsParsedCommandWithUnknownType() {
+    public void parse_commandWithArguments_returnsTypeAndArguments() {
+        Parser parser = new Parser();
+        ParsedCommand parsedCommand = parser.parse("todo read a book");
+
+        assertEquals(CommandType.TODO, parsedCommand.getCommandType());
+        assertEquals("read a book", parsedCommand.getArguments());
+        assertTrue(parsedCommand.hasArguments());
+    }
+
+    @Test
+    public void parse_extraWhitespace_trimsAndSeparatesInput() {
+        Parser parser = new Parser();
+        ParsedCommand parsedCommand = parser.parse("  deadline   submit report /by 02/09/2026  ");
+
+        assertEquals(CommandType.DEADLINE, parsedCommand.getCommandType());
+        assertEquals("submit report /by 02/09/2026", parsedCommand.getArguments());
+    }
+
+    @Test
+    public void parse_unrecognizedCommand_returnsUnknownTypeWithArguments() {
+        Parser parser = new Parser();
+        ParsedCommand parsedCommand = parser.parse("hello Lloyd");
+
+        assertEquals(CommandType.UNKNOWN, parsedCommand.getCommandType());
+        assertEquals("Lloyd", parsedCommand.getArguments());
+    }
+
+    @Test
+    public void parse_emptyInput_returnsUnknownTypeWithoutArguments() {
         Parser parser = new Parser();
         ParsedCommand parsedCommand = parser.parse("");
-        assert(parsedCommand.getCommandType() == CommandType.UNKNOWN);
-        assert(parsedCommand.getArguments().isEmpty());
+
+        assertEquals(CommandType.UNKNOWN, parsedCommand.getCommandType());
+        assertEquals("", parsedCommand.getArguments());
+        assertFalse(parsedCommand.hasArguments());
     }
 
-    
+    @Test
+    public void parse_whitespaceOnlyInput_returnsUnknownTypeWithoutArguments() {
+        Parser parser = new Parser();
+        ParsedCommand parsedCommand = parser.parse("   ");
+
+        assertEquals(CommandType.UNKNOWN, parsedCommand.getCommandType());
+        assertEquals("", parsedCommand.getArguments());
+        assertFalse(parsedCommand.hasArguments());
+    }
+
+    @Test
+    public void parse_nullInput_throwsIllegalArgumentException() {
+        Parser parser = new Parser();
+
+        assertThrows(IllegalArgumentException.class, () -> parser.parse(null));
+    }
 }
