@@ -22,7 +22,7 @@ public class Ui {
     /**
      * Reports whether another command is available to read.
      *
-     * @return true if standard input contains another line
+     * @return {@code true} if standard input contains another line.
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
@@ -31,7 +31,7 @@ public class Ui {
     /**
      * Reads the next command and removes surrounding whitespace.
      *
-     * @return the next command entered by the user
+     * @return The next command entered by the user.
      */
     public String readCommand() {
         return scanner.nextLine().trim();
@@ -40,7 +40,7 @@ public class Ui {
     /**
      * Displays a chatbot response enclosed by divider lines.
      *
-     * @param message response to display
+     * @param message Response to display.
      */
     public static void showResponse(String message) {
         System.out.println(DIVIDER);

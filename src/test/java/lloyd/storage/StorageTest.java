@@ -30,6 +30,7 @@ public class StorageTest {
     @TempDir
     private Path temporaryDirectory;
 
+    /** Verifies that saving and loading preserve mixed task data and order. */
     @Test
     public void saveAndLoad_mixedTasks_preservesTaskDataAndOrder() throws IOException {
         Todo todo = new Todo("read book");
@@ -60,6 +61,7 @@ public class StorageTest {
         assertEquals(LocalDateTime.of(2026, 9, 7, 16, 0), loadedEvent.getTo());
     }
 
+    /** Verifies that loading from a missing path creates an empty storage file. */
     @Test
     public void load_missingFile_createsEmptyStorageFile() throws IOException {
         Path filePath = temporaryDirectory.resolve("nested/tasks.txt");
@@ -71,6 +73,7 @@ public class StorageTest {
         assertTrue(Files.isRegularFile(filePath));
     }
 
+    /** Verifies that blank storage lines are ignored during loading. */
     @Test
     public void load_blankLines_ignoresBlankLines() throws IOException {
         Path filePath = temporaryDirectory.resolve("tasks.txt");
@@ -83,6 +86,7 @@ public class StorageTest {
         assertEquals("read book", loadedTasks.get(0).getDescription());
     }
 
+    /** Verifies that malformed saved data reports the offending line number. */
     @Test
     public void load_invalidTaskData_throwsIOExceptionWithLineNumber() throws IOException {
         Path filePath = temporaryDirectory.resolve("tasks.txt");
@@ -96,6 +100,7 @@ public class StorageTest {
         assertTrue(exception.getMessage().contains("line 2"));
     }
 
+    /** Verifies that saving rejects a null task list. */
     @Test
     public void save_nullTaskList_throwsIllegalArgumentException() {
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt"));
@@ -103,6 +108,7 @@ public class StorageTest {
         assertThrows(IllegalArgumentException.class, () -> storage.save(null));
     }
 
+    /** Verifies that saving rejects a null task within the list. */
     @Test
     public void save_nullTask_throwsIllegalArgumentException() {
         Storage storage = new Storage(temporaryDirectory.resolve("tasks.txt"));
@@ -112,6 +118,7 @@ public class StorageTest {
         assertThrows(IllegalArgumentException.class, () -> storage.save(tasks));
     }
 
+    /** Verifies that invalid delimiters are rejected before replacing saved data. */
     @Test
     public void save_reservedDelimiter_preservesExistingFile() throws IOException {
         Path filePath = temporaryDirectory.resolve("tasks.txt");
@@ -125,6 +132,7 @@ public class StorageTest {
                 Files.readString(filePath, StandardCharsets.UTF_8));
     }
 
+    /** Verifies that unsupported task types do not replace existing saved data. */
     @Test
     public void save_unsupportedTaskType_preservesExistingFile() throws IOException {
         Path filePath = temporaryDirectory.resolve("tasks.txt");

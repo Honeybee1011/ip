@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
  */
 public class LloydTest {
 
+    /** Verifies that the application prints both its greeting and farewell. */
     @Test
     public void main_byeCommand_printsGreetingAndFarewell() {
         String output = runLloyd("bye\n");
@@ -23,6 +24,7 @@ public class LloydTest {
         assertTrue(output.contains("Leaving already?"));
     }
 
+    /** Verifies that an unknown command produces the guidance message. */
     @Test
     public void main_unknownCommand_printsErrorMessage() {
         String output = runLloyd("hello\nbye\n");
@@ -34,8 +36,8 @@ public class LloydTest {
     /**
      * Runs Lloyd with simulated user input and returns everything it prints.
      *
-     * @param input commands to send to Lloyd
-     * @return console output produced by Lloyd
+     * @param input Commands to send to Lloyd.
+     * @return Console output produced by Lloyd.
      */
     private String runLloyd(String input) {
         InputStream originalInput = System.in;
