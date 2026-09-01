@@ -5,6 +5,11 @@ package lloyd.command;
  */
 public class Parser {
 
+    /** Creates a parser for Lloyd's supported console commands. */
+    public Parser() {
+        // This class currently needs no configuration.
+    }
+
     /**
      * Parses one line entered by the user.
      *

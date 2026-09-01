@@ -44,6 +44,11 @@ public class Lloyd {
                                      __/ |      \s
                                     |___/       \s""";
 
+    /** Creates a Lloyd application entry point. */
+    public Lloyd() {
+        // Application state is created when main starts.
+    }
+
     /**
      * Runs the chatbot until the user enters the {@code bye} command.
      *

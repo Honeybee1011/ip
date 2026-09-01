@@ -14,11 +14,13 @@ import org.junit.jupiter.api.Test;
  */
 public class TaskListTest {
 
+    /** Verifies that a task list rejects a null initial collection. */
     @Test
     public void constructor_nullTasks_throwsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new TaskList(null));
     }
 
+    /** Verifies that construction copies tasks while preserving their order. */
     @Test
     public void constructor_existingTasks_copiesTasksInOriginalOrder() {
         Task first = new Todo("first");
@@ -33,6 +35,7 @@ public class TaskListTest {
         assertSame(second, taskList.get(1));
     }
 
+    /** Verifies that appending tasks updates both the size and last task. */
     @Test
     public void add_tasks_appendsTasksAndUpdatesLastTask() {
         TaskList taskList = new TaskList();
@@ -47,6 +50,7 @@ public class TaskListTest {
         assertSame(second, taskList.getLast());
     }
 
+    /** Verifies that indexed insertion preserves the surrounding task order. */
     @Test
     public void add_atIndex_insertsTaskAndPreservesOrder() {
         Task first = new Todo("first");
@@ -62,6 +66,7 @@ public class TaskListTest {
         assertSame(second, taskList.get(2));
     }
 
+    /** Verifies that indexed removal returns the task and closes the list gap. */
     @Test
     public void remove_existingTask_returnsTaskAndClosesGap() {
         Task first = new Todo("first");
@@ -77,6 +82,7 @@ public class TaskListTest {
         assertSame(third, taskList.get(1));
     }
 
+    /** Verifies that removing the final task exposes the preceding task as last. */
     @Test
     public void removeLast_nonEmptyList_removesLastTask() {
         Task first = new Todo("first");
@@ -88,6 +94,7 @@ public class TaskListTest {
         assertSame(first, taskList.getLast());
     }
 
+    /** Verifies that callers cannot modify the list returned for read-only use. */
     @Test
     public void asList_returnedView_cannotBeModified() {
         Task task = new Todo("task");

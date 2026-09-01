@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
  */
 public class CommandTypeTest {
 
+    /** Verifies the mapping for every recognized command word. */
     @Test
     public void from_recognizedCommandWord_returnsMatchingCommandType() {
         assertEquals(CommandType.BYE, CommandType.from("bye"));
@@ -22,21 +23,25 @@ public class CommandTypeTest {
         assertEquals(CommandType.EVENT, CommandType.from("event"));
     }
 
+    /** Verifies that an unrecognized word maps to {@link CommandType#UNKNOWN}. */
     @Test
     public void from_unrecognizedCommandWord_returnsUnknown() {
         assertEquals(CommandType.UNKNOWN, CommandType.from("hello"));
     }
 
+    /** Verifies that an empty word maps to {@link CommandType#UNKNOWN}. */
     @Test
     public void from_emptyCommandWord_returnsUnknown() {
         assertEquals(CommandType.UNKNOWN, CommandType.from(""));
     }
 
+    /** Verifies that a null word maps to {@link CommandType#UNKNOWN}. */
     @Test
     public void from_nullCommandWord_returnsUnknown() {
         assertEquals(CommandType.UNKNOWN, CommandType.from(null));
     }
 
+    /** Verifies that command-word matching remains case-sensitive. */
     @Test
     public void from_differentlyCasedCommandWord_returnsUnknown() {
         assertEquals(CommandType.UNKNOWN, CommandType.from("TODO"));
