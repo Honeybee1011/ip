@@ -72,6 +72,22 @@ public class TaskList {
     }
 
     /**
+     * Returns tasks whose descriptions contain the supplied keyword.
+     *
+     * @param keyword Text to find in each task description.
+     * @return Matching tasks in their original order.
+     */
+    public List<Task> find(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException("Keyword cannot be blank");
+        }
+
+        return tasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .toList();
+    }
+
+    /**
      * Removes and returns the task at a zero-based position.
      *
      * @param index zero-based task position

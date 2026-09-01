@@ -33,6 +33,15 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_findCommandWithKeyword_returnsFindTypeAndKeyword() {
+        Parser parser = new Parser();
+        ParsedCommand parsedCommand = parser.parse("find book");
+
+        assertEquals(CommandType.FIND, parsedCommand.getCommandType());
+        assertEquals("book", parsedCommand.getArguments());
+    }
+
+    @Test
     public void parse_extraWhitespace_trimsAndSeparatesInput() {
         Parser parser = new Parser();
         ParsedCommand parsedCommand = parser.parse("  deadline   submit report /by 02/09/2026  ");

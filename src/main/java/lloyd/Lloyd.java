@@ -88,6 +88,27 @@ public class Lloyd {
                     }
                     printResponse(taskList.toString().stripTrailing());
                     break;
+                case FIND:
+                    if (!command.hasArguments()) {
+                        printResponse(" A search needs a keyword. Tell me what to find.");
+                        break;
+                    }
+
+                    String keyword = command.getArguments();
+                    TaskList matchingTasks = new TaskList(toDoList.find(keyword));
+                    if (matchingTasks.size() == 0) {
+                        printResponse(" No tasks contain the keyword: " + keyword);
+                        break;
+                    }
+
+                    StringBuilder searchResult = new StringBuilder(
+                            " Here are the matching tasks in the master plan:\n");
+                    for (int i = 0; i < matchingTasks.size(); i++) {
+                        searchResult.append(String.format(
+                                " %d.%s%n", i + 1, matchingTasks.get(i)));
+                    }
+                    printResponse(searchResult.toString().stripTrailing());
+                    break;
                 case CHECK:
                     if (!command.hasArguments()) {
                         printResponse(" Tell me which date to inspect using dd/MM/yyyy.");
@@ -250,7 +271,8 @@ public class Lloyd {
                             deadlineDetails.substring(byIndex + " /by ".length()).trim();
 
                     if (deadlineDescription.isEmpty() || by.isEmpty()) {
-                        printResponse(" A contract needs both the work and its deadline. Provide a description and /by date.");
+                        printResponse(" A contract needs both the work and its deadline."
+                                + " Provide a description and /by date.");
                         break;
                     }
 
@@ -272,7 +294,8 @@ public class Lloyd {
                     break;
                 case EVENT:
                     if (!command.hasArguments()) {
-                        printResponse(" Every grand event needs a plan. Provide a description, /from date, and /to date.");
+                        printResponse(" Every grand event needs a plan."
+                                + " Provide a description, /from date, and /to date.");
                         break;
                     }
 
@@ -294,7 +317,8 @@ public class Lloyd {
                             eventDetails.substring(toIndex + " /to ".length()).trim();
 
                     if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        printResponse(" The project contract is incomplete. Provide a description, /from date, and /to date.");
+                        printResponse(" The project contract is incomplete."
+                                + " Provide a description, /from date, and /to date.");
                         break;
                     }
 

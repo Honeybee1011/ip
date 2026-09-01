@@ -6,6 +6,7 @@ package lloyd.command;
 public enum CommandType {
     BYE("bye"),
     LIST("list"),
+    FIND("find"),
     CHECK("check"),
     MARK("mark"),
     UNMARK("unmark"),

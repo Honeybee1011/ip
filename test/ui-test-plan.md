@@ -625,6 +625,141 @@ ____________________________________________________________
 
 ```
 
+### UI-014: Find tasks containing a keyword
+
+**Aim:** Verify that `find` returns every task whose description contains the
+keyword, preserves their order, and rejects a missing keyword without changing
+the task list.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+todo read book
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] read book
+ Tasks currently in the master plan: 1.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+deadline return book /by 02/09/2026
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [D][ ] return book (by: Sep 2 2026)
+ Tasks currently in the master plan: 2.
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+todo write essay
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Excellent! Another investment in your future has been approved:
+   [T][ ] write essay
+ Tasks currently in the master plan: 3.
+____________________________________________________________
+
+```
+
+#### Step 4
+
+**Input:**
+
+```text
+find book
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Here are the matching tasks in the master plan:
+ 1.[T][ ] read book
+ 2.[D][ ] return book (by: Sep 2 2026)
+____________________________________________________________
+
+```
+
+#### Step 5
+
+**Input:**
+
+```text
+find bridge
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ No tasks contain the keyword: bridge
+____________________________________________________________
+
+```
+
+#### Step 6
+
+**Input:**
+
+```text
+find
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ A search needs a keyword. Tell me what to find.
+____________________________________________________________
+
+```
+
+#### Step 7
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
 ### UI-013: Check deadlines and event endpoints by date
 
 **Aim:** Verify that `check` lists deadlines due on the requested date and events
