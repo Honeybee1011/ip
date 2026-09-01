@@ -3,7 +3,6 @@ package lloyd.task;
 /**
  * Represents a task and whether it has been completed.
  */
-
 public class Task {
     private final String description;
     private boolean isDone;
@@ -13,7 +12,6 @@ public class Task {
      *
      * @param description Description of the task.
      */
-
     public Task(String description) {
         this.description = description;
         this.isDone = false;
