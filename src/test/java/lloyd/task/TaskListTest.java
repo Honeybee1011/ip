@@ -96,6 +96,31 @@ public class TaskListTest {
 
     /** Verifies that callers cannot modify the list returned for read-only use. */
     @Test
+    public void find_matchingKeyword_returnsAllMatchesInOriginalOrder() {
+        Task first = new Todo("read book");
+        Task second = new Todo("return book");
+        TaskList taskList = new TaskList(List.of(first, new Todo("write essay"), second));
+
+        List<Task> matches = taskList.find("book");
+
+        assertEquals(List.of(first, second), matches);
+    }
+
+    @Test
+    public void find_keywordWithDifferentCase_returnsNoMatches() {
+        TaskList taskList = new TaskList(List.of(new Todo("read book")));
+
+        assertEquals(List.of(), taskList.find("Book"));
+    }
+
+    @Test
+    public void find_blankKeyword_throwsIllegalArgumentException() {
+        TaskList taskList = new TaskList();
+
+        assertThrows(IllegalArgumentException.class, () -> taskList.find(" "));
+    }
+
+    @Test
     public void asList_returnedView_cannotBeModified() {
         Task task = new Todo("task");
         TaskList taskList = new TaskList(List.of(task));

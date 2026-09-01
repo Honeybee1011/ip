@@ -93,6 +93,27 @@ public class Lloyd {
                     }
                     printResponse(taskList.toString().stripTrailing());
                     break;
+                case FIND:
+                    if (!command.hasArguments()) {
+                        printResponse(" A search needs a keyword. Tell me what to find.");
+                        break;
+                    }
+
+                    String keyword = command.getArguments();
+                    TaskList matchingTasks = new TaskList(toDoList.find(keyword));
+                    if (matchingTasks.size() == 0) {
+                        printResponse(" No tasks contain the keyword: " + keyword);
+                        break;
+                    }
+
+                    StringBuilder searchResult = new StringBuilder(
+                            " Here are the matching tasks in the master plan:\n");
+                    for (int i = 0; i < matchingTasks.size(); i++) {
+                        searchResult.append(String.format(
+                                " %d.%s%n", i + 1, matchingTasks.get(i)));
+                    }
+                    printResponse(searchResult.toString().stripTrailing());
+                    break;
                 case CHECK:
                     if (!command.hasArguments()) {
                         printResponse(" Tell me which date to inspect using dd/MM/yyyy.");

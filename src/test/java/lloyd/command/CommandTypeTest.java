@@ -14,6 +14,7 @@ public class CommandTypeTest {
     public void from_recognizedCommandWord_returnsMatchingCommandType() {
         assertEquals(CommandType.BYE, CommandType.from("bye"));
         assertEquals(CommandType.LIST, CommandType.from("list"));
+        assertEquals(CommandType.FIND, CommandType.from("find"));
         assertEquals(CommandType.CHECK, CommandType.from("check"));
         assertEquals(CommandType.MARK, CommandType.from("mark"));
         assertEquals(CommandType.UNMARK, CommandType.from("unmark"));

@@ -8,6 +8,8 @@ public enum CommandType {
     BYE("bye"),
     /** Displays all tasks in their current order. */
     LIST("list"),
+    /** Displays tasks that contain a keyword in their description. */
+    FIND("find"),
     /** Displays deadlines and event endpoints on a requested date. */
     CHECK("check"),
     /** Marks a task as complete. */
