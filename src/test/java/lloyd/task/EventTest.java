@@ -25,7 +25,7 @@ public class EventTest {
     public void event_invalidEvent_throwsIllegalArgumentException() {
         LocalDateTime from = LocalDateTime.now();
         LocalDateTime to = from.minusHours(1);
-        assertThrows(IllegalArgumentException.class,
-                () -> new Event("Invalid event", from, to));
+        assertThrows(IllegalArgumentException.class, () ->
+                new Event("Invalid event", from, to));
     }
 }

@@ -127,7 +127,7 @@ public class TaskListTest {
         List<Task> readOnlyTasks = taskList.asList();
 
         assertEquals(List.of(task), readOnlyTasks);
-        assertThrows(UnsupportedOperationException.class,
-                () -> readOnlyTasks.add(new Todo("another task")));
+        assertThrows(UnsupportedOperationException.class, () ->
+                readOnlyTasks.add(new Todo("another task")));
     }
 }
