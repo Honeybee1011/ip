@@ -88,14 +88,14 @@ public class StorageTest {
 
     /** Verifies that malformed saved data reports the offending line number. */
     @Test
-    public void load_invalidTaskData_throwsIOExceptionWithLineNumber() throws IOException {
+    public void load_invalidTaskData_throwsIoExceptionWithLineNumber() throws IOException {
         Path filePath = temporaryDirectory.resolve("tasks.txt");
         Files.write(filePath, List.of(
                 "T | 0 | valid task",
                 "D | 0 | invalid deadline | not-a-date"), StandardCharsets.UTF_8);
 
-        IOException exception = assertThrows(IOException.class,
-                () -> new Storage(filePath).load());
+        IOException exception = assertThrows(IOException.class, () ->
+                new Storage(filePath).load());
 
         assertTrue(exception.getMessage().contains("line 2"));
     }
@@ -125,8 +125,8 @@ public class StorageTest {
         Files.writeString(filePath, "T | 0 | original", StandardCharsets.UTF_8);
         Storage storage = new Storage(filePath);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> storage.save(List.of(new Todo("compare A | B"))));
+        assertThrows(IllegalArgumentException.class, () ->
+                storage.save(List.of(new Todo("compare A | B"))));
 
         assertEquals("T | 0 | original",
                 Files.readString(filePath, StandardCharsets.UTF_8));
@@ -139,8 +139,8 @@ public class StorageTest {
         Files.writeString(filePath, "T | 0 | original", StandardCharsets.UTF_8);
         Storage storage = new Storage(filePath);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> storage.save(List.of(new Task("unsupported"))));
+        assertThrows(IllegalArgumentException.class, () ->
+                storage.save(List.of(new Task("unsupported"))));
 
         assertEquals("T | 0 | original",
                 Files.readString(filePath, StandardCharsets.UTF_8));
