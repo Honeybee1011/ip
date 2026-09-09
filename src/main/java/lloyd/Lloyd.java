@@ -9,7 +9,6 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
 
-import lloyd.command.CommandType;
 import lloyd.command.ParsedCommand;
 import lloyd.command.Parser;
 import lloyd.storage.Storage;
@@ -20,9 +19,7 @@ import lloyd.task.TaskList;
 import lloyd.task.Todo;
 import lloyd.ui.Ui;
 
-/**
- * Starts the Lloyd chatbot application and responds to commands entered by the user.
- */
+/** Processes commands and manages the persistent task list for Lloyd's user interfaces. */
 public class Lloyd {
     private static final DateTimeFormatter DEADLINE_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/uuuu")
@@ -43,348 +40,385 @@ public class Lloyd {
                     |______|_|\\___/ \\__, |\\__,_|
                                      __/ |      \s
                                     |___/       \s""";
+    private static final String GREETING =
+            " Lloyd Frontera, the greatest estate developer, at your service!"
+                    + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
+                    + "\n Now, what needs doing?";
+    private static final String FAREWELL =
+            " Leaving already? Fine. Rest while you can; those tasks will not"
+                    + " build themselves. Come back when you are ready to work..."
+                    + " and remember to bring payment!";
+    private static final String LOAD_ERROR =
+            " I could not load the task file. Check that data/lloyd.txt"
+                    + " contains valid task data and can be read.";
+    private static final String SAVE_ERROR =
+            " I could not save that change. The task list was left unchanged."
+                    + " Check that data/lloyd.txt can be written and task details"
+                    + " do not contain the | character.";
 
-    /** Creates a Lloyd application entry point. */
-    public Lloyd() {
-        // Application state is created when main starts.
+    private final Storage storage;
+    private final TaskList toDoList;
+    private final Parser parser;
+    private boolean isExitRequested;
+
+    /**
+     * Creates a Lloyd application backed by the default task file.
+     *
+     * @throws IOException If the task file cannot be loaded.
+     */
+    public Lloyd() throws IOException {
+        this(Path.of("data", "lloyd.txt"));
     }
 
     /**
-     * Runs the chatbot until the user enters the {@code bye} command.
+     * Creates a Lloyd application backed by the supplied task file.
+     *
+     * @param storagePath Location from which tasks are loaded and saved.
+     * @throws IOException If the task file cannot be loaded.
+     */
+    public Lloyd(Path storagePath) throws IOException {
+        storage = new Storage(storagePath);
+        toDoList = new TaskList(storage.load());
+        parser = new Parser();
+    }
+
+    /**
+     * Runs Lloyd through the original console interface.
+     *
+     * <p>The graphical application uses {@link #getResponse(String)} directly;
+     * this entry point remains available for console testing.</p>
      *
      * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         Ui ui = new Ui();
-        printResponse(BANNER
-                + "\n Lloyd Frontera, the greatest estate developer, at your service!"
-                + "\n Got a problem? Excellent. Problems are profits waiting for an engineer."
-                + "\n Now, what needs doing?");
+        printResponse(BANNER + "\n" + GREETING);
 
-        Storage storage = new Storage(Path.of("data", "lloyd.txt"));
-        TaskList toDoList;
         try {
-            toDoList = new TaskList(storage.load());
-        } catch (IOException e) {
-            printResponse(" I could not load the task file. Check that data/lloyd.txt"
-                    + " contains valid task data and can be read.");
-            ui.close();
-            return;
-        }
-        boolean isRunning = true;
-        Parser parser = new Parser();
-
-        while (isRunning && ui.hasNextCommand()) {
-            ParsedCommand command = parser.parse(ui.readCommand());
-            CommandType commandType = command.getCommandType();
-
-            switch (commandType) {
-                case BYE:
-                    isRunning = false;
-                    break;
-                case LIST:
-                    StringBuilder taskList = new StringBuilder(
-                            " Behold! Here is the master plan:\n"
-                    );
-                    for (int i = 0; i < toDoList.size(); i++) {
-                        taskList.append(String.format(
-                                " %d.%s%n", i + 1, toDoList.get(i)
-                        ));
-                    }
-                    printResponse(taskList.toString().stripTrailing());
-                    break;
-                case FIND:
-                    if (!command.hasArguments()) {
-                        printResponse(" A search needs a keyword. Tell me what to find.");
-                        break;
-                    }
-
-                    String keyword = command.getArguments();
-                    TaskList matchingTasks = new TaskList(toDoList.find(keyword));
-                    if (matchingTasks.size() == 0) {
-                        printResponse(" No tasks contain the keyword: " + keyword);
-                        break;
-                    }
-
-                    StringBuilder searchResult = new StringBuilder(
-                            " Here are the matching tasks in the master plan:\n");
-                    for (int i = 0; i < matchingTasks.size(); i++) {
-                        searchResult.append(String.format(
-                                " %d.%s%n", i + 1, matchingTasks.get(i)));
-                    }
-                    printResponse(searchResult.toString().stripTrailing());
-                    break;
-                case CHECK:
-                    if (!command.hasArguments()) {
-                        printResponse(" Tell me which date to inspect using dd/MM/yyyy.");
-                        break;
-                    }
-
-                    try {
-                        LocalDate checkedDate = LocalDate.parse(
-                                command.getArguments(), DEADLINE_FORMAT);
-                        StringBuilder scheduledTasks = new StringBuilder(
-                                " Deadlines and event endpoints on "
-                                        + checkedDate.format(CHECK_DISPLAY_FORMAT)
-                                        + ":\n");
-                        int matchCount = 0;
-                        for (int i = 0; i < toDoList.size(); i++) {
-                            Task task = toDoList.get(i);
-                            if (isScheduledOn(task, checkedDate)) {
-                                scheduledTasks.append(String.format(
-                                        " %d.%s%n", i + 1, task));
-                                matchCount++;
-                            }
-                        }
-
-                        if (matchCount == 0) {
-                            printResponse(" No deadlines or event endpoints fall on "
-                                    + checkedDate.format(CHECK_DISPLAY_FORMAT) + ".");
-                        } else {
-                            printResponse(scheduledTasks.toString().stripTrailing());
-                        }
-                    } catch (DateTimeParseException e) {
-                        printResponse(" Enter the date to check in dd/MM/yyyy format.");
-                    }
-                    break;
-                case MARK:
-                    if (!command.hasArguments()) {
-                        printResponse(" Even I cannot finish an imaginary task."
-                                + " Give me the task number to mark.");
-                        break;
-                    }
-
-                    try {
-                        int taskNumber = Integer.parseInt(command.getArguments());
-                        if (taskNumber < 1 || taskNumber > toDoList.size()) {
-                            printResponse(" That task is not in the master plan."
-                                    + " Check its number.");
-                            break;
-                        }
-
-                        Task task = toDoList.get(taskNumber - 1);
-                        boolean wasDone = task.isDone();
-                        task.mark();
-                        if (!saveTasks(storage, toDoList)) {
-                            if (!wasDone) {
-                                task.unmark();
-                            }
-                            break;
-                        }
-                        printResponse(" Magnificent! Efficient work means lower costs."
-                                + " This task is officially complete:\n"
-                                + toDoList.get(taskNumber - 1));
-                    } catch (NumberFormatException e) {
-                        printResponse(" A task number needs to be a number."
-                                + " Even Javier knows that.");
-                    }
-                    break;
-                case UNMARK:
-                    if (!command.hasArguments()) {
-                        printResponse(" Rework requires paperwork."
-                                + " Give me the task number to unmark.");
-                        break;
-                    }
-
-                    try {
-                        int taskNumber = Integer.parseInt(command.getArguments());
-                        if (taskNumber < 1 || taskNumber > toDoList.size()) {
-                            printResponse(" That task is not in the master plan."
-                                    + " Check its number.");
-                            break;
-                        }
-
-                        Task task = toDoList.get(taskNumber - 1);
-                        boolean wasDone = task.isDone();
-                        task.unmark();
-                        if (!saveTasks(storage, toDoList)) {
-                            if (wasDone) {
-                                task.mark();
-                            }
-                            break;
-                        }
-                        printResponse(" What? Rework? That is terrible for the budget!"
-                                + " Fine, this task is back under construction:\n"
-                                + toDoList.get(taskNumber - 1));
-                    } catch (NumberFormatException e) {
-                        printResponse(" A task number needs to be a number."
-                                + " Even Javier knows that.");
-                    }
-                    break;
-                case DELETE:
-                    if (!command.hasArguments()) {
-                        printResponse(" Demolition needs a target."
-                                + " Give me the task number to delete.");
-                        break;
-                    }
-
-                    try {
-                        int taskNumber = Integer.parseInt(command.getArguments());
-                        if (taskNumber < 1 || taskNumber > toDoList.size()) {
-                            printResponse(" That task is not in the master plan."
-                                    + " Check its number.");
-                            break;
-                        }
-
-                        Task deletedTask = toDoList.remove(taskNumber - 1);
-                        if (!saveTasks(storage, toDoList)) {
-                            toDoList.add(taskNumber - 1, deletedTask);
-                            break;
-                        }
-                        printResponse(" Excellent! Waste eliminated from the budget."
-                                + " I have removed this task:\n"
-                                + deletedTask
-                                + "\n Tasks currently in the master plan: "
-                                + toDoList.size() + ".");
-                    } catch (NumberFormatException e) {
-                        printResponse(" A task number needs to be a number. Even Javier knows that.");
-                    }
-                    break;
-                case TODO:
-                    if (!command.hasArguments()) {
-                        printResponse(" Every task needs a description."
-                                + " Tell me what needs doing.");
-                        break;
-                    }
-
-                    toDoList.add(new Todo(command.getArguments()));
-                    if (!saveTasks(storage, toDoList)) {
-                        toDoList.removeLast();
-                        break;
-                    }
-                    printResponse(createTaskAddedMessage(
-                            toDoList.getLast(), toDoList.size()
-                    ));
-                    break;
-                case DEADLINE:
-                    if (!command.hasArguments()) {
-                        printResponse(" Every profitable project needs details."
-                                + " Provide a description and /by date.");
-                        break;
-                    }
-
-                    String deadlineDetails = command.getArguments();
-                    int byIndex = deadlineDetails.indexOf(" /by ");
-
-                    if (byIndex < 0) {
-                        printResponse(" No deadline, no schedule. Specify it using /by.");
-                        break;
-                    }
-
-                    String deadlineDescription =
-                            deadlineDetails.substring(0, byIndex).trim();
-                    String by =
-                            deadlineDetails.substring(byIndex + " /by ".length()).trim();
-
-                    if (deadlineDescription.isEmpty() || by.isEmpty()) {
-                        printResponse(" A contract needs both the work and its deadline."
-                                + " Provide a description and /by date.");
-                        break;
-                    }
-
-                    try {
-                        LocalDate deadlineDate = LocalDate.parse(by, DEADLINE_FORMAT);
-                        toDoList.add(new Deadline(deadlineDescription, deadlineDate));
-                    } catch (DateTimeParseException e) {
-                        printResponse(" Enter the deadline in dd/MM/yyyy format.");
-                        break;
-                    }
-                    if (!saveTasks(storage, toDoList)) {
-                        toDoList.removeLast();
-                        break;
-                    }
-
-                    printResponse(createTaskAddedMessage(
-                            toDoList.getLast(), toDoList.size()
-                    ));
-                    break;
-                case EVENT:
-                    if (!command.hasArguments()) {
-                        printResponse(" Every grand event needs a plan."
-                                + " Provide a description, /from date, and /to date.");
-                        break;
-                    }
-
-                    String eventDetails = command.getArguments();
-                    int fromIndex = eventDetails.indexOf(" /from ");
-                    int toIndex = eventDetails.indexOf(
-                            " /to ", fromIndex + " /from ".length());
-
-                    if (fromIndex < 0 || toIndex < 0) {
-                        printResponse(" An event without a schedule invites disaster."
-                                + " Specify it using /from and /to.");
-                        break;
-                    }
-
-                    String eventDescription =
-                            eventDetails.substring(0, fromIndex).trim();
-                    String from = eventDetails.substring(
-                            fromIndex + " /from ".length(), toIndex).trim();
-                    String to =
-                            eventDetails.substring(toIndex + " /to ".length()).trim();
-
-                    if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        printResponse(" The project contract is incomplete."
-                                + " Provide a description, /from date, and /to date.");
-                        break;
-                    }
-
-                    try {
-                        LocalDateTime start = LocalDateTime.parse(from, EVENT_FORMAT);
-                        LocalDateTime end = LocalDateTime.parse(to, EVENT_FORMAT);
-                        toDoList.add(new Event(eventDescription, start, end));
-                    } catch (DateTimeParseException e) {
-                        printResponse(" Enter event dates and times in dd/MM/yyyy HHmm format.");
-                        break;
-                    } catch (IllegalArgumentException e) {
-                        printResponse(" The event end cannot be before its start.");
-                        break;
-                    }
-                    if (!saveTasks(storage, toDoList)) {
-                        toDoList.removeLast();
-                        break;
-                    }
-
-                    printResponse(createTaskAddedMessage(
-                            toDoList.getLast(), toDoList.size()
-                    ));
-                    break;
-                default:
-                    printResponse(" I reject vague contracts."
-                            + " Start every task with todo, deadline, or event.");
-                    break;
+            Lloyd lloyd = new Lloyd();
+            while (!lloyd.isExitRequested() && ui.hasNextCommand()) {
+                printResponse(lloyd.getResponse(ui.readCommand()));
             }
+            if (!lloyd.isExitRequested()) {
+                printResponse(FAREWELL);
+            }
+        } catch (IOException e) {
+            printResponse(LOAD_ERROR);
+        } finally {
+            ui.close();
         }
-        ui.close();
-
-        printResponse(" Leaving already? Fine. Rest while you can; those tasks will not"
-                + " build themselves. Come back when you are ready to work..."
-                + " and remember to bring payment!");
     }
 
     /**
-     * Creates the standard response shown after adding any type of task.
+     * Returns the greeting shown when a user interface starts.
      *
-     * @param task Task that was added.
-     * @param taskCount Number of tasks currently in the list.
-     * @return Response containing the added task and updated task count.
+     * @return Lloyd's greeting without the console-only text banner.
      */
-    private static String createTaskAddedMessage(Task task, int taskCount) {
+    public String getGreeting() {
+        return GREETING.stripLeading();
+    }
+
+    /**
+     * Processes one command and returns the response for a user interface to display.
+     *
+     * @param input Command entered by the user.
+     * @return Lloyd's response to the command.
+     */
+    public String getResponse(String input) {
+        ParsedCommand command = parser.parse(input);
+        return switch (command.getCommandType()) {
+            case BYE -> exit();
+            case LIST -> listTasks();
+            case FIND -> findTasks(command);
+            case CHECK -> checkDate(command);
+            case MARK -> markTask(command);
+            case UNMARK -> unmarkTask(command);
+            case DELETE -> deleteTask(command);
+            case TODO -> addTodo(command);
+            case DEADLINE -> addDeadline(command);
+            case EVENT -> addEvent(command);
+            default -> " I reject vague contracts."
+                    + " Start every task with todo, deadline, or event.";
+        };
+    }
+
+    /**
+     * Reports whether the latest command asked Lloyd to exit.
+     *
+     * @return {@code true} after Lloyd processes the {@code bye} command.
+     */
+    public boolean isExitRequested() {
+        return isExitRequested;
+    }
+
+    /** Marks the application as finished and returns Lloyd's farewell. */
+    private String exit() {
+        isExitRequested = true;
+        return FAREWELL;
+    }
+
+    /** Returns all tasks in their current order. */
+    private String listTasks() {
+        StringBuilder taskList = new StringBuilder(
+                " Behold! Here is the master plan:\n");
+        for (int i = 0; i < toDoList.size(); i++) {
+            taskList.append(String.format(" %d.%s%n", i + 1, toDoList.get(i)));
+        }
+        return taskList.toString().stripTrailing();
+    }
+
+    /** Returns tasks containing the requested keyword. */
+    private String findTasks(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " A search needs a keyword. Tell me what to find.";
+        }
+
+        String keyword = command.getArguments();
+        TaskList matchingTasks = new TaskList(toDoList.find(keyword));
+        if (matchingTasks.size() == 0) {
+            return " No tasks contain the keyword: " + keyword;
+        }
+
+        StringBuilder searchResult = new StringBuilder(
+                " Here are the matching tasks in the master plan:\n");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            searchResult.append(String.format(
+                    " %d.%s%n", i + 1, matchingTasks.get(i)));
+        }
+        return searchResult.toString().stripTrailing();
+    }
+
+    /** Returns deadlines and event endpoints on the requested date. */
+    private String checkDate(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Tell me which date to inspect using dd/MM/yyyy.";
+        }
+
+        try {
+            LocalDate checkedDate = LocalDate.parse(
+                    command.getArguments(), DEADLINE_FORMAT);
+            StringBuilder scheduledTasks = new StringBuilder(
+                    " Deadlines and event endpoints on "
+                            + checkedDate.format(CHECK_DISPLAY_FORMAT) + ":\n");
+            int matchCount = 0;
+            for (int i = 0; i < toDoList.size(); i++) {
+                Task task = toDoList.get(i);
+                if (isScheduledOn(task, checkedDate)) {
+                    scheduledTasks.append(String.format(
+                            " %d.%s%n", i + 1, task));
+                    matchCount++;
+                }
+            }
+
+            if (matchCount == 0) {
+                return " No deadlines or event endpoints fall on "
+                        + checkedDate.format(CHECK_DISPLAY_FORMAT) + ".";
+            }
+            return scheduledTasks.toString().stripTrailing();
+        } catch (DateTimeParseException e) {
+            return " Enter the date to check in dd/MM/yyyy format.";
+        }
+    }
+
+    /** Marks one task as complete when its number is valid. */
+    private String markTask(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Even I cannot finish an imaginary task."
+                    + " Give me the task number to mark.";
+        }
+
+        try {
+            int taskNumber = Integer.parseInt(command.getArguments());
+            if (!isValidTaskNumber(taskNumber)) {
+                return invalidTaskNumberMessage();
+            }
+
+            Task task = toDoList.get(taskNumber - 1);
+            boolean wasDone = task.isDone();
+            task.mark();
+            if (!saveTasks()) {
+                if (!wasDone) {
+                    task.unmark();
+                }
+                return SAVE_ERROR;
+            }
+            return " Magnificent! Efficient work means lower costs."
+                    + " This task is officially complete:\n" + task;
+        } catch (NumberFormatException e) {
+            return invalidNumberMessage();
+        }
+    }
+
+    /** Marks one task as incomplete when its number is valid. */
+    private String unmarkTask(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Rework requires paperwork."
+                    + " Give me the task number to unmark.";
+        }
+
+        try {
+            int taskNumber = Integer.parseInt(command.getArguments());
+            if (!isValidTaskNumber(taskNumber)) {
+                return invalidTaskNumberMessage();
+            }
+
+            Task task = toDoList.get(taskNumber - 1);
+            boolean wasDone = task.isDone();
+            task.unmark();
+            if (!saveTasks()) {
+                if (wasDone) {
+                    task.mark();
+                }
+                return SAVE_ERROR;
+            }
+            return " What? Rework? That is terrible for the budget!"
+                    + " Fine, this task is back under construction:\n" + task;
+        } catch (NumberFormatException e) {
+            return invalidNumberMessage();
+        }
+    }
+
+    /** Deletes one task when its number is valid. */
+    private String deleteTask(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Demolition needs a target."
+                    + " Give me the task number to delete.";
+        }
+
+        try {
+            int taskNumber = Integer.parseInt(command.getArguments());
+            if (!isValidTaskNumber(taskNumber)) {
+                return invalidTaskNumberMessage();
+            }
+
+            Task deletedTask = toDoList.remove(taskNumber - 1);
+            if (!saveTasks()) {
+                toDoList.add(taskNumber - 1, deletedTask);
+                return SAVE_ERROR;
+            }
+            return " Excellent! Waste eliminated from the budget."
+                    + " I have removed this task:\n" + deletedTask
+                    + "\n Tasks currently in the master plan: "
+                    + toDoList.size() + ".";
+        } catch (NumberFormatException e) {
+            return invalidNumberMessage();
+        }
+    }
+
+    /** Adds a todo when a description is present. */
+    private String addTodo(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Every task needs a description. Tell me what needs doing.";
+        }
+
+        toDoList.add(new Todo(command.getArguments()));
+        if (!saveTasks()) {
+            toDoList.removeLast();
+            return SAVE_ERROR;
+        }
+        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+    }
+
+    /** Adds a deadline when its description and date are valid. */
+    private String addDeadline(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Every profitable project needs details."
+                    + " Provide a description and /by date.";
+        }
+
+        String deadlineDetails = command.getArguments();
+        int byIndex = deadlineDetails.indexOf(" /by ");
+        if (byIndex < 0) {
+            return " No deadline, no schedule. Specify it using /by.";
+        }
+
+        String deadlineDescription = deadlineDetails.substring(0, byIndex).trim();
+        String by = deadlineDetails.substring(byIndex + " /by ".length()).trim();
+        if (deadlineDescription.isEmpty() || by.isEmpty()) {
+            return " A contract needs both the work and its deadline."
+                    + " Provide a description and /by date.";
+        }
+
+        try {
+            LocalDate deadlineDate = LocalDate.parse(by, DEADLINE_FORMAT);
+            toDoList.add(new Deadline(deadlineDescription, deadlineDate));
+        } catch (DateTimeParseException e) {
+            return " Enter the deadline in dd/MM/yyyy format.";
+        }
+
+        if (!saveTasks()) {
+            toDoList.removeLast();
+            return SAVE_ERROR;
+        }
+        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+    }
+
+    /** Adds an event when its description and endpoints are valid. */
+    private String addEvent(ParsedCommand command) {
+        if (!command.hasArguments()) {
+            return " Every grand event needs a plan."
+                    + " Provide a description, /from date, and /to date.";
+        }
+
+        String eventDetails = command.getArguments();
+        int fromIndex = eventDetails.indexOf(" /from ");
+        int toIndex = eventDetails.indexOf(
+                " /to ", fromIndex + " /from ".length());
+        if (fromIndex < 0 || toIndex < 0) {
+            return " An event without a schedule invites disaster."
+                    + " Specify it using /from and /to.";
+        }
+
+        String eventDescription = eventDetails.substring(0, fromIndex).trim();
+        String from = eventDetails.substring(
+                fromIndex + " /from ".length(), toIndex).trim();
+        String to = eventDetails.substring(toIndex + " /to ".length()).trim();
+        if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
+            return " The project contract is incomplete."
+                    + " Provide a description, /from date, and /to date.";
+        }
+
+        try {
+            LocalDateTime start = LocalDateTime.parse(from, EVENT_FORMAT);
+            LocalDateTime end = LocalDateTime.parse(to, EVENT_FORMAT);
+            toDoList.add(new Event(eventDescription, start, end));
+        } catch (DateTimeParseException e) {
+            return " Enter event dates and times in dd/MM/yyyy HHmm format.";
+        } catch (IllegalArgumentException e) {
+            return " The event end cannot be before its start.";
+        }
+
+        if (!saveTasks()) {
+            toDoList.removeLast();
+            return SAVE_ERROR;
+        }
+        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+    }
+
+    /** Reports whether a one-based task number refers to an existing task. */
+    private boolean isValidTaskNumber(int taskNumber) {
+        return taskNumber >= 1 && taskNumber <= toDoList.size();
+    }
+
+    /** Returns the standard response for a numeric task index outside the list. */
+    private String invalidTaskNumberMessage() {
+        return " That task is not in the master plan. Check its number.";
+    }
+
+    /** Returns the standard response for a task number that is not numeric. */
+    private String invalidNumberMessage() {
+        return " A task number needs to be a number. Even Javier knows that.";
+    }
+
+    /** Creates the standard response shown after adding any type of task. */
+    private String createTaskAddedMessage(Task task, int taskCount) {
         return " Excellent! Another investment in your future has been approved:\n"
                 + "   " + task
                 + "\n Tasks currently in the master plan: " + taskCount + ".";
     }
 
-    /**
-     * Reports whether a task belongs in the result for a checked date.
-     * Deadlines match their due date. Events match only their start or end date,
-     * so dates strictly between the endpoints of a multi-day event are excluded.
-     *
-     * @param task Task to inspect.
-     * @param checkedDate Date requested by the user.
-     * @return {@code true} if the deadline or an event endpoint matches the date.
-     */
-    private static boolean isScheduledOn(Task task, LocalDate checkedDate) {
+    /** Reports whether a deadline or event endpoint matches the checked date. */
+    private boolean isScheduledOn(Task task, LocalDate checkedDate) {
         if (task instanceof Deadline deadline) {
             return deadline.getBy().equals(checkedDate);
         }
@@ -395,30 +429,17 @@ public class Lloyd {
         return false;
     }
 
-    /**
-     * Saves the current tasks and reports a recoverable error to the user.
-     *
-     * @param storage Storage used by the chatbot.
-     * @param tasks Current task list.
-     * @return {@code true} when the save succeeds.
-     */
-    private static boolean saveTasks(Storage storage, TaskList tasks) {
+    /** Saves the current tasks and reports whether the operation succeeded. */
+    private boolean saveTasks() {
         try {
-            storage.save(tasks.asList());
+            storage.save(toDoList.asList());
             return true;
         } catch (IOException | IllegalArgumentException e) {
-            printResponse(" I could not save that change. The task list was left unchanged."
-                    + " Check that data/lloyd.txt can be written and task details"
-                    + " do not contain the | character.");
             return false;
         }
     }
 
-    /**
-     * Prints a chatbot response enclosed by divider lines.
-     *
-     * @param message Response to display.
-     */
+    /** Displays a response through the compatibility console interface. */
     private static void printResponse(String message) {
         Ui.showResponse(message);
     }

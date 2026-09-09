@@ -4,9 +4,9 @@ This file is the source of truth for console UI test cases run with the `test-ui
 
 ## Test configuration
 
-- Compilation command: `javac -d out (Get-ChildItem src/main/java -Recurse -Filter *.java).FullName`
+- Compilation command: `.\gradlew.bat classes`
 - Compilation working directory: `C:\Users\joshu\Code\ip`
-- Default program start command: `java -cp ..\..\out lloyd.Lloyd`
+- Default program start command: `java -cp ..\..\build\classes\java\main lloyd.Lloyd`
 - Default UI working directory: `C:\Users\joshu\Code\ip\_temp\ui-case`
 - Java version: 25.
 - Session isolation: Start each test case in a fresh process.
@@ -23,9 +23,16 @@ This file is the source of truth for console UI test cases run with the `test-ui
 writes the specified delimited format safely, restores task data, preserves an
 existing file after rejected data, and reports malformed data and write failures.
 
-**Compilation command:** `javac -d out (Get-ChildItem src/main/java,test -Recurse -Filter *.java).FullName`
+**Compilation command:**
 
-**Program start command:** `java -cp out lloyd.storage.StorageTest`
+```powershell
+$storageSources = @(Get-ChildItem 'src\main\java\lloyd\task' -Filter '*.java')
+$storageSources += Get-Item 'src\main\java\lloyd\storage\Storage.java'
+$storageSources += Get-Item 'test\StorageTest.java'
+javac -d out $storageSources.FullName
+```
+
+**Program start command:** `java -cp "out;build\classes\java\main" lloyd.storage.StorageTest`
 
 **Expected startup output:**
 
@@ -48,7 +55,7 @@ unmarking, and deleting tasks.
 
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-save-test`
 
-**Program start command:** `java -cp ..\..\out lloyd.Lloyd`
+**Program start command:** `java -cp ..\..\build\classes\java\main lloyd.Lloyd`
 
 **Storage setup:** Ensure the working directory does not contain a `data` directory.
 
@@ -233,7 +240,7 @@ including their completion states and task-specific information.
 
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-load-test`
 
-**Program start command:** `java -cp ..\..\out lloyd.Lloyd`
+**Program start command:** `java -cp ..\..\build\classes\java\main lloyd.Lloyd`
 
 **Initial `data/lloyd.txt`:**
 
@@ -289,7 +296,7 @@ is rejected, and unsavable task data is rolled back without terminating the chat
 
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-storage-errors`
 
-**Program start command:** `java -cp ..\..\out lloyd.Lloyd`
+**Program start command:** `java -cp ..\..\build\classes\java\main lloyd.Lloyd`
 
 **Storage setup:** Ensure the working directory does not contain a `data` directory.
 
@@ -372,7 +379,7 @@ stack trace or an accidental overwrite of the storage file.
 
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-corrupt-storage`
 
-**Program start command:** `java -cp ..\..\out lloyd.Lloyd`
+**Program start command:** `java -cp ..\..\build\classes\java\main lloyd.Lloyd`
 
 **Initial `data/lloyd.txt`:**
 
@@ -769,7 +776,7 @@ responses.
 
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-check-test`
 
-**Program start command:** `java -cp ..\..\out lloyd.Lloyd`
+**Program start command:** `java -cp ..\..\build\classes\java\main lloyd.Lloyd`
 
 **Initial `data/lloyd.txt`:**
 
