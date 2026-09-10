@@ -31,6 +31,10 @@ public class Lloyd {
     private static final DateTimeFormatter CHECK_DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
 
+    private static final String DEADLINE_ARGUMENT_SEPARATOR = " /by ";
+    private static final String EVENT_START_ARGUMENT_SEPARATOR = " /from ";
+    private static final String EVENT_END_ARGUMENT_SEPARATOR = " /to ";
+
     private static final String BANNER =
             """
                      _      _                 _
@@ -319,20 +323,21 @@ public class Lloyd {
         }
 
         String deadlineDetails = command.getArguments();
-        int byIndex = deadlineDetails.indexOf(" /by ");
+        int byIndex = deadlineDetails.indexOf(DEADLINE_ARGUMENT_SEPARATOR);
         if (byIndex < 0) {
             return " No deadline, no schedule. Specify it using /by.";
         }
 
         String deadlineDescription = deadlineDetails.substring(0, byIndex).trim();
-        String by = deadlineDetails.substring(byIndex + " /by ".length()).trim();
-        if (deadlineDescription.isEmpty() || by.isEmpty()) {
+        String deadlineText = deadlineDetails.substring(
+                byIndex + DEADLINE_ARGUMENT_SEPARATOR.length()).trim();
+        if (deadlineDescription.isEmpty() || deadlineText.isEmpty()) {
             return " A contract needs both the work and its deadline."
                     + " Provide a description and /by date.";
         }
 
         try {
-            LocalDate deadlineDate = LocalDate.parse(by, DEADLINE_FORMAT);
+            LocalDate deadlineDate = LocalDate.parse(deadlineText, DEADLINE_FORMAT);
             taskList.add(new Deadline(deadlineDescription, deadlineDate));
         } catch (DateTimeParseException e) {
             return " Enter the deadline in dd/MM/yyyy format.";
@@ -353,26 +358,28 @@ public class Lloyd {
         }
 
         String eventDetails = command.getArguments();
-        int fromIndex = eventDetails.indexOf(" /from ");
+        int fromIndex = eventDetails.indexOf(EVENT_START_ARGUMENT_SEPARATOR);
         int toIndex = eventDetails.indexOf(
-                " /to ", fromIndex + " /from ".length());
+                EVENT_END_ARGUMENT_SEPARATOR,
+                fromIndex + EVENT_START_ARGUMENT_SEPARATOR.length());
         if (fromIndex < 0 || toIndex < 0) {
             return " An event without a schedule invites disaster."
                     + " Specify it using /from and /to.";
         }
 
         String eventDescription = eventDetails.substring(0, fromIndex).trim();
-        String from = eventDetails.substring(
-                fromIndex + " /from ".length(), toIndex).trim();
-        String to = eventDetails.substring(toIndex + " /to ".length()).trim();
-        if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
+        String startText = eventDetails.substring(
+                fromIndex + EVENT_START_ARGUMENT_SEPARATOR.length(), toIndex).trim();
+        String endText = eventDetails.substring(
+                toIndex + EVENT_END_ARGUMENT_SEPARATOR.length()).trim();
+        if (eventDescription.isEmpty() || startText.isEmpty() || endText.isEmpty()) {
             return " The project contract is incomplete."
                     + " Provide a description, /from date, and /to date.";
         }
 
         try {
-            LocalDateTime start = LocalDateTime.parse(from, EVENT_FORMAT);
-            LocalDateTime end = LocalDateTime.parse(to, EVENT_FORMAT);
+            LocalDateTime start = LocalDateTime.parse(startText, EVENT_FORMAT);
+            LocalDateTime end = LocalDateTime.parse(endText, EVENT_FORMAT);
             taskList.add(new Event(eventDescription, start, end));
         } catch (DateTimeParseException e) {
             return " Enter event dates and times in dd/MM/yyyy HHmm format.";
