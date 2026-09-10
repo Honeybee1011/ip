@@ -57,7 +57,7 @@ public class Lloyd {
                     + " do not contain the | character.";
 
     private final Storage storage;
-    private final TaskList toDoList;
+    private final TaskList taskList;
     private final Parser parser;
     private boolean isExitRequested;
 
@@ -78,7 +78,7 @@ public class Lloyd {
      */
     public Lloyd(Path storagePath) throws IOException {
         storage = new Storage(storagePath);
-        toDoList = new TaskList(storage.load());
+        taskList = new TaskList(storage.load());
         parser = new Parser();
     }
 
@@ -159,12 +159,12 @@ public class Lloyd {
 
     /** Returns all tasks in their current order. */
     private String listTasks() {
-        StringBuilder taskList = new StringBuilder(
+        StringBuilder numberedTasks = new StringBuilder(
                 " Behold! Here is the master plan:\n");
-        for (int i = 0; i < toDoList.size(); i++) {
-            taskList.append(String.format(" %d.%s%n", i + 1, toDoList.get(i)));
+        for (int i = 0; i < taskList.size(); i++) {
+            numberedTasks.append(String.format(" %d.%s%n", i + 1, taskList.get(i)));
         }
-        return taskList.toString().stripTrailing();
+        return numberedTasks.toString().stripTrailing();
     }
 
     /** Returns tasks containing the requested keyword. */
@@ -174,7 +174,7 @@ public class Lloyd {
         }
 
         String keyword = command.getArguments();
-        TaskList matchingTasks = new TaskList(toDoList.find(keyword));
+        TaskList matchingTasks = new TaskList(taskList.find(keyword));
         if (matchingTasks.size() == 0) {
             return " No tasks contain the keyword: " + keyword;
         }
@@ -201,8 +201,8 @@ public class Lloyd {
                     " Deadlines and event endpoints on "
                             + checkedDate.format(CHECK_DISPLAY_FORMAT) + ":\n");
             int matchCount = 0;
-            for (int i = 0; i < toDoList.size(); i++) {
-                Task task = toDoList.get(i);
+            for (int i = 0; i < taskList.size(); i++) {
+                Task task = taskList.get(i);
                 if (isScheduledOn(task, checkedDate)) {
                     scheduledTasks.append(String.format(
                             " %d.%s%n", i + 1, task));
@@ -233,7 +233,7 @@ public class Lloyd {
                 return invalidTaskNumberMessage();
             }
 
-            Task task = toDoList.get(taskNumber - 1);
+            Task task = taskList.get(taskNumber - 1);
             boolean wasDone = task.isDone();
             task.mark();
             if (!saveTasks()) {
@@ -262,7 +262,7 @@ public class Lloyd {
                 return invalidTaskNumberMessage();
             }
 
-            Task task = toDoList.get(taskNumber - 1);
+            Task task = taskList.get(taskNumber - 1);
             boolean wasDone = task.isDone();
             task.unmark();
             if (!saveTasks()) {
@@ -291,15 +291,15 @@ public class Lloyd {
                 return invalidTaskNumberMessage();
             }
 
-            Task deletedTask = toDoList.remove(taskNumber - 1);
+            Task deletedTask = taskList.remove(taskNumber - 1);
             if (!saveTasks()) {
-                toDoList.add(taskNumber - 1, deletedTask);
+                taskList.add(taskNumber - 1, deletedTask);
                 return SAVE_ERROR;
             }
             return " Excellent! Waste eliminated from the budget."
                     + " I have removed this task:\n" + deletedTask
                     + "\n Tasks currently in the master plan: "
-                    + toDoList.size() + ".";
+                    + taskList.size() + ".";
         } catch (NumberFormatException e) {
             return invalidNumberMessage();
         }
@@ -311,12 +311,12 @@ public class Lloyd {
             return " Every task needs a description. Tell me what needs doing.";
         }
 
-        toDoList.add(new Todo(command.getArguments()));
+        taskList.add(new Todo(command.getArguments()));
         if (!saveTasks()) {
-            toDoList.removeLast();
+            taskList.removeLast();
             return SAVE_ERROR;
         }
-        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+        return createTaskAddedMessage(taskList.getLast(), taskList.size());
     }
 
     /** Adds a deadline when its description and date are valid. */
@@ -341,16 +341,16 @@ public class Lloyd {
 
         try {
             LocalDate deadlineDate = LocalDate.parse(by, DEADLINE_FORMAT);
-            toDoList.add(new Deadline(deadlineDescription, deadlineDate));
+            taskList.add(new Deadline(deadlineDescription, deadlineDate));
         } catch (DateTimeParseException e) {
             return " Enter the deadline in dd/MM/yyyy format.";
         }
 
         if (!saveTasks()) {
-            toDoList.removeLast();
+            taskList.removeLast();
             return SAVE_ERROR;
         }
-        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+        return createTaskAddedMessage(taskList.getLast(), taskList.size());
     }
 
     /** Adds an event when its description and endpoints are valid. */
@@ -381,7 +381,7 @@ public class Lloyd {
         try {
             LocalDateTime start = LocalDateTime.parse(from, EVENT_FORMAT);
             LocalDateTime end = LocalDateTime.parse(to, EVENT_FORMAT);
-            toDoList.add(new Event(eventDescription, start, end));
+            taskList.add(new Event(eventDescription, start, end));
         } catch (DateTimeParseException e) {
             return " Enter event dates and times in dd/MM/yyyy HHmm format.";
         } catch (IllegalArgumentException e) {
@@ -389,15 +389,15 @@ public class Lloyd {
         }
 
         if (!saveTasks()) {
-            toDoList.removeLast();
+            taskList.removeLast();
             return SAVE_ERROR;
         }
-        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+        return createTaskAddedMessage(taskList.getLast(), taskList.size());
     }
 
     /** Reports whether a one-based task number refers to an existing task. */
     private boolean isValidTaskNumber(int taskNumber) {
-        return taskNumber >= 1 && taskNumber <= toDoList.size();
+        return taskNumber >= 1 && taskNumber <= taskList.size();
     }
 
     /** Returns the standard response for a numeric task index outside the list. */
@@ -432,7 +432,7 @@ public class Lloyd {
     /** Saves the current tasks and reports whether the operation succeeded. */
     private boolean saveTasks() {
         try {
-            storage.save(toDoList.asList());
+            storage.save(taskList.asList());
             return true;
         } catch (IOException | IllegalArgumentException e) {
             return false;
