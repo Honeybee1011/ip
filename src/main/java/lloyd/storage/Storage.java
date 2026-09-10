@@ -173,18 +173,18 @@ public class Storage {
             Task task = switch (fields[0]) {
                 case "T" -> {
                     requireFieldCount(fields, 3);
-                    yield new Todo(requireValidField(fields[2]));
+                    yield new Todo(validateField(fields[2]));
                 }
                 case "D" -> {
                     requireFieldCount(fields, 4);
-                    yield new Deadline(requireValidField(fields[2]),
-                            LocalDate.parse(requireValidField(fields[3])));
+                    yield new Deadline(validateField(fields[2]),
+                            LocalDate.parse(validateField(fields[3])));
                 }
                 case "E" -> {
                     requireFieldCount(fields, 5);
-                    yield new Event(requireValidField(fields[2]),
-                            LocalDateTime.parse(requireValidField(fields[3])),
-                            LocalDateTime.parse(requireValidField(fields[4])));
+                    yield new Event(validateField(fields[2]),
+                            LocalDateTime.parse(validateField(fields[3])),
+                            LocalDateTime.parse(validateField(fields[4])));
                 }
                 default -> throw new IllegalArgumentException("unknown task type");
             };
@@ -212,17 +212,6 @@ public class Storage {
         if (fields.length != expectedCount) {
             throw new IllegalArgumentException("incorrect number of fields");
         }
-    }
-
-    /**
-     * Ensures that a field read from disk is valid for this storage format.
-     *
-     * @param field Field to validate.
-     * @return The unchanged valid field.
-     * @throws IllegalArgumentException If the field cannot be stored safely.
-     */
-    private String requireValidField(String field) {
-        return validateField(field);
     }
 
     /**
