@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 import java.util.Locale;
 
 import lloyd.command.ParsedCommand;
@@ -159,12 +160,8 @@ public class Lloyd {
 
     /** Returns all tasks in their current order. */
     private String listTasks() {
-        StringBuilder numberedTasks = new StringBuilder(
-                " Behold! Here is the master plan:\n");
-        for (int i = 0; i < taskList.size(); i++) {
-            numberedTasks.append(String.format(" %d.%s%n", i + 1, taskList.get(i)));
-        }
-        return numberedTasks.toString().stripTrailing();
+        return formatNumberedTasks(
+                " Behold! Here is the master plan:", taskList.asList());
     }
 
     /** Returns tasks containing the requested keyword. */
@@ -174,18 +171,13 @@ public class Lloyd {
         }
 
         String keyword = command.getArguments();
-        TaskList matchingTasks = new TaskList(taskList.find(keyword));
-        if (matchingTasks.size() == 0) {
+        List<Task> matchingTasks = taskList.find(keyword);
+        if (matchingTasks.isEmpty()) {
             return " No tasks contain the keyword: " + keyword;
         }
 
-        StringBuilder searchResult = new StringBuilder(
-                " Here are the matching tasks in the master plan:\n");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            searchResult.append(String.format(
-                    " %d.%s%n", i + 1, matchingTasks.get(i)));
-        }
-        return searchResult.toString().stripTrailing();
+        return formatNumberedTasks(
+                " Here are the matching tasks in the master plan:", matchingTasks);
     }
 
     /** Returns deadlines and event endpoints on the requested date. */
@@ -415,6 +407,15 @@ public class Lloyd {
         return " Excellent! Another investment in your future has been approved:\n"
                 + "   " + task
                 + "\n Tasks currently in the master plan: " + taskCount + ".";
+    }
+
+    /** Formats a heading and tasks as a one-based numbered list. */
+    private static String formatNumberedTasks(String heading, List<Task> tasks) {
+        StringBuilder numberedTasks = new StringBuilder(heading).append("\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            numberedTasks.append(String.format(" %d.%s%n", i + 1, tasks.get(i)));
+        }
+        return numberedTasks.toString().stripTrailing();
     }
 
     /** Reports whether a deadline or event endpoint matches the checked date. */
