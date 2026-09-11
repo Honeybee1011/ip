@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 import java.util.Locale;
 
 import lloyd.command.ParsedCommand;
@@ -29,6 +30,10 @@ public class Lloyd {
                     .withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter CHECK_DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
+
+    private static final String DEADLINE_ARGUMENT_SEPARATOR = " /by ";
+    private static final String EVENT_START_ARGUMENT_SEPARATOR = " /from ";
+    private static final String EVENT_END_ARGUMENT_SEPARATOR = " /to ";
 
     private static final String BANNER =
             """
@@ -57,7 +62,7 @@ public class Lloyd {
                     + " do not contain the | character.";
 
     private final Storage storage;
-    private final TaskList toDoList;
+    private final TaskList taskList;
     private final Parser parser;
     private boolean isExitRequested;
 
@@ -78,7 +83,7 @@ public class Lloyd {
      */
     public Lloyd(Path storagePath) throws IOException {
         storage = new Storage(storagePath);
-        toDoList = new TaskList(storage.load());
+        taskList = new TaskList(storage.load());
         parser = new Parser();
     }
 
@@ -160,12 +165,8 @@ public class Lloyd {
 
     /** Returns all tasks in their current order. */
     private String listTasks() {
-        StringBuilder taskList = new StringBuilder(
-                " Behold! Here is the master plan:\n");
-        for (int i = 0; i < toDoList.size(); i++) {
-            taskList.append(String.format(" %d.%s%n", i + 1, toDoList.get(i)));
-        }
-        return taskList.toString().stripTrailing();
+        return formatNumberedTasks(
+                " Behold! Here is the master plan:", taskList.asList());
     }
 
     /** Returns tasks containing the requested keyword. */
@@ -175,18 +176,13 @@ public class Lloyd {
         }
 
         String keyword = command.getArguments();
-        TaskList matchingTasks = new TaskList(toDoList.find(keyword));
-        if (matchingTasks.size() == 0) {
+        List<Task> matchingTasks = taskList.find(keyword);
+        if (matchingTasks.isEmpty()) {
             return " No tasks contain the keyword: " + keyword;
         }
 
-        StringBuilder searchResult = new StringBuilder(
-                " Here are the matching tasks in the master plan:\n");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            searchResult.append(String.format(
-                    " %d.%s%n", i + 1, matchingTasks.get(i)));
-        }
-        return searchResult.toString().stripTrailing();
+        return formatNumberedTasks(
+                " Here are the matching tasks in the master plan:", matchingTasks);
     }
 
     /** Returns deadlines and event endpoints on the requested date. */
@@ -202,8 +198,8 @@ public class Lloyd {
                     " Deadlines and event endpoints on "
                             + checkedDate.format(CHECK_DISPLAY_FORMAT) + ":\n");
             int matchCount = 0;
-            for (int i = 0; i < toDoList.size(); i++) {
-                Task task = toDoList.get(i);
+            for (int i = 0; i < taskList.size(); i++) {
+                Task task = taskList.get(i);
                 if (isScheduledOn(task, checkedDate)) {
                     scheduledTasks.append(String.format(
                             " %d.%s%n", i + 1, task));
@@ -235,9 +231,9 @@ public class Lloyd {
             }
 
             int taskIndex = taskNumber - 1;
-            assert taskIndex >= 0 && taskIndex < toDoList.size()
+            assert taskIndex >= 0 && taskIndex < taskList.size()
                     : "A validated task number must map to an existing list index";
-            Task task = toDoList.get(taskIndex);
+            Task task = taskList.get(taskIndex);
             boolean wasDone = task.isDone();
             task.mark();
             assert task.isDone() : "A marked task must report that it is complete";
@@ -270,9 +266,9 @@ public class Lloyd {
             }
 
             int taskIndex = taskNumber - 1;
-            assert taskIndex >= 0 && taskIndex < toDoList.size()
+            assert taskIndex >= 0 && taskIndex < taskList.size()
                     : "A validated task number must map to an existing list index";
-            Task task = toDoList.get(taskIndex);
+            Task task = taskList.get(taskIndex);
             boolean wasDone = task.isDone();
             task.unmark();
             assert !task.isDone() : "An unmarked task must report that it is incomplete";
@@ -305,24 +301,24 @@ public class Lloyd {
             }
 
             int taskIndex = taskNumber - 1;
-            assert taskIndex >= 0 && taskIndex < toDoList.size()
+            assert taskIndex >= 0 && taskIndex < taskList.size()
                     : "A validated task number must map to an existing list index";
-            int previousTaskCount = toDoList.size();
-            Task deletedTask = toDoList.remove(taskIndex);
-            assert toDoList.size() == previousTaskCount - 1
+            int previousTaskCount = taskList.size();
+            Task deletedTask = taskList.remove(taskIndex);
+            assert taskList.size() == previousTaskCount - 1
                     : "Deleting one task must reduce the task count by one";
             if (!saveTasks()) {
-                toDoList.add(taskIndex, deletedTask);
-                assert toDoList.size() == previousTaskCount
+                taskList.add(taskIndex, deletedTask);
+                assert taskList.size() == previousTaskCount
                         : "A failed save must restore the previous task count";
-                assert toDoList.get(taskIndex) == deletedTask
+                assert taskList.get(taskIndex) == deletedTask
                         : "A failed save must restore the deleted task at its original index";
                 return SAVE_ERROR;
             }
             return " Excellent! Waste eliminated from the budget."
                     + " I have removed this task:\n" + deletedTask
                     + "\n Tasks currently in the master plan: "
-                    + toDoList.size() + ".";
+                    + taskList.size() + ".";
         } catch (NumberFormatException e) {
             return invalidNumberMessage();
         }
@@ -334,17 +330,17 @@ public class Lloyd {
             return " Every task needs a description. Tell me what needs doing.";
         }
 
-        int previousTaskCount = toDoList.size();
+        int previousTaskCount = taskList.size();
         Todo todo = new Todo(command.getArguments());
-        toDoList.add(todo);
+        taskList.add(todo);
         assertTaskWasAppended(todo, previousTaskCount);
         if (!saveTasks()) {
-            toDoList.removeLast();
-            assert toDoList.size() == previousTaskCount
+            taskList.removeLast();
+            assert taskList.size() == previousTaskCount
                     : "A failed save must restore the previous task count";
             return SAVE_ERROR;
         }
-        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+        return createTaskAddedMessage(taskList.getLast(), taskList.size());
     }
 
     /** Adds a deadline when its description and date are valid. */
@@ -355,36 +351,37 @@ public class Lloyd {
         }
 
         String deadlineDetails = command.getArguments();
-        int byIndex = deadlineDetails.indexOf(" /by ");
+        int byIndex = deadlineDetails.indexOf(DEADLINE_ARGUMENT_SEPARATOR);
         if (byIndex < 0) {
             return " No deadline, no schedule. Specify it using /by.";
         }
 
         String deadlineDescription = deadlineDetails.substring(0, byIndex).trim();
-        String by = deadlineDetails.substring(byIndex + " /by ".length()).trim();
-        if (deadlineDescription.isEmpty() || by.isEmpty()) {
+        String deadlineText = deadlineDetails.substring(
+                byIndex + DEADLINE_ARGUMENT_SEPARATOR.length()).trim();
+        if (deadlineDescription.isEmpty() || deadlineText.isEmpty()) {
             return " A contract needs both the work and its deadline."
                     + " Provide a description and /by date.";
         }
 
-        int previousTaskCount = toDoList.size();
+        int previousTaskCount = taskList.size();
         Deadline deadline;
         try {
-            LocalDate deadlineDate = LocalDate.parse(by, DEADLINE_FORMAT);
+            LocalDate deadlineDate = LocalDate.parse(deadlineText, DEADLINE_FORMAT);
             deadline = new Deadline(deadlineDescription, deadlineDate);
-            toDoList.add(deadline);
+            taskList.add(deadline);
         } catch (DateTimeParseException e) {
             return " Enter the deadline in dd/MM/yyyy format.";
         }
         assertTaskWasAppended(deadline, previousTaskCount);
 
         if (!saveTasks()) {
-            toDoList.removeLast();
-            assert toDoList.size() == previousTaskCount
+            taskList.removeLast();
+            assert taskList.size() == previousTaskCount
                     : "A failed save must restore the previous task count";
             return SAVE_ERROR;
         }
-        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+        return createTaskAddedMessage(taskList.getLast(), taskList.size());
     }
 
     /** Adds an event when its description and endpoints are valid. */
@@ -395,9 +392,10 @@ public class Lloyd {
         }
 
         String eventDetails = command.getArguments();
-        int fromIndex = eventDetails.indexOf(" /from ");
+        int fromIndex = eventDetails.indexOf(EVENT_START_ARGUMENT_SEPARATOR);
         int toIndex = eventDetails.indexOf(
-                " /to ", fromIndex + " /from ".length());
+                EVENT_END_ARGUMENT_SEPARATOR,
+                fromIndex + EVENT_START_ARGUMENT_SEPARATOR.length());
         if (fromIndex < 0 || toIndex < 0) {
             return " An event without a schedule invites disaster."
                     + " Specify it using /from and /to.";
@@ -406,21 +404,22 @@ public class Lloyd {
                 : "The /from delimiter must precede the /to delimiter";
 
         String eventDescription = eventDetails.substring(0, fromIndex).trim();
-        String from = eventDetails.substring(
-                fromIndex + " /from ".length(), toIndex).trim();
-        String to = eventDetails.substring(toIndex + " /to ".length()).trim();
-        if (eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
+        String startText = eventDetails.substring(
+                fromIndex + EVENT_START_ARGUMENT_SEPARATOR.length(), toIndex).trim();
+        String endText = eventDetails.substring(
+                toIndex + EVENT_END_ARGUMENT_SEPARATOR.length()).trim();
+        if (eventDescription.isEmpty() || startText.isEmpty() || endText.isEmpty()) {
             return " The project contract is incomplete."
                     + " Provide a description, /from date, and /to date.";
         }
 
-        int previousTaskCount = toDoList.size();
+        int previousTaskCount = taskList.size();
         Event event;
         try {
-            LocalDateTime start = LocalDateTime.parse(from, EVENT_FORMAT);
-            LocalDateTime end = LocalDateTime.parse(to, EVENT_FORMAT);
+            LocalDateTime start = LocalDateTime.parse(startText, EVENT_FORMAT);
+            LocalDateTime end = LocalDateTime.parse(endText, EVENT_FORMAT);
             event = new Event(eventDescription, start, end);
-            toDoList.add(event);
+            taskList.add(event);
         } catch (DateTimeParseException e) {
             return " Enter event dates and times in dd/MM/yyyy HHmm format.";
         } catch (IllegalArgumentException e) {
@@ -429,17 +428,17 @@ public class Lloyd {
         assertTaskWasAppended(event, previousTaskCount);
 
         if (!saveTasks()) {
-            toDoList.removeLast();
-            assert toDoList.size() == previousTaskCount
+            taskList.removeLast();
+            assert taskList.size() == previousTaskCount
                     : "A failed save must restore the previous task count";
             return SAVE_ERROR;
         }
-        return createTaskAddedMessage(toDoList.getLast(), toDoList.size());
+        return createTaskAddedMessage(taskList.getLast(), taskList.size());
     }
 
     /** Reports whether a one-based task number refers to an existing task. */
     private boolean isValidTaskNumber(int taskNumber) {
-        return taskNumber >= 1 && taskNumber <= toDoList.size();
+        return taskNumber >= 1 && taskNumber <= taskList.size();
     }
 
     /** Returns the standard response for a numeric task index outside the list. */
@@ -455,11 +454,20 @@ public class Lloyd {
     /** Creates the standard response shown after adding any type of task. */
     private String createTaskAddedMessage(Task task, int taskCount) {
         assert task != null : "An added-task response must describe an existing task";
-        assert taskCount == toDoList.size()
+        assert taskCount == taskList.size()
                 : "An added-task response must report the current task count";
         return " Excellent! Another investment in your future has been approved:\n"
                 + "   " + task
                 + "\n Tasks currently in the master plan: " + taskCount + ".";
+    }
+
+    /** Formats a heading and tasks as a one-based numbered list. */
+    private static String formatNumberedTasks(String heading, List<Task> tasks) {
+        StringBuilder numberedTasks = new StringBuilder(heading).append("\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            numberedTasks.append(String.format(" %d.%s%n", i + 1, tasks.get(i)));
+        }
+        return numberedTasks.toString().stripTrailing();
     }
 
     /** Reports whether a deadline or event endpoint matches the checked date. */
@@ -478,16 +486,16 @@ public class Lloyd {
 
     /** Verifies the internal postconditions shared by all task-addition commands. */
     private void assertTaskWasAppended(Task addedTask, int previousTaskCount) {
-        assert toDoList.size() == previousTaskCount + 1
+        assert taskList.size() == previousTaskCount + 1
                 : "Adding one task must increase the task count by one";
-        assert toDoList.getLast() == addedTask
+        assert taskList.getLast() == addedTask
                 : "A newly added task must be the final task in the list";
     }
 
     /** Saves the current tasks and reports whether the operation succeeded. */
     private boolean saveTasks() {
         try {
-            storage.save(toDoList.asList());
+            storage.save(taskList.asList());
             return true;
         } catch (IOException | IllegalArgumentException e) {
             return false;
