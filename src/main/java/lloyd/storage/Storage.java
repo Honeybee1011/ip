@@ -80,10 +80,9 @@ public class Storage {
             throw new IllegalArgumentException("Task list cannot be null");
         }
 
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(formatTask(task));
-        }
+        List<String> lines = tasks.stream()
+                .map(this::formatTask)
+                .toList();
 
         createParentDirectory();
         Path parentDirectory = filePath.toAbsolutePath().getParent();
