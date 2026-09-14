@@ -233,6 +233,192 @@ ____________________________________________________________
 
 ```
 
+### UI-015: Show overdue reminders without changing stored tasks
+
+**Aim:** Verify that `reminder` displays incomplete dated tasks in date order,
+uses their original task numbers, and excludes todos, completed tasks, and
+distant future tasks without changing storage.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-reminder-overdue-test`
+
+**Program start command:** `java -ea -cp ..\..\build\classes\java\main lloyd.Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 0 | buy supplies
+D | 0 | pay invoice | 2000-01-01
+D | 1 | completed permit | 2000-01-02
+E | 0 | old site visit | 2000-01-03T09:00 | 2000-01-03T10:00
+D | 0 | distant project | 9999-12-31
+```
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+reminder
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ The schedule waits for no one! Here are your reminders:
+ Overdue:
+ 2.[D][ ] pay invoice (by: Jan 1 2000)
+ 4.[E][ ] old site visit (from: Jan 3 2000, 9:00 AM to: Jan 3 2000, 10:00 AM)
+____________________________________________________________
+
+```
+
+**Expected unchanged `data/lloyd.txt`:**
+
+```text
+T | 0 | buy supplies
+D | 0 | pay invoice | 2000-01-01
+D | 1 | completed permit | 2000-01-02
+E | 0 | old site visit | 2000-01-03T09:00 | 2000-01-03T10:00
+D | 0 | distant project | 9999-12-31
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-016: Report when no tasks need reminders
+
+**Aim:** Verify that `reminder` reports an empty result when the task list has
+no incomplete dated tasks that are overdue or due soon.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-reminder-empty-test`
+
+**Program start command:** `java -ea -cp ..\..\build\classes\java\main lloyd.Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 0 | buy supplies
+D | 1 | completed permit | 2000-01-02
+D | 0 | distant project | 9999-12-31
+```
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+reminder
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ No urgent projects! You have no overdue tasks or tasks due within the next 3 days.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
+### UI-017: Reject reminder arguments
+
+**Aim:** Verify that reminder-window arguments are rejected without changing
+the task list.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-reminder-arguments-test`
+
+**Program start command:** `java -ea -cp ..\..\build\classes\java\main lloyd.Lloyd`
+
+**Storage setup:** Ensure the working directory does not contain a `data` directory.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+reminder 5
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ The reminder schedule is fixed at 3 days for now. Enter reminder without any extra details.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Behold! Here is the master plan:
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+____________________________________________________________
+
+```
+
 ### UI-010: Load saved tasks when the chatbot starts
 
 **Aim:** Verify that the chatbot loads saved todos, deadlines, and events in order,

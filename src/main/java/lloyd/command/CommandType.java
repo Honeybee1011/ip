@@ -12,6 +12,8 @@ public enum CommandType {
     FIND("find"),
     /** Displays deadlines and event endpoints on a requested date. */
     CHECK("check"),
+    /** Displays incomplete dated tasks that are overdue or due soon. */
+    REMINDER("reminder"),
     /** Marks a task as complete. */
     MARK("mark"),
     /** Marks a task as incomplete. */

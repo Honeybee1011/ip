@@ -2,11 +2,14 @@ package lloyd;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +25,8 @@ import lloyd.ui.Ui;
 
 /** Processes commands and manages the persistent task list for Lloyd's user interfaces. */
 public class Lloyd {
+    private static final int REMINDER_DAYS = 3;
+
     private static final DateTimeFormatter DEADLINE_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/uuuu")
                     .withResolverStyle(ResolverStyle.STRICT);
@@ -64,6 +69,7 @@ public class Lloyd {
     private final Storage storage;
     private final TaskList taskList;
     private final Parser parser;
+    private final Clock clock;
     private boolean isExitRequested;
 
     /**
@@ -82,9 +88,21 @@ public class Lloyd {
      * @throws IOException If the task file cannot be loaded.
      */
     public Lloyd(Path storagePath) throws IOException {
+        this(storagePath, Clock.systemDefaultZone());
+    }
+
+    /**
+     * Creates a Lloyd application with a supplied clock for date-dependent behavior.
+     *
+     * @param storagePath Location from which tasks are loaded and saved.
+     * @param clock Clock used to determine the current local date.
+     * @throws IOException If the task file cannot be loaded.
+     */
+    Lloyd(Path storagePath, Clock clock) throws IOException {
         storage = new Storage(storagePath);
         taskList = new TaskList(storage.load());
         parser = new Parser();
+        this.clock = clock;
     }
 
     /**
@@ -137,6 +155,7 @@ public class Lloyd {
             case LIST -> listTasks();
             case FIND -> findTasks(command);
             case CHECK -> checkDate(command);
+            case REMINDER -> showReminders(command);
             case MARK -> markTask(command);
             case UNMARK -> unmarkTask(command);
             case DELETE -> deleteTask(command);
@@ -214,6 +233,77 @@ public class Lloyd {
             return scheduledTasks.toString().stripTrailing();
         } catch (DateTimeParseException e) {
             return " Enter the date to check in dd/MM/yyyy format.";
+        }
+    }
+
+    /** Returns incomplete dated tasks that are overdue or due within the reminder window. */
+    private String showReminders(ParsedCommand command) {
+        if (command.hasArguments()) {
+            return " The reminder schedule is fixed at 3 days for now."
+                    + " Enter reminder without any extra details.";
+        }
+
+        LocalDate today = LocalDate.now(clock);
+        LocalDate reminderEndDate = today.plusDays(REMINDER_DAYS);
+        List<ReminderEntry> overdueTasks = new ArrayList<>();
+        List<ReminderEntry> dueSoonTasks = new ArrayList<>();
+
+        for (int i = 0; i < taskList.size(); i++) {
+            Task task = taskList.get(i);
+            LocalDate scheduledDate = getReminderDate(task);
+            if (task.isDone() || scheduledDate == null) {
+                continue;
+            }
+
+            ReminderEntry entry = new ReminderEntry(i + 1, task, scheduledDate);
+            if (scheduledDate.isBefore(today)) {
+                overdueTasks.add(entry);
+            } else if (!scheduledDate.isAfter(reminderEndDate)) {
+                dueSoonTasks.add(entry);
+            }
+        }
+
+        if (overdueTasks.isEmpty() && dueSoonTasks.isEmpty()) {
+            return " No urgent projects! You have no overdue tasks"
+                    + " or tasks due within the next 3 days.";
+        }
+
+        Comparator<ReminderEntry> byDateThenTaskNumber = Comparator
+                .comparing(ReminderEntry::scheduledDate)
+                .thenComparingInt(ReminderEntry::taskNumber);
+        overdueTasks.sort(byDateThenTaskNumber);
+        dueSoonTasks.sort(byDateThenTaskNumber);
+
+        StringBuilder reminders = new StringBuilder(
+                " The schedule waits for no one! Here are your reminders:");
+        appendReminderSection(reminders, "Overdue", overdueTasks);
+        appendReminderSection(
+                reminders, "Due within 3 days, including today", dueSoonTasks);
+        return reminders.toString();
+    }
+
+    /** Returns the date used to classify a task for reminders, or {@code null} for todos. */
+    private LocalDate getReminderDate(Task task) {
+        if (task instanceof Deadline deadline) {
+            return deadline.getBy();
+        }
+        if (task instanceof Event event) {
+            return event.getFrom().toLocalDate();
+        }
+        return null;
+    }
+
+    /** Appends a nonempty reminder section while preserving original task numbers. */
+    private void appendReminderSection(
+            StringBuilder reminders, String heading, List<ReminderEntry> entries) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        reminders.append("\n ").append(heading).append(":");
+        for (ReminderEntry entry : entries) {
+            reminders.append(String.format(
+                    "\n %d.%s", entry.taskNumber(), entry.task()));
         }
     }
 
@@ -505,5 +595,9 @@ public class Lloyd {
     /** Displays a response through the compatibility console interface. */
     private static void printResponse(String message) {
         Ui.showResponse(message);
+    }
+
+    /** Associates a dated task with its original task number for reminder output. */
+    private record ReminderEntry(int taskNumber, Task task, LocalDate scheduledDate) {
     }
 }
