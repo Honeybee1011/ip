@@ -38,7 +38,7 @@ public class LloydReminderTest {
         String response = lloyd.getResponse("reminder");
 
         assertEquals(
-                "The schedule waits for no one! Here are your reminders:\n"
+                "Reminders:\n"
                         + "Overdue:\n"
                         + "7. [E][ ] building works (from: Sep 12 2026, 8:00 AM"
                         + " to: Sep 15 2026, 6:00 PM)\n"
@@ -61,7 +61,7 @@ public class LloydReminderTest {
         String response = lloyd.getResponse("reminder");
 
         assertEquals(
-                "The schedule waits for no one! Here are your reminders:\n"
+                "Reminders:\n"
                         + "Due within 3 days, including today:\n"
                         + "1. [E][ ] afternoon meeting (from: Sep 14 2026, 3:00 PM"
                         + " to: Sep 14 2026, 4:00 PM)\n"

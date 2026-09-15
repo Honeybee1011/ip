@@ -267,7 +267,7 @@ reminder
 
 ```text
 ____________________________________________________________
-The schedule waits for no one! Here are your reminders:
+Reminders:
 Overdue:
 2. [D][ ] pay invoice (by: Jan 1 2000)
 4. [E][ ] old site visit (from: Jan 3 2000, 9:00 AM to: Jan 3 2000, 10:00 AM)
@@ -450,7 +450,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][X] read book
 2. [D][ ] return book (by: Jun 6 2026)
 3. [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
@@ -756,7 +756,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][X] read book
 2. [D][ ] return book (by: Jun 6 2026)
 3. [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
@@ -898,7 +898,7 @@ find book
 
 ```text
 ____________________________________________________________
-Here are the matching tasks in the task list:
+Matching tasks:
 1. [T][ ] read book
 2. [D][ ] return book (by: Sep 2 2026)
 ____________________________________________________________
@@ -993,7 +993,7 @@ check 29/08/2026
 
 ```text
 ____________________________________________________________
-Deadlines and event endpoints on Aug 29 2026:
+Schedule for Aug 29 2026:
 2. [D][ ] submit permit (by: Aug 29 2026)
 4. [E][ ] council meeting (from: Aug 29 2026, 9:00 AM to: Aug 29 2026, 10:00 AM)
 5. [E][ ] building works (from: Aug 29 2026, 8:00 AM to: Sep 2 2026, 6:00 PM)
@@ -1014,7 +1014,7 @@ check 30/08/2026
 
 ```text
 ____________________________________________________________
-Deadlines and event endpoints on Aug 30 2026:
+Schedule for Aug 30 2026:
 3. [D][ ] pay supplier (by: Aug 30 2026)
 ____________________________________________________________
 
@@ -1453,7 +1453,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] survey land
 ____________________________________________________________
 
@@ -1508,7 +1508,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] survey land
 2. [D][ ] build bridge (by: Aug 29 2026)
 ____________________________________________________________
@@ -1582,7 +1582,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] survey land
 2. [D][ ] build bridge (by: Aug 29 2026)
 3. [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
@@ -1679,7 +1679,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][X] inspect walls
 ____________________________________________________________
 
@@ -1714,7 +1714,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][X] inspect walls
 ____________________________________________________________
 
@@ -1767,7 +1767,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] inspect walls
 ____________________________________________________________
 
@@ -1802,7 +1802,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] inspect walls
 ____________________________________________________________
 
@@ -1937,7 +1937,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] survey land
 2. [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
 ____________________________________________________________
@@ -2084,7 +2084,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the task list:
+Tasks:
 1. [T][ ] inspect foundations
 ____________________________________________________________
 

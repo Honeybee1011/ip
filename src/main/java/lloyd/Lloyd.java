@@ -224,7 +224,7 @@ public class Lloyd {
             return confident("Your task list is empty.");
         }
         return confident(formatNumberedTasks(
-                "Behold! Here is the task list:", taskList.asList()));
+                "Tasks:", taskList.asList()));
     }
 
     /** Returns tasks containing the requested keyword. */
@@ -240,7 +240,7 @@ public class Lloyd {
         }
 
         return confident(formatNumberedTasks(
-                "Here are the matching tasks in the task list:", matchingTasks));
+                "Matching tasks:", matchingTasks));
     }
 
     /** Returns deadlines and event endpoints on the requested date. */
@@ -254,7 +254,7 @@ public class Lloyd {
             LocalDate checkedDate = LocalDate.parse(
                     command.getArguments(), DEADLINE_FORMAT);
             StringBuilder scheduledTasks = new StringBuilder(
-                    "Deadlines and event endpoints on "
+                    "Schedule for "
                             + checkedDate.format(CHECK_DISPLAY_FORMAT) + ":\n");
             int matchCount = 0;
             for (int i = 0; i < taskList.size(); i++) {
@@ -315,7 +315,7 @@ public class Lloyd {
         dueSoonTasks.sort(byDateThenTaskNumber);
 
         StringBuilder reminders = new StringBuilder(
-                "The schedule waits for no one! Here are your reminders:");
+                "Reminders:");
         appendReminderSection(reminders, "Overdue", overdueTasks);
         appendReminderSection(
                 reminders, "Due within 3 days, including today", dueSoonTasks);
