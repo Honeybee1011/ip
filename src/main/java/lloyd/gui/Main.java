@@ -21,6 +21,8 @@ import lloyd.Lloyd;
 public class Main extends Application {
     private static final double WINDOW_WIDTH = 400.0;
     private static final double WINDOW_HEIGHT = 600.0;
+    private static final double MIN_WINDOW_WIDTH = 350.0;
+    private static final double MIN_WINDOW_HEIGHT = 450.0;
     private static final double INPUT_HEIGHT = 55.0;
 
     private final ScrollPane scrollPane = new ScrollPane();
@@ -41,7 +43,9 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Lloyd");
-        stage.setResizable(false);
+        stage.setMinWidth(MIN_WINDOW_WIDTH);
+        stage.setMinHeight(MIN_WINDOW_HEIGHT);
+        stage.setResizable(true);
         stage.show();
 
         try {
