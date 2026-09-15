@@ -30,7 +30,7 @@ public class LloydTest {
         String output = runLloyd("hello\nbye\n");
 
         assertTrue(output.contains(
-                "I reject vague contracts. Start every task with todo, deadline, or event."));
+                "Enter a valid command."));
     }
 
     /**

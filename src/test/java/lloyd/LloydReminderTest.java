@@ -96,8 +96,7 @@ public class LloydReminderTest {
         String response = lloyd.getResponse("reminder 5");
 
         assertEquals(
-                "The reminder schedule is fixed at 3 days for now."
-                        + " Enter reminder without any extra details.",
+                "Enter reminder without additional information.",
                 response);
         assertEquals(originalContents,
                 Files.readString(storagePath, StandardCharsets.UTF_8));

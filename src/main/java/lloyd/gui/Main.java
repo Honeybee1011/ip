@@ -57,8 +57,8 @@ public class Main extends Application {
                             lloyd.getGreeting(), LloydMood.CONFIDENT));
         } catch (IOException e) {
             dialogContainer.getChildren().add(DialogBox.createLloydDialog(
-                    "I could not load the task file. Check that data/lloyd.txt"
-                            + " contains valid task data and can be read.",
+                    "Unable to load tasks from data/lloyd.txt.\n"
+                            + "Check that the file is readable and contains valid task data.",
                     LloydMood.ALARMED));
             disableInput();
         }

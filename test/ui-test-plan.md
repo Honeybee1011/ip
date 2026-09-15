@@ -380,7 +380,7 @@ reminder 5
 
 ```text
 ____________________________________________________________
-The reminder schedule is fixed at 3 days for now. Enter reminder without any extra details.
+Enter reminder without additional information.
 ____________________________________________________________
 
 ```
@@ -500,7 +500,8 @@ todo
 
 ```text
 ____________________________________________________________
-Every task needs a description. Tell me what needs doing.
+Enter a task description.
+Example: todo read book
 ____________________________________________________________
 
 ```
@@ -517,7 +518,8 @@ todo compare A | B
 
 ```text
 ____________________________________________________________
-I could not save that change. The task list was left unchanged. Check that data/lloyd.txt can be written and task details do not contain the | character.
+Unable to save the change; your task list was not changed.
+Check that data/lloyd.txt is writable and task details do not contain |.
 ____________________________________________________________
 
 ```
@@ -579,7 +581,8 @@ T | 2 | invalid status
 
 ```text
 ____________________________________________________________
-I could not load the task file. Check that data/lloyd.txt contains valid task data and can be read.
+Unable to load tasks from data/lloyd.txt.
+Check that the file is readable and contains valid task data.
 ____________________________________________________________
 
 ```
@@ -931,7 +934,8 @@ find
 
 ```text
 ____________________________________________________________
-A search needs a keyword. Tell me what to find.
+Enter a keyword.
+Example: find book
 ____________________________________________________________
 
 ```
@@ -1045,7 +1049,8 @@ check
 
 ```text
 ____________________________________________________________
-Tell me which date to inspect using dd/MM/yyyy.
+Enter a date in dd/MM/yyyy format.
+Example: check 06/08/2026
 ____________________________________________________________
 
 ```
@@ -1062,7 +1067,8 @@ check 31/02/2026
 
 ```text
 ____________________________________________________________
-Enter the date to check in dd/MM/yyyy format.
+Enter a date in dd/MM/yyyy format.
+Example: check 06/08/2026
 ____________________________________________________________
 
 ```
@@ -1105,7 +1111,8 @@ deadline do homework /by no idea :-p
 
 ```text
 ____________________________________________________________
-Enter the deadline in dd/MM/yyyy format.
+Enter a deadline in this format:
+deadline DESCRIPTION /by DD/MM/YYYY
 ____________________________________________________________
 
 ```
@@ -1182,7 +1189,8 @@ mark
 
 ```text
 ____________________________________________________________
-Even I cannot finish an imaginary task. Give me the task number to mark.
+Enter a task number.
+Example: mark 1
 ____________________________________________________________
 
 ```
@@ -1199,7 +1207,7 @@ mark gold
 
 ```text
 ____________________________________________________________
-A task number needs to be a number. Even Javier knows that.
+Enter a numeric task number.
 ____________________________________________________________
 
 ```
@@ -1216,7 +1224,7 @@ mark 99
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
@@ -1233,7 +1241,8 @@ unmark
 
 ```text
 ____________________________________________________________
-Rework requires paperwork. Give me the task number to unmark.
+Enter a task number.
+Example: unmark 1
 ____________________________________________________________
 
 ```
@@ -1250,7 +1259,8 @@ deadline
 
 ```text
 ____________________________________________________________
-Every profitable project needs details. Provide a description and /by date.
+Enter a deadline in this format:
+deadline DESCRIPTION /by DD/MM/YYYY
 ____________________________________________________________
 
 ```
@@ -1267,7 +1277,8 @@ deadline build bridge tomorrow
 
 ```text
 ____________________________________________________________
-No deadline, no schedule. Specify it using /by.
+Enter a deadline in this format:
+deadline DESCRIPTION /by DD/MM/YYYY
 ____________________________________________________________
 
 ```
@@ -1284,7 +1295,8 @@ event
 
 ```text
 ____________________________________________________________
-Every grand event needs a plan. Provide a description, /from date, and /to date.
+Enter an event in this format:
+event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
 ____________________________________________________________
 
 ```
@@ -1301,7 +1313,8 @@ event grand opening tomorrow
 
 ```text
 ____________________________________________________________
-An event without a schedule invites disaster. Specify it using /from and /to.
+Enter an event in this format:
+event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
 ____________________________________________________________
 
 ```
@@ -1345,7 +1358,8 @@ inspect foundations
 
 ```text
 ____________________________________________________________
-I reject vague contracts. Start every task with todo, deadline, or event.
+Enter a valid command.
+Commands: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, bye
 ____________________________________________________________
 
 ```
@@ -1421,7 +1435,8 @@ deadline build bridge tomorrow
 
 ```text
 ____________________________________________________________
-No deadline, no schedule. Specify it using /by.
+Enter a deadline in this format:
+deadline DESCRIPTION /by DD/MM/YYYY
 ____________________________________________________________
 
 ```
@@ -1475,7 +1490,8 @@ event opening ceremony /from Monday
 
 ```text
 ____________________________________________________________
-An event without a schedule invites disaster. Specify it using /from and /to.
+Enter an event in this format:
+event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
 ____________________________________________________________
 
 ```
@@ -1511,7 +1527,8 @@ event opening ceremony /from  /to Tuesday
 
 ```text
 ____________________________________________________________
-The project contract is incomplete. Provide a description, /from date, and /to date.
+Enter an event in this format:
+event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
 ____________________________________________________________
 
 ```
@@ -1547,7 +1564,8 @@ build tunnel
 
 ```text
 ____________________________________________________________
-I reject vague contracts. Start every task with todo, deadline, or event.
+Enter a valid command.
+Commands: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, bye
 ____________________________________________________________
 
 ```
@@ -1644,7 +1662,7 @@ mark 0
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
@@ -1679,7 +1697,7 @@ unmark gold
 
 ```text
 ____________________________________________________________
-A task number needs to be a number. Even Javier knows that.
+Enter a numeric task number.
 ____________________________________________________________
 
 ```
@@ -1732,7 +1750,7 @@ unmark 2
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
@@ -1767,7 +1785,7 @@ mark -1
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
@@ -1980,7 +1998,8 @@ delete
 
 ```text
 ____________________________________________________________
-Demolition needs a target. Give me the task number to delete.
+Enter a task number.
+Example: delete 1
 ____________________________________________________________
 
 ```
@@ -1997,7 +2016,7 @@ delete gold
 
 ```text
 ____________________________________________________________
-A task number needs to be a number. Even Javier knows that.
+Enter a numeric task number.
 ____________________________________________________________
 
 ```
@@ -2014,7 +2033,7 @@ delete 0
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
@@ -2031,7 +2050,7 @@ delete -1
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
@@ -2048,7 +2067,7 @@ delete 2
 
 ```text
 ____________________________________________________________
-That task is not in the master plan. Check its number.
+Enter the number of an existing task.
 ____________________________________________________________
 
 ```
