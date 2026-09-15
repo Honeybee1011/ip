@@ -269,8 +269,8 @@ reminder
 ____________________________________________________________
 The schedule waits for no one! Here are your reminders:
 Overdue:
-2.[D][ ] pay invoice (by: Jan 1 2000)
-4.[E][ ] old site visit (from: Jan 3 2000, 9:00 AM to: Jan 3 2000, 10:00 AM)
+2. [D][ ] pay invoice (by: Jan 1 2000)
+4. [E][ ] old site visit (from: Jan 3 2000, 9:00 AM to: Jan 3 2000, 10:00 AM)
 ____________________________________________________________
 
 ```
@@ -451,9 +451,9 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][X] read book
-2.[D][ ] return book (by: Jun 6 2026)
-3.[E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
+1. [T][X] read book
+2. [D][ ] return book (by: Jun 6 2026)
+3. [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
 ____________________________________________________________
 
 ```
@@ -754,11 +754,11 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][X] read book
-2.[D][ ] return book (by: Jun 6 2026)
-3.[E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
-4.[T][X] join sports club
-5.[T][ ] borrow book
+1. [T][X] read book
+2. [D][ ] return book (by: Jun 6 2026)
+3. [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
+4. [T][X] join sports club
+5. [T][ ] borrow book
 ____________________________________________________________
 
 ```
@@ -896,8 +896,8 @@ find book
 ```text
 ____________________________________________________________
 Here are the matching tasks in the master plan:
-1.[T][ ] read book
-2.[D][ ] return book (by: Sep 2 2026)
+1. [T][ ] read book
+2. [D][ ] return book (by: Sep 2 2026)
 ____________________________________________________________
 
 ```
@@ -990,10 +990,10 @@ check 29/08/2026
 ```text
 ____________________________________________________________
 Deadlines and event endpoints on Aug 29 2026:
-2.[D][ ] submit permit (by: Aug 29 2026)
-4.[E][ ] council meeting (from: Aug 29 2026, 9:00 AM to: Aug 29 2026, 10:00 AM)
-5.[E][ ] building works (from: Aug 29 2026, 8:00 AM to: Sep 2 2026, 6:00 PM)
-6.[E][ ] site survey (from: Aug 27 2026, 8:00 AM to: Aug 29 2026, 6:00 PM)
+2. [D][ ] submit permit (by: Aug 29 2026)
+4. [E][ ] council meeting (from: Aug 29 2026, 9:00 AM to: Aug 29 2026, 10:00 AM)
+5. [E][ ] building works (from: Aug 29 2026, 8:00 AM to: Sep 2 2026, 6:00 PM)
+6. [E][ ] site survey (from: Aug 27 2026, 8:00 AM to: Aug 29 2026, 6:00 PM)
 ____________________________________________________________
 
 ```
@@ -1011,7 +1011,7 @@ check 30/08/2026
 ```text
 ____________________________________________________________
 Deadlines and event endpoints on Aug 30 2026:
-3.[D][ ] pay supplier (by: Aug 30 2026)
+3. [D][ ] pay supplier (by: Aug 30 2026)
 ____________________________________________________________
 
 ```
@@ -1439,7 +1439,7 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] survey land
+1. [T][ ] survey land
 ____________________________________________________________
 
 ```
@@ -1493,8 +1493,8 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] survey land
-2.[D][ ] build bridge (by: Aug 29 2026)
+1. [T][ ] survey land
+2. [D][ ] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
 ```
@@ -1565,9 +1565,9 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] survey land
-2.[D][ ] build bridge (by: Aug 29 2026)
-3.[E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
+1. [T][ ] survey land
+2. [D][ ] build bridge (by: Aug 29 2026)
+3. [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
 ____________________________________________________________
 
 ```
@@ -1662,7 +1662,7 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][X] inspect walls
+1. [T][X] inspect walls
 ____________________________________________________________
 
 ```
@@ -1697,7 +1697,7 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][X] inspect walls
+1. [T][X] inspect walls
 ____________________________________________________________
 
 ```
@@ -1750,7 +1750,7 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] inspect walls
+1. [T][ ] inspect walls
 ____________________________________________________________
 
 ```
@@ -1785,7 +1785,7 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] inspect walls
+1. [T][ ] inspect walls
 ____________________________________________________________
 
 ```
@@ -1920,8 +1920,8 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] survey land
-2.[E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
+1. [T][ ] survey land
+2. [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
 ____________________________________________________________
 
 ```
@@ -2066,7 +2066,7 @@ list
 ```text
 ____________________________________________________________
 Behold! Here is the master plan:
-1.[T][ ] inspect foundations
+1. [T][ ] inspect foundations
 ____________________________________________________________
 
 ```

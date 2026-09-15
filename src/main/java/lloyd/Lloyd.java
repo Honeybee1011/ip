@@ -253,7 +253,7 @@ public class Lloyd {
                 Task task = taskList.get(i);
                 if (isScheduledOn(task, checkedDate)) {
                     scheduledTasks.append(String.format(
-                            "%d.%s%n", i + 1, task));
+                            "%d. %s%n", i + 1, task));
                     matchCount++;
                 }
             }
@@ -335,7 +335,7 @@ public class Lloyd {
         reminders.append("\n").append(heading).append(":");
         for (ReminderEntry entry : entries) {
             reminders.append(String.format(
-                    "\n%d.%s", entry.taskNumber(), entry.task()));
+                    "\n%d. %s", entry.taskNumber(), entry.task()));
         }
     }
 
@@ -587,7 +587,7 @@ public class Lloyd {
     private static String formatNumberedTasks(String heading, List<Task> tasks) {
         StringBuilder numberedTasks = new StringBuilder(heading).append("\n");
         for (int i = 0; i < tasks.size(); i++) {
-            numberedTasks.append(String.format("%d.%s%n", i + 1, tasks.get(i)));
+            numberedTasks.append(String.format("%d. %s%n", i + 1, tasks.get(i)));
         }
         return numberedTasks.toString().stripTrailing();
     }
