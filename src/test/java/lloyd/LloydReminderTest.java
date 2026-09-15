@@ -38,15 +38,15 @@ public class LloydReminderTest {
         String response = lloyd.getResponse("reminder");
 
         assertEquals(
-                " The schedule waits for no one! Here are your reminders:\n"
-                        + " Overdue:\n"
-                        + " 7.[E][ ] building works (from: Sep 12 2026, 8:00 AM"
+                "The schedule waits for no one! Here are your reminders:\n"
+                        + "Overdue:\n"
+                        + "7.[E][ ] building works (from: Sep 12 2026, 8:00 AM"
                         + " to: Sep 15 2026, 6:00 PM)\n"
-                        + " 3.[D][ ] pay invoice (by: Sep 13 2026)\n"
-                        + " Due within 3 days, including today:\n"
-                        + " 5.[E][ ] morning inspection (from: Sep 14 2026, 9:00 AM"
+                        + "3.[D][ ] pay invoice (by: Sep 13 2026)\n"
+                        + "Due within 3 days, including today:\n"
+                        + "5.[E][ ] morning inspection (from: Sep 14 2026, 9:00 AM"
                         + " to: Sep 14 2026, 10:00 AM)\n"
-                        + " 2.[D][ ] file permit (by: Sep 17 2026)",
+                        + "2.[D][ ] file permit (by: Sep 17 2026)",
                 response);
     }
 
@@ -61,12 +61,12 @@ public class LloydReminderTest {
         String response = lloyd.getResponse("reminder");
 
         assertEquals(
-                " The schedule waits for no one! Here are your reminders:\n"
-                        + " Due within 3 days, including today:\n"
-                        + " 1.[E][ ] afternoon meeting (from: Sep 14 2026, 3:00 PM"
+                "The schedule waits for no one! Here are your reminders:\n"
+                        + "Due within 3 days, including today:\n"
+                        + "1.[E][ ] afternoon meeting (from: Sep 14 2026, 3:00 PM"
                         + " to: Sep 14 2026, 4:00 PM)\n"
-                        + " 2.[D][ ] submit plans (by: Sep 14 2026)\n"
-                        + " 3.[E][ ] morning meeting (from: Sep 14 2026, 9:00 AM"
+                        + "2.[D][ ] submit plans (by: Sep 14 2026)\n"
+                        + "3.[E][ ] morning meeting (from: Sep 14 2026, 9:00 AM"
                         + " to: Sep 14 2026, 10:00 AM)",
                 response);
     }
@@ -80,7 +80,7 @@ public class LloydReminderTest {
                 "D | 0 | distant project | 2026-09-18"));
 
         assertEquals(
-                " No urgent projects! You have no overdue tasks"
+                "No urgent projects! You have no overdue tasks"
                         + " or tasks due within the next 3 days.",
                 lloyd.getResponse("reminder"));
     }
@@ -96,7 +96,7 @@ public class LloydReminderTest {
         String response = lloyd.getResponse("reminder 5");
 
         assertEquals(
-                " The reminder schedule is fixed at 3 days for now."
+                "The reminder schedule is fixed at 3 days for now."
                         + " Enter reminder without any extra details.",
                 response);
         assertEquals(originalContents,
