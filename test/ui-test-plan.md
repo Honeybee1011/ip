@@ -73,9 +73,9 @@ todo survey land
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] survey land
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -98,9 +98,9 @@ deadline build bridge /by 29/08/2026
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [D][ ] build bridge (by: Aug 29 2026)
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -124,7 +124,7 @@ mark 2
 
 ```text
 ____________________________________________________________
-Magnificent! Efficient work means lower costs. This task is officially complete:
+Task completed:
 [D][X] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
@@ -149,9 +149,9 @@ event opening ceremony /from 31/08/2026 0900 /to 31/08/2026 1000
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
-Tasks currently in the master plan: 3.
+Total tasks: 3.
 ____________________________________________________________
 
 ```
@@ -176,7 +176,7 @@ unmark 2
 
 ```text
 ____________________________________________________________
-What? Rework? That is terrible for the budget! Fine, this task is back under construction:
+Task marked as incomplete:
 [D][ ] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
@@ -202,9 +202,9 @@ delete 1
 
 ```text
 ____________________________________________________________
-Excellent! Waste eliminated from the budget. I have removed this task:
+Task deleted:
 [T][ ] survey land
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -228,7 +228,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -297,7 +297,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -350,7 +350,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -414,7 +414,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -470,7 +470,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -553,7 +553,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -622,9 +622,9 @@ todo read book
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] read book
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -641,7 +641,7 @@ mark 1
 
 ```text
 ____________________________________________________________
-Magnificent! Efficient work means lower costs. This task is officially complete:
+Task completed:
 [T][X] read book
 ____________________________________________________________
 
@@ -659,9 +659,9 @@ deadline return book /by 06/06/2026
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [D][ ] return book (by: Jun 6 2026)
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -678,9 +678,9 @@ event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
-Tasks currently in the master plan: 3.
+Total tasks: 3.
 ____________________________________________________________
 
 ```
@@ -697,9 +697,9 @@ todo join sports club
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] join sports club
-Tasks currently in the master plan: 4.
+Total tasks: 4.
 ____________________________________________________________
 
 ```
@@ -716,7 +716,7 @@ mark 4
 
 ```text
 ____________________________________________________________
-Magnificent! Efficient work means lower costs. This task is officially complete:
+Task completed:
 [T][X] join sports club
 ____________________________________________________________
 
@@ -734,9 +734,9 @@ todo borrow book
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] borrow book
-Tasks currently in the master plan: 5.
+Total tasks: 5.
 ____________________________________________________________
 
 ```
@@ -775,9 +775,9 @@ deadline return book /by 30/08/2026
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [D][ ] return book (by: Aug 30 2026)
-Tasks currently in the master plan: 6.
+Total tasks: 6.
 ____________________________________________________________
 
 ```
@@ -794,9 +794,9 @@ event project meeting /from 07/08/2026 1400 /to 07/08/2026 1600
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [E][ ] project meeting (from: Aug 7 2026, 2:00 PM to: Aug 7 2026, 4:00 PM)
-Tasks currently in the master plan: 7.
+Total tasks: 7.
 ____________________________________________________________
 
 ```
@@ -813,7 +813,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -838,9 +838,9 @@ todo read book
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] read book
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -857,9 +857,9 @@ deadline return book /by 02/09/2026
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [D][ ] return book (by: Sep 2 2026)
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -876,9 +876,9 @@ todo write essay
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] write essay
-Tasks currently in the master plan: 3.
+Total tasks: 3.
 ____________________________________________________________
 
 ```
@@ -948,7 +948,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1079,7 +1079,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1122,7 +1122,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1145,9 +1145,9 @@ todo inspect foundations
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] inspect foundations
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -1164,7 +1164,7 @@ unmark 1
 
 ```text
 ____________________________________________________________
-What? Rework? That is terrible for the budget! Fine, this task is back under construction:
+Task marked as incomplete:
 [T][ ] inspect foundations
 ____________________________________________________________
 
@@ -1318,7 +1318,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1379,7 +1379,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1402,9 +1402,9 @@ todo survey land
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] survey land
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -1456,9 +1456,9 @@ deadline build bridge /by 29/08/2026
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [D][ ] build bridge (by: Aug 29 2026)
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -1528,9 +1528,9 @@ event opening ceremony /from 31/08/2026 0900 /to 31/08/2026 1000
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
-Tasks currently in the master plan: 3.
+Total tasks: 3.
 ____________________________________________________________
 
 ```
@@ -1584,7 +1584,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1607,9 +1607,9 @@ todo inspect walls
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] inspect walls
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -1626,7 +1626,7 @@ mark 1
 
 ```text
 ____________________________________________________________
-Magnificent! Efficient work means lower costs. This task is officially complete:
+Task completed:
 [T][X] inspect walls
 ____________________________________________________________
 
@@ -1714,7 +1714,7 @@ unmark 1
 
 ```text
 ____________________________________________________________
-What? Rework? That is terrible for the budget! Fine, this task is back under construction:
+Task marked as incomplete:
 [T][ ] inspect walls
 ____________________________________________________________
 
@@ -1802,7 +1802,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1825,9 +1825,9 @@ todo survey land
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] survey land
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -1844,9 +1844,9 @@ deadline build bridge /by 29/08/2026
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [D][ ] build bridge (by: Aug 29 2026)
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -1863,9 +1863,9 @@ event opening ceremony /from 31/08/2026 0900 /to 31/08/2026 1000
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
-Tasks currently in the master plan: 3.
+Total tasks: 3.
 ____________________________________________________________
 
 ```
@@ -1882,7 +1882,7 @@ mark 2
 
 ```text
 ____________________________________________________________
-Magnificent! Efficient work means lower costs. This task is officially complete:
+Task completed:
 [D][X] build bridge (by: Aug 29 2026)
 ____________________________________________________________
 
@@ -1900,9 +1900,9 @@ delete 2
 
 ```text
 ____________________________________________________________
-Excellent! Waste eliminated from the budget. I have removed this task:
+Task deleted:
 [D][X] build bridge (by: Aug 29 2026)
-Tasks currently in the master plan: 2.
+Total tasks: 2.
 ____________________________________________________________
 
 ```
@@ -1938,7 +1938,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```
@@ -1961,9 +1961,9 @@ todo inspect foundations
 
 ```text
 ____________________________________________________________
-Excellent! Another investment in your future has been approved:
+Task added:
 [T][ ] inspect foundations
-Tasks currently in the master plan: 1.
+Total tasks: 1.
 ____________________________________________________________
 
 ```
@@ -2083,7 +2083,7 @@ bye
 
 ```text
 ____________________________________________________________
-Leaving already? Fine. Rest while you can; those tasks will not build themselves. Come back when you are ready to work... and remember to bring payment!
+Goodbye! Your tasks will be waiting.
 ____________________________________________________________
 
 ```

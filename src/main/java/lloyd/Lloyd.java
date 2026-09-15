@@ -55,9 +55,7 @@ public class Lloyd {
                     + "\nGot a problem? Excellent. Problems are profits waiting for an engineer."
                     + "\nNow, what needs doing?";
     private static final String FAREWELL =
-            "Leaving already? Fine. Rest while you can; those tasks will not"
-                    + " build themselves. Come back when you are ready to work..."
-                    + " and remember to bring payment!";
+            "Goodbye! Your tasks will be waiting.";
     private static final String LOAD_ERROR =
             "I could not load the task file. Check that data/lloyd.txt"
                     + " contains valid task data and can be read.";
@@ -370,8 +368,7 @@ public class Lloyd {
                         : "A failed save must restore the task's previous completion state";
                 return alarmed(SAVE_ERROR);
             }
-            return delighted("Magnificent! Efficient work means lower costs."
-                    + " This task is officially complete:\n" + task);
+            return delighted("Task completed:\n" + task);
         } catch (NumberFormatException e) {
             return annoyed(invalidNumberMessage());
         }
@@ -405,8 +402,7 @@ public class Lloyd {
                         : "A failed save must restore the task's previous completion state";
                 return alarmed(SAVE_ERROR);
             }
-            return annoyed("What? Rework? That is terrible for the budget!"
-                    + " Fine, this task is back under construction:\n" + task);
+            return annoyed("Task marked as incomplete:\n" + task);
         } catch (NumberFormatException e) {
             return annoyed(invalidNumberMessage());
         }
@@ -440,10 +436,8 @@ public class Lloyd {
                         : "A failed save must restore the deleted task at its original index";
                 return alarmed(SAVE_ERROR);
             }
-            return delighted("Excellent! Waste eliminated from the budget."
-                    + " I have removed this task:\n" + deletedTask
-                    + "\nTasks currently in the master plan: "
-                    + taskList.size() + ".");
+            return delighted("Task deleted:\n" + deletedTask
+                    + "\nTotal tasks: " + taskList.size() + ".");
         } catch (NumberFormatException e) {
             return annoyed(invalidNumberMessage());
         }
@@ -581,9 +575,9 @@ public class Lloyd {
         assert task != null : "An added-task response must describe an existing task";
         assert taskCount == taskList.size()
                 : "An added-task response must report the current task count";
-        return "Excellent! Another investment in your future has been approved:\n"
+        return "Task added:\n"
                 + task
-                + "\nTasks currently in the master plan: " + taskCount + ".";
+                + "\nTotal tasks: " + taskCount + ".";
     }
 
     /** Formats a heading and tasks as a one-based numbered list. */

@@ -21,7 +21,7 @@ public class LloydTest {
         String output = runLloyd("bye\n");
 
         assertTrue(output.contains("Lloyd Frontera"));
-        assertTrue(output.contains("Leaving already?"));
+        assertTrue(output.contains("Goodbye! Your tasks will be waiting."));
     }
 
     /** Verifies that an unknown command produces the guidance message. */
