@@ -16,6 +16,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lloyd.Lloyd;
+import lloyd.LloydMood;
+import lloyd.LloydResponse;
 
 /** Displays and coordinates Lloyd's JavaFX user interface. */
 public class Main extends Application {
@@ -51,11 +53,13 @@ public class Main extends Application {
         try {
             lloyd = new Lloyd(Path.of("data", "lloyd.txt"));
             dialogContainer.getChildren().add(
-                    DialogBox.createLloydDialog(lloyd.getGreeting()));
+                    DialogBox.createLloydDialog(
+                            lloyd.getGreeting(), LloydMood.CONFIDENT));
         } catch (IOException e) {
             dialogContainer.getChildren().add(DialogBox.createLloydDialog(
                     "I could not load the task file. Check that data/lloyd.txt"
-                            + " contains valid task data and can be read."));
+                            + " contains valid task data and can be read.",
+                    LloydMood.ALARMED));
             disableInput();
         }
     }
@@ -117,10 +121,10 @@ public class Main extends Application {
             return;
         }
 
-        String response = lloyd.getResponse(input);
+        LloydResponse reply = lloyd.getReply(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.createUserDialog(input),
-                DialogBox.createLloydDialog(response));
+                DialogBox.createLloydDialog(reply.text(), reply.mood()));
         userInput.clear();
 
         if (lloyd.isExitRequested()) {

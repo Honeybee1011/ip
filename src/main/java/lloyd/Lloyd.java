@@ -142,14 +142,26 @@ public class Lloyd {
     }
 
     /**
-     * Processes one command and returns the response for a user interface to display.
+     * Processes one command and returns its response text.
      *
      * @param input Command entered by the user.
-     * @return Lloyd's response to the command.
+     * @return Lloyd's textual response.
      */
     public String getResponse(String input) {
+        return getReply(input).text();
+    }
+
+    /**
+     * Processes one command and returns the response and mood.
+     *
+     * @param input Command entered by the user.
+     * @return Lloyd's complete reply.
+     */
+    public LloydResponse getReply(String input) {
         ParsedCommand command = parser.parse(input);
-        assert command != null : "Parser must return a command for every non-null input";
+        assert command != null
+                : "Parser must return a command for every non-null input";
+
         return switch (command.getCommandType()) {
             case BYE -> exit();
             case LIST -> listTasks();
@@ -162,9 +174,29 @@ public class Lloyd {
             case TODO -> addTodo(command);
             case DEADLINE -> addDeadline(command);
             case EVENT -> addEvent(command);
-            default -> " I reject vague contracts."
-                    + " Start every task with todo, deadline, or event.";
+            default -> annoyed(" I reject vague contracts."
+                    + " Start every task with todo, deadline, or event.");
         };
+    }
+
+    /** Creates a confident Lloyd response. */
+    private static LloydResponse confident(String text) {
+        return new LloydResponse(text, LloydMood.CONFIDENT);
+    }
+
+    /** Creates a delighted Lloyd response. */
+    private static LloydResponse delighted(String text) {
+        return new LloydResponse(text, LloydMood.DELIGHTED);
+    }
+
+    /** Creates an annoyed Lloyd response. */
+    private static LloydResponse annoyed(String text) {
+        return new LloydResponse(text, LloydMood.ANNOYED);
+    }
+
+    /** Creates an alarmed Lloyd response. */
+    private static LloydResponse alarmed(String text) {
+        return new LloydResponse(text, LloydMood.ALARMED);
     }
 
     /**
@@ -177,37 +209,37 @@ public class Lloyd {
     }
 
     /** Marks the application as finished and returns Lloyd's farewell. */
-    private String exit() {
+    private LloydResponse exit() {
         isExitRequested = true;
-        return FAREWELL;
+        return confident(FAREWELL);
     }
 
     /** Returns all tasks in their current order. */
-    private String listTasks() {
-        return formatNumberedTasks(
-                " Behold! Here is the master plan:", taskList.asList());
+    private LloydResponse listTasks() {
+        return confident(formatNumberedTasks(
+                " Behold! Here is the master plan:", taskList.asList()));
     }
 
     /** Returns tasks containing the requested keyword. */
-    private String findTasks(ParsedCommand command) {
+    private LloydResponse findTasks(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " A search needs a keyword. Tell me what to find.";
+            return annoyed(" A search needs a keyword. Tell me what to find.");
         }
 
         String keyword = command.getArguments();
         List<Task> matchingTasks = taskList.find(keyword);
         if (matchingTasks.isEmpty()) {
-            return " No tasks contain the keyword: " + keyword;
+            return annoyed(" No tasks contain the keyword: " + keyword);
         }
 
-        return formatNumberedTasks(
-                " Here are the matching tasks in the master plan:", matchingTasks);
+        return confident(formatNumberedTasks(
+                " Here are the matching tasks in the master plan:", matchingTasks));
     }
 
     /** Returns deadlines and event endpoints on the requested date. */
-    private String checkDate(ParsedCommand command) {
+    private LloydResponse checkDate(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Tell me which date to inspect using dd/MM/yyyy.";
+            return annoyed(" Tell me which date to inspect using dd/MM/yyyy.");
         }
 
         try {
@@ -227,20 +259,20 @@ public class Lloyd {
             }
 
             if (matchCount == 0) {
-                return " No deadlines or event endpoints fall on "
-                        + checkedDate.format(CHECK_DISPLAY_FORMAT) + ".";
+                return confident(" No deadlines or event endpoints fall on "
+                        + checkedDate.format(CHECK_DISPLAY_FORMAT) + ".");
             }
-            return scheduledTasks.toString().stripTrailing();
+            return confident(scheduledTasks.toString().stripTrailing());
         } catch (DateTimeParseException e) {
-            return " Enter the date to check in dd/MM/yyyy format.";
+            return annoyed(" Enter the date to check in dd/MM/yyyy format.");
         }
     }
 
     /** Returns incomplete dated tasks that are overdue or due within the reminder window. */
-    private String showReminders(ParsedCommand command) {
+    private LloydResponse showReminders(ParsedCommand command) {
         if (command.hasArguments()) {
-            return " The reminder schedule is fixed at 3 days for now."
-                    + " Enter reminder without any extra details.";
+            return annoyed(" The reminder schedule is fixed at 3 days for now."
+                    + " Enter reminder without any extra details.");
         }
 
         LocalDate today = LocalDate.now(clock);
@@ -264,8 +296,8 @@ public class Lloyd {
         }
 
         if (overdueTasks.isEmpty() && dueSoonTasks.isEmpty()) {
-            return " No urgent projects! You have no overdue tasks"
-                    + " or tasks due within the next 3 days.";
+            return delighted(" No urgent projects! You have no overdue tasks"
+                    + " or tasks due within the next 3 days.");
         }
 
         Comparator<ReminderEntry> byDateThenTaskNumber = Comparator
@@ -279,7 +311,7 @@ public class Lloyd {
         appendReminderSection(reminders, "Overdue", overdueTasks);
         appendReminderSection(
                 reminders, "Due within 3 days, including today", dueSoonTasks);
-        return reminders.toString();
+        return alarmed(reminders.toString());
     }
 
     /** Returns the date used to classify a task for reminders, or {@code null} for todos. */
@@ -308,16 +340,16 @@ public class Lloyd {
     }
 
     /** Marks one task as complete when its number is valid. */
-    private String markTask(ParsedCommand command) {
+    private LloydResponse markTask(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Even I cannot finish an imaginary task."
-                    + " Give me the task number to mark.";
+            return annoyed(" Even I cannot finish an imaginary task."
+                    + " Give me the task number to mark.");
         }
 
         try {
             int taskNumber = Integer.parseInt(command.getArguments());
             if (!isValidTaskNumber(taskNumber)) {
-                return invalidTaskNumberMessage();
+                return annoyed(invalidTaskNumberMessage());
             }
 
             int taskIndex = taskNumber - 1;
@@ -333,26 +365,26 @@ public class Lloyd {
                 }
                 assert task.isDone() == wasDone
                         : "A failed save must restore the task's previous completion state";
-                return SAVE_ERROR;
+                return alarmed(SAVE_ERROR);
             }
-            return " Magnificent! Efficient work means lower costs."
-                    + " This task is officially complete:\n" + task;
+            return delighted(" Magnificent! Efficient work means lower costs."
+                    + " This task is officially complete:\n" + task);
         } catch (NumberFormatException e) {
-            return invalidNumberMessage();
+            return annoyed(invalidNumberMessage());
         }
     }
 
     /** Marks one task as incomplete when its number is valid. */
-    private String unmarkTask(ParsedCommand command) {
+    private LloydResponse unmarkTask(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Rework requires paperwork."
-                    + " Give me the task number to unmark.";
+            return annoyed(" Rework requires paperwork."
+                    + " Give me the task number to unmark.");
         }
 
         try {
             int taskNumber = Integer.parseInt(command.getArguments());
             if (!isValidTaskNumber(taskNumber)) {
-                return invalidTaskNumberMessage();
+                return annoyed(invalidTaskNumberMessage());
             }
 
             int taskIndex = taskNumber - 1;
@@ -368,26 +400,26 @@ public class Lloyd {
                 }
                 assert task.isDone() == wasDone
                         : "A failed save must restore the task's previous completion state";
-                return SAVE_ERROR;
+                return alarmed(SAVE_ERROR);
             }
-            return " What? Rework? That is terrible for the budget!"
-                    + " Fine, this task is back under construction:\n" + task;
+            return annoyed(" What? Rework? That is terrible for the budget!"
+                    + " Fine, this task is back under construction:\n" + task);
         } catch (NumberFormatException e) {
-            return invalidNumberMessage();
+            return annoyed(invalidNumberMessage());
         }
     }
 
     /** Deletes one task when its number is valid. */
-    private String deleteTask(ParsedCommand command) {
+    private LloydResponse deleteTask(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Demolition needs a target."
-                    + " Give me the task number to delete.";
+            return annoyed(" Demolition needs a target."
+                    + " Give me the task number to delete.");
         }
 
         try {
             int taskNumber = Integer.parseInt(command.getArguments());
             if (!isValidTaskNumber(taskNumber)) {
-                return invalidTaskNumberMessage();
+                return annoyed(invalidTaskNumberMessage());
             }
 
             int taskIndex = taskNumber - 1;
@@ -403,21 +435,21 @@ public class Lloyd {
                         : "A failed save must restore the previous task count";
                 assert taskList.get(taskIndex) == deletedTask
                         : "A failed save must restore the deleted task at its original index";
-                return SAVE_ERROR;
+                return alarmed(SAVE_ERROR);
             }
-            return " Excellent! Waste eliminated from the budget."
+            return delighted(" Excellent! Waste eliminated from the budget."
                     + " I have removed this task:\n" + deletedTask
                     + "\n Tasks currently in the master plan: "
-                    + taskList.size() + ".";
+                    + taskList.size() + ".");
         } catch (NumberFormatException e) {
-            return invalidNumberMessage();
+            return annoyed(invalidNumberMessage());
         }
     }
 
     /** Adds a todo when a description is present. */
-    private String addTodo(ParsedCommand command) {
+    private LloydResponse addTodo(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Every task needs a description. Tell me what needs doing.";
+            return annoyed(" Every task needs a description. Tell me what needs doing.");
         }
 
         int previousTaskCount = taskList.size();
@@ -428,30 +460,30 @@ public class Lloyd {
             taskList.removeLast();
             assert taskList.size() == previousTaskCount
                     : "A failed save must restore the previous task count";
-            return SAVE_ERROR;
+            return alarmed(SAVE_ERROR);
         }
-        return createTaskAddedMessage(taskList.getLast(), taskList.size());
+        return delighted(createTaskAddedMessage(taskList.getLast(), taskList.size()));
     }
 
     /** Adds a deadline when its description and date are valid. */
-    private String addDeadline(ParsedCommand command) {
+    private LloydResponse addDeadline(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Every profitable project needs details."
-                    + " Provide a description and /by date.";
+            return annoyed(" Every profitable project needs details."
+                    + " Provide a description and /by date.");
         }
 
         String deadlineDetails = command.getArguments();
         int byIndex = deadlineDetails.indexOf(DEADLINE_ARGUMENT_SEPARATOR);
         if (byIndex < 0) {
-            return " No deadline, no schedule. Specify it using /by.";
+            return annoyed(" No deadline, no schedule. Specify it using /by.");
         }
 
         String deadlineDescription = deadlineDetails.substring(0, byIndex).trim();
         String deadlineText = deadlineDetails.substring(
                 byIndex + DEADLINE_ARGUMENT_SEPARATOR.length()).trim();
         if (deadlineDescription.isEmpty() || deadlineText.isEmpty()) {
-            return " A contract needs both the work and its deadline."
-                    + " Provide a description and /by date.";
+            return annoyed(" A contract needs both the work and its deadline."
+                    + " Provide a description and /by date.");
         }
 
         int previousTaskCount = taskList.size();
@@ -461,7 +493,7 @@ public class Lloyd {
             deadline = new Deadline(deadlineDescription, deadlineDate);
             taskList.add(deadline);
         } catch (DateTimeParseException e) {
-            return " Enter the deadline in dd/MM/yyyy format.";
+            return annoyed(" Enter the deadline in dd/MM/yyyy format.");
         }
         assertTaskWasAppended(deadline, previousTaskCount);
 
@@ -469,16 +501,16 @@ public class Lloyd {
             taskList.removeLast();
             assert taskList.size() == previousTaskCount
                     : "A failed save must restore the previous task count";
-            return SAVE_ERROR;
+            return alarmed(SAVE_ERROR);
         }
-        return createTaskAddedMessage(taskList.getLast(), taskList.size());
+        return delighted(createTaskAddedMessage(taskList.getLast(), taskList.size()));
     }
 
     /** Adds an event when its description and endpoints are valid. */
-    private String addEvent(ParsedCommand command) {
+    private LloydResponse addEvent(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return " Every grand event needs a plan."
-                    + " Provide a description, /from date, and /to date.";
+            return annoyed(" Every grand event needs a plan."
+                    + " Provide a description, /from date, and /to date.");
         }
 
         String eventDetails = command.getArguments();
@@ -487,8 +519,8 @@ public class Lloyd {
                 EVENT_END_ARGUMENT_SEPARATOR,
                 fromIndex + EVENT_START_ARGUMENT_SEPARATOR.length());
         if (fromIndex < 0 || toIndex < 0) {
-            return " An event without a schedule invites disaster."
-                    + " Specify it using /from and /to.";
+            return annoyed(" An event without a schedule invites disaster."
+                    + " Specify it using /from and /to.");
         }
         assert fromIndex < toIndex
                 : "The /from delimiter must precede the /to delimiter";
@@ -499,8 +531,8 @@ public class Lloyd {
         String endText = eventDetails.substring(
                 toIndex + EVENT_END_ARGUMENT_SEPARATOR.length()).trim();
         if (eventDescription.isEmpty() || startText.isEmpty() || endText.isEmpty()) {
-            return " The project contract is incomplete."
-                    + " Provide a description, /from date, and /to date.";
+            return annoyed(" The project contract is incomplete."
+                    + " Provide a description, /from date, and /to date.");
         }
 
         int previousTaskCount = taskList.size();
@@ -511,9 +543,9 @@ public class Lloyd {
             event = new Event(eventDescription, start, end);
             taskList.add(event);
         } catch (DateTimeParseException e) {
-            return " Enter event dates and times in dd/MM/yyyy HHmm format.";
+            return annoyed(" Enter event dates and times in dd/MM/yyyy HHmm format.");
         } catch (IllegalArgumentException e) {
-            return " The event end cannot be before its start.";
+            return annoyed(" The event end cannot be before its start.");
         }
         assertTaskWasAppended(event, previousTaskCount);
 
@@ -521,9 +553,9 @@ public class Lloyd {
             taskList.removeLast();
             assert taskList.size() == previousTaskCount
                     : "A failed save must restore the previous task count";
-            return SAVE_ERROR;
+            return alarmed(SAVE_ERROR);
         }
-        return createTaskAddedMessage(taskList.getLast(), taskList.size());
+        return delighted(createTaskAddedMessage(taskList.getLast(), taskList.size()));
     }
 
     /** Reports whether a one-based task number refers to an existing task. */
