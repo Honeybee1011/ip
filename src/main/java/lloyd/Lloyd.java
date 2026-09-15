@@ -221,10 +221,10 @@ public class Lloyd {
     /** Returns all tasks in their current order. */
     private LloydResponse listTasks() {
         if (taskList.size() == 0) {
-            return confident("Your master plan is empty.");
+            return confident("Your task list is empty.");
         }
         return confident(formatNumberedTasks(
-                "Behold! Here is the master plan:", taskList.asList()));
+                "Behold! Here is the task list:", taskList.asList()));
     }
 
     /** Returns tasks containing the requested keyword. */
@@ -240,7 +240,7 @@ public class Lloyd {
         }
 
         return confident(formatNumberedTasks(
-                "Here are the matching tasks in the master plan:", matchingTasks));
+                "Here are the matching tasks in the task list:", matchingTasks));
     }
 
     /** Returns deadlines and event endpoints on the requested date. */
@@ -304,7 +304,7 @@ public class Lloyd {
         }
 
         if (overdueTasks.isEmpty() && dueSoonTasks.isEmpty()) {
-            return delighted("No urgent projects! You have no overdue tasks"
+            return delighted("No urgent tasks! You have no overdue tasks"
                     + " or tasks due within the next 3 days.");
         }
 

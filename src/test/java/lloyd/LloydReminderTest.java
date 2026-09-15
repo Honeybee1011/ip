@@ -80,7 +80,7 @@ public class LloydReminderTest {
                 "D | 0 | distant project | 2026-09-18"));
 
         assertEquals(
-                "No urgent projects! You have no overdue tasks"
+                "No urgent tasks! You have no overdue tasks"
                         + " or tasks due within the next 3 days.",
                 lloyd.getResponse("reminder"));
     }

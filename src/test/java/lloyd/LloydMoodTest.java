@@ -29,7 +29,7 @@ public class LloydMoodTest {
         LloydResponse response = lloyd.getReply("list");
 
         assertEquals(LloydMood.CONFIDENT, response.mood());
-        assertEquals("Your master plan is empty.", response.text());
+        assertEquals("Your task list is empty.", response.text());
     }
 
     /** Verifies that successful task additions make Lloyd delighted. */

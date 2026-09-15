@@ -333,7 +333,7 @@ reminder
 
 ```text
 ____________________________________________________________
-No urgent projects! You have no overdue tasks or tasks due within the next 3 days.
+No urgent tasks! You have no overdue tasks or tasks due within the next 3 days.
 ____________________________________________________________
 
 ```
@@ -397,7 +397,7 @@ list
 
 ```text
 ____________________________________________________________
-Your master plan is empty.
+Your task list is empty.
 ____________________________________________________________
 
 ```
@@ -450,7 +450,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][X] read book
 2. [D][ ] return book (by: Jun 6 2026)
 3. [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
@@ -536,7 +536,7 @@ list
 
 ```text
 ____________________________________________________________
-Your master plan is empty.
+Your task list is empty.
 ____________________________________________________________
 
 ```
@@ -756,7 +756,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][X] read book
 2. [D][ ] return book (by: Jun 6 2026)
 3. [E][ ] project meeting (from: Aug 6 2026, 2:00 PM to: Aug 6 2026, 4:00 PM)
@@ -898,7 +898,7 @@ find book
 
 ```text
 ____________________________________________________________
-Here are the matching tasks in the master plan:
+Here are the matching tasks in the task list:
 1. [T][ ] read book
 2. [D][ ] return book (by: Sep 2 2026)
 ____________________________________________________________
@@ -1376,7 +1376,7 @@ list
 
 ```text
 ____________________________________________________________
-Your master plan is empty.
+Your task list is empty.
 ____________________________________________________________
 
 ```
@@ -1453,7 +1453,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] survey land
 ____________________________________________________________
 
@@ -1508,7 +1508,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] survey land
 2. [D][ ] build bridge (by: Aug 29 2026)
 ____________________________________________________________
@@ -1582,7 +1582,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] survey land
 2. [D][ ] build bridge (by: Aug 29 2026)
 3. [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
@@ -1679,7 +1679,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][X] inspect walls
 ____________________________________________________________
 
@@ -1714,7 +1714,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][X] inspect walls
 ____________________________________________________________
 
@@ -1767,7 +1767,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] inspect walls
 ____________________________________________________________
 
@@ -1802,7 +1802,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] inspect walls
 ____________________________________________________________
 
@@ -1937,7 +1937,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] survey land
 2. [E][ ] opening ceremony (from: Aug 31 2026, 9:00 AM to: Aug 31 2026, 10:00 AM)
 ____________________________________________________________
@@ -2084,7 +2084,7 @@ list
 
 ```text
 ____________________________________________________________
-Behold! Here is the master plan:
+Behold! Here is the task list:
 1. [T][ ] inspect foundations
 ____________________________________________________________
 
