@@ -216,6 +216,9 @@ public class Lloyd {
 
     /** Returns all tasks in their current order. */
     private LloydResponse listTasks() {
+        if (taskList.size() == 0) {
+            return confident("Your master plan is empty.");
+        }
         return confident(formatNumberedTasks(
                 "Behold! Here is the master plan:", taskList.asList()));
     }

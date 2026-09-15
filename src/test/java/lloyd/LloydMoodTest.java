@@ -26,7 +26,10 @@ public class LloydMoodTest {
     public void getReply_listCommand_returnsConfidentMood() throws IOException {
         Lloyd lloyd = createLloyd("");
 
-        assertEquals(LloydMood.CONFIDENT, lloyd.getReply("list").mood());
+        LloydResponse response = lloyd.getReply("list");
+
+        assertEquals(LloydMood.CONFIDENT, response.mood());
+        assertEquals("Your master plan is empty.", response.text());
     }
 
     /** Verifies that successful task additions make Lloyd delighted. */
