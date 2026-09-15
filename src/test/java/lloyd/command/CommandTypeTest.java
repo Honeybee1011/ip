@@ -16,6 +16,7 @@ public class CommandTypeTest {
         assertEquals(CommandType.LIST, CommandType.from("list"));
         assertEquals(CommandType.FIND, CommandType.from("find"));
         assertEquals(CommandType.CHECK, CommandType.from("check"));
+        assertEquals(CommandType.REMINDER, CommandType.from("reminder"));
         assertEquals(CommandType.MARK, CommandType.from("mark"));
         assertEquals(CommandType.UNMARK, CommandType.from("unmark"));
         assertEquals(CommandType.DELETE, CommandType.from("delete"));
@@ -46,5 +47,6 @@ public class CommandTypeTest {
     @Test
     public void from_differentlyCasedCommandWord_returnsUnknown() {
         assertEquals(CommandType.UNKNOWN, CommandType.from("TODO"));
+        assertEquals(CommandType.UNKNOWN, CommandType.from("Reminder"));
     }
 }
