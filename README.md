@@ -19,3 +19,17 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    IDE). If the setup is correct, the Lloyd chat window should open.
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## AI Usage
+
+This project was developed with assistance from OpenAI Codex.
+
+AI was used to:
+
+- discuss software design and implementation approaches;
+- generate or refine portions of the Java code;
+- suggest test cases and documentation improvements; and
+- help diagnose errors and review code quality.
+
+All AI-generated suggestions were reviewed, adapted, and tested by the author,
+who remains responsible for the submitted work.
