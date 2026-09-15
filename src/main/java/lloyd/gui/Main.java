@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -71,7 +73,11 @@ public class Main extends Application {
     private void configureInputArea() {
         userInput.setPromptText("Enter a command...");
         userInput.setOnAction(event -> handleUserInput());
+        userInput.setMaxWidth(Double.MAX_VALUE);
+        userInput.setPrefHeight(INPUT_HEIGHT);
+
         sendButton.setOnAction(event -> handleUserInput());
+        sendButton.setPrefSize(70.0, INPUT_HEIGHT);
     }
 
     /**
@@ -81,8 +87,14 @@ public class Main extends Application {
      */
     private AnchorPane createMainLayout() {
         AnchorPane mainLayout = new AnchorPane();
+        HBox inputArea = new HBox(userInput, sendButton);
+
+
         mainLayout.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        mainLayout.getChildren().addAll(scrollPane, userInput, sendButton);
+        mainLayout.getChildren().addAll(scrollPane, inputArea);
+
+        HBox.setHgrow(userInput, Priority.ALWAYS);
+        inputArea.setPrefHeight(INPUT_HEIGHT);
 
         AnchorPane.setTopAnchor(scrollPane, 0.0);
         AnchorPane.setLeftAnchor(scrollPane, 0.0);
@@ -92,11 +104,6 @@ public class Main extends Application {
         AnchorPane.setLeftAnchor(userInput, 0.0);
         AnchorPane.setRightAnchor(userInput, 70.0);
         AnchorPane.setBottomAnchor(userInput, 0.0);
-        userInput.setPrefHeight(INPUT_HEIGHT);
-
-        AnchorPane.setRightAnchor(sendButton, 0.0);
-        AnchorPane.setBottomAnchor(sendButton, 0.0);
-        sendButton.setPrefSize(70.0, INPUT_HEIGHT);
         return mainLayout;
     }
 
