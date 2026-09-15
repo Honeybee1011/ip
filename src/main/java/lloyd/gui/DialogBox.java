@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 
 /** Displays one user or Lloyd message in the conversation. */
 public class DialogBox extends HBox {
-    private static final double MESSAGE_WIDTH = 280.0;
+    private static final double MESSAGE_WIDTH_RATIO = 0.75;
 
     private static final String USER_MESSAGE_STYLE =
             "-fx-background-color: #d8ecff; -fx-background-radius: 8;";
@@ -27,7 +27,9 @@ public class DialogBox extends HBox {
     private DialogBox(String text, String speaker, boolean isUserMessage) {
         Label message = new Label(text);
         message.setWrapText(true);
-        message.setMaxWidth(MESSAGE_WIDTH);
+        message.setMinWidth(0.0);
+        message.maxWidthProperty().bind(
+            widthProperty().multiply(MESSAGE_WIDTH_RATIO));
         message.setPadding(new Insets(10));
         message.setStyle(isUserMessage ? USER_MESSAGE_STYLE : LLOYD_MESSAGE_STYLE);
 
