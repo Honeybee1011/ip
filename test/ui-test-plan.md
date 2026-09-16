@@ -1049,7 +1049,7 @@ check
 
 ```text
 ____________________________________________________________
-Enter a date in dd/MM/yyyy format.
+Enter a date using DD/MM/YYYY (day/month/year).
 Example: check 06/08/2026
 ____________________________________________________________
 
@@ -1067,7 +1067,7 @@ check 31/02/2026
 
 ```text
 ____________________________________________________________
-Enter a date in dd/MM/yyyy format.
+Enter a date using DD/MM/YYYY (day/month/year).
 Example: check 06/08/2026
 ____________________________________________________________
 
@@ -1113,6 +1113,8 @@ deadline do homework /by no idea :-p
 ____________________________________________________________
 Enter a deadline in this format:
 deadline DESCRIPTION /by DD/MM/YYYY
+Date format: DD/MM/YYYY (day/month/year).
+Example: deadline submit report /by 06/08/2026
 ____________________________________________________________
 
 ```
@@ -1136,7 +1138,7 @@ ____________________________________________________________
 
 ### UI-003: Show themed command and validation responses
 
-**Aim:** Verify that unmarking and invalid command details produce Lloyd-themed responses without changing their existing behavior.
+**Aim:** Verify that unmarking and invalid command details produce informative responses without changing task state.
 
 **Expected startup output:** Same as UI-001.
 
@@ -1261,6 +1263,8 @@ deadline
 ____________________________________________________________
 Enter a deadline in this format:
 deadline DESCRIPTION /by DD/MM/YYYY
+Date format: DD/MM/YYYY (day/month/year).
+Example: deadline submit report /by 06/08/2026
 ____________________________________________________________
 
 ```
@@ -1279,6 +1283,8 @@ deadline build bridge tomorrow
 ____________________________________________________________
 Enter a deadline in this format:
 deadline DESCRIPTION /by DD/MM/YYYY
+Date format: DD/MM/YYYY (day/month/year).
+Example: deadline submit report /by 06/08/2026
 ____________________________________________________________
 
 ```
@@ -1297,6 +1303,8 @@ event
 ____________________________________________________________
 Enter an event in this format:
 event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+Date and time format: DD/MM/YYYY HHMM (day/month/year, 24-hour time).
+Example: event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
 ____________________________________________________________
 
 ```
@@ -1315,11 +1323,51 @@ event grand opening tomorrow
 ____________________________________________________________
 Enter an event in this format:
 event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+Date and time format: DD/MM/YYYY HHMM (day/month/year, 24-hour time).
+Example: event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
 ____________________________________________________________
 
 ```
 
 #### Step 11
+
+**Input:**
+
+```text
+event project meeting /from tomorrow /to later
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Enter an event in this format:
+event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+Date and time format: DD/MM/YYYY HHMM (day/month/year, 24-hour time).
+Example: event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
+____________________________________________________________
+
+```
+
+#### Step 12
+
+**Input:**
+
+```text
+event project meeting /from 06/08/2026 1600 /to 06/08/2026 1400
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Enter an event end time that is not before its start.
+Example: event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
+____________________________________________________________
+
+```
+
+#### Step 13
 
 **Input:**
 
@@ -1437,6 +1485,8 @@ deadline build bridge tomorrow
 ____________________________________________________________
 Enter a deadline in this format:
 deadline DESCRIPTION /by DD/MM/YYYY
+Date format: DD/MM/YYYY (day/month/year).
+Example: deadline submit report /by 06/08/2026
 ____________________________________________________________
 
 ```
@@ -1492,6 +1542,8 @@ event opening ceremony /from Monday
 ____________________________________________________________
 Enter an event in this format:
 event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+Date and time format: DD/MM/YYYY HHMM (day/month/year, 24-hour time).
+Example: event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
 ____________________________________________________________
 
 ```
@@ -1529,6 +1581,8 @@ event opening ceremony /from  /to Tuesday
 ____________________________________________________________
 Enter an event in this format:
 event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+Date and time format: DD/MM/YYYY HHMM (day/month/year, 24-hour time).
+Example: event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
 ____________________________________________________________
 
 ```

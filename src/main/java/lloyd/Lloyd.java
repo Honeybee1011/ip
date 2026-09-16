@@ -64,10 +64,19 @@ public class Lloyd {
                     + "Check that data/lloyd.txt is writable and task details do not contain |.";
     private static final String DEADLINE_FORMAT_GUIDANCE =
             "Enter a deadline in this format:\n"
-                    + "deadline DESCRIPTION /by DD/MM/YYYY";
+                    + "deadline DESCRIPTION /by DD/MM/YYYY\n"
+                    + "Date format: DD/MM/YYYY (day/month/year).\n"
+                    + "Example: deadline submit report /by 06/08/2026";
     private static final String EVENT_FORMAT_GUIDANCE =
             "Enter an event in this format:\n"
-                    + "event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM";
+                    + "event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM\n"
+                    + "Date and time format: DD/MM/YYYY HHMM"
+                    + " (day/month/year, 24-hour time).\n"
+                    + "Example: event project meeting /from 06/08/2026 1400"
+                    + " /to 06/08/2026 1600";
+    private static final String CHECK_DATE_FORMAT_GUIDANCE =
+            "Enter a date using DD/MM/YYYY (day/month/year).\n"
+                    + "Example: check 06/08/2026";
 
     private final Storage storage;
     private final TaskList taskList;
@@ -246,8 +255,7 @@ public class Lloyd {
     /** Returns deadlines and event endpoints on the requested date. */
     private LloydResponse checkDate(ParsedCommand command) {
         if (!command.hasArguments()) {
-            return annoyed("Enter a date in dd/MM/yyyy format.\n"
-                    + "Example: check 06/08/2026");
+            return annoyed(CHECK_DATE_FORMAT_GUIDANCE);
         }
 
         try {
@@ -272,8 +280,7 @@ public class Lloyd {
             }
             return confident(scheduledTasks.toString().stripTrailing());
         } catch (DateTimeParseException e) {
-            return annoyed("Enter a date in dd/MM/yyyy format.\n"
-                    + "Example: check 06/08/2026");
+            return annoyed(CHECK_DATE_FORMAT_GUIDANCE);
         }
     }
 
@@ -541,7 +548,9 @@ public class Lloyd {
         } catch (DateTimeParseException e) {
             return annoyed(EVENT_FORMAT_GUIDANCE);
         } catch (IllegalArgumentException e) {
-            return annoyed("Enter an event end time that is not before its start.");
+            return annoyed("Enter an event end time that is not before its start.\n"
+                    + "Example: event project meeting /from 06/08/2026 1400"
+                    + " /to 06/08/2026 1600");
         }
         assertTaskWasAppended(event, previousTaskCount);
 
