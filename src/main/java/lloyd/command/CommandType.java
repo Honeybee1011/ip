@@ -14,6 +14,8 @@ public enum CommandType {
     CHECK("check"),
     /** Displays incomplete dated tasks that are overdue or due soon. */
     REMINDER("reminder"),
+    /** Displays a summary of the supported commands and their formats. */
+    HELP("help"),
     /** Marks a task as complete. */
     MARK("mark"),
     /** Marks a task as incomplete. */

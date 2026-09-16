@@ -16,9 +16,9 @@ public class ParserTest {
     @Test
     public void parse_recognizedCommandWithoutArguments_returnsCommandType() {
         Parser parser = new Parser();
-        ParsedCommand parsedCommand = parser.parse("list");
+        ParsedCommand parsedCommand = parser.parse("help");
 
-        assertEquals(CommandType.LIST, parsedCommand.getCommandType());
+        assertEquals(CommandType.HELP, parsedCommand.getCommandType());
         assertEquals("", parsedCommand.getArguments());
         assertFalse(parsedCommand.hasArguments());
     }
