@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import lloyd.command.CommandType;
 import lloyd.command.ParsedCommand;
 import lloyd.command.Parser;
 import lloyd.storage.Storage;
@@ -98,11 +99,13 @@ public class Lloyd {
                       delete TASK_NUMBER
 
                     Other commands:
-                      help
+                      help [COMMAND]
                       bye
 
                     Dates use DD/MM/YYYY.
                     Times use the 24-hour HHMM format; for example, 1430 means 2:30 PM.""";
+    private static final String HELP_TOPICS =
+            "todo, deadline, event, list, find, check, reminder, mark, unmark, delete, help, bye";
 
     private final Storage storage;
     private final TaskList taskList;
@@ -356,12 +359,119 @@ public class Lloyd {
         return alarmed(reminders.toString());
     }
 
-    /** Returns a summary of the supported commands and their input formats. */
+    /** Returns general guidance or detailed guidance for one supported command. */
     private LloydResponse showHelp(ParsedCommand command) {
-        if (command.hasArguments()) {
-            return annoyed("Enter help without additional information.");
+        if (!command.hasArguments()) {
+            return confident(HELP_MESSAGE);
         }
-        return confident(HELP_MESSAGE);
+
+        String helpTopic = command.getArguments();
+        CommandType helpCommandType = CommandType.from(helpTopic);
+        if (helpCommandType == CommandType.UNKNOWN) {
+            return annoyed("No help is available for: " + helpTopic
+                    + "\nAvailable help topics: " + HELP_TOPICS);
+        }
+        return confident(getCommandHelp(helpCommandType));
+    }
+
+    /** Returns detailed usage guidance for one recognized command. */
+    private String getCommandHelp(CommandType commandType) {
+        assert commandType != CommandType.UNKNOWN
+                : "Detailed help requires a recognized command type";
+        return switch (commandType) {
+            case TODO -> """
+                    todo - Add a task without a date or time.
+
+                    Format:
+                      todo DESCRIPTION
+
+                    Example:
+                      todo read book""";
+            case DEADLINE -> """
+                    deadline - Add a task with a due date.
+
+                    Format:
+                      deadline DESCRIPTION /by DD/MM/YYYY
+
+                    Example:
+                      deadline submit report /by 06/08/2026""";
+            case EVENT -> """
+                    event - Add an event with a start and end date and time.
+
+                    Format:
+                      event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+
+                    Example:
+                      event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600""";
+            case LIST -> """
+                    list - Display all tasks in their current order.
+
+                    Format:
+                      list""";
+            case FIND -> """
+                    find - Display tasks containing a keyword.
+
+                    Format:
+                      find KEYWORD
+
+                    Example:
+                      find book""";
+            case CHECK -> """
+                    check - Display deadlines and event endpoints on a date.
+
+                    Format:
+                      check DD/MM/YYYY
+
+                    Example:
+                      check 06/08/2026""";
+            case REMINDER -> """
+                    reminder - Display incomplete dated tasks that need attention.
+
+                    Shows overdue tasks and tasks due within 3 days, including today.
+
+                    Format:
+                      reminder""";
+            case MARK -> """
+                    mark - Mark a task as complete.
+
+                    Format:
+                      mark TASK_NUMBER
+
+                    Example:
+                      mark 1""";
+            case UNMARK -> """
+                    unmark - Mark a task as incomplete.
+
+                    Format:
+                      unmark TASK_NUMBER
+
+                    Example:
+                      unmark 1""";
+            case DELETE -> """
+                    delete - Remove a task from the list.
+
+                    Format:
+                      delete TASK_NUMBER
+
+                    Example:
+                      delete 1""";
+            case HELP -> """
+                    help - Display general or command-specific guidance.
+
+                    Format:
+                      help
+                      help COMMAND
+
+                    Example:
+                      help todo""";
+            case BYE -> """
+                    bye - End the current session.
+
+                    Format:
+                      bye""";
+            case UNKNOWN -> throw new IllegalArgumentException(
+                    "Detailed help requires a recognized command type");
+        };
     }
 
     /** Returns the date used to classify a task for reminders, or {@code null} for todos. */

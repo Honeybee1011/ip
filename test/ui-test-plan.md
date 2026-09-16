@@ -281,7 +281,7 @@ Manage tasks:
   delete TASK_NUMBER
 
 Other commands:
-  help
+  help [COMMAND]
   bye
 
 Dates use DD/MM/YYYY.
@@ -331,10 +331,10 @@ ____________________________________________________________
 
 ```
 
-### UI-019: Reject help arguments
+### UI-019: Display command-specific help
 
-**Aim:** Verify that `help` rejects additional information without changing
-the task list or ending the session.
+**Aim:** Verify that `help COMMAND` displays detailed guidance for supported
+commands, rejects unknown topics, and does not change the task list or end the session.
 
 **Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-help-arguments-test`
 
@@ -349,6 +349,52 @@ the task list or ending the session.
 **Input:**
 
 ```text
+help todo
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+todo - Add a task without a date or time.
+
+Format:
+  todo DESCRIPTION
+
+Example:
+  todo read book
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+help event
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+event - Add an event with a start and end date and time.
+
+Format:
+  event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+
+Example:
+  event project meeting /from 06/08/2026 1400 /to 06/08/2026 1600
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
 help tasks
 ```
 
@@ -356,12 +402,13 @@ help tasks
 
 ```text
 ____________________________________________________________
-Enter help without additional information.
+No help is available for: tasks
+Available help topics: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, help, bye
 ____________________________________________________________
 
 ```
 
-#### Step 2
+#### Step 4
 
 **Input:**
 
@@ -378,7 +425,7 @@ ____________________________________________________________
 
 ```
 
-#### Step 3
+#### Step 5
 
 **Input:**
 
