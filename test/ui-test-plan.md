@@ -233,6 +233,168 @@ ____________________________________________________________
 
 ```
 
+### UI-018: Display help without changing stored tasks
+
+**Aim:** Verify that `help` displays every supported command and its format
+without changing existing tasks or ending the session.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-help-test`
+
+**Program start command:** `java -ea -cp ..\..\build\classes\java\main lloyd.Lloyd`
+
+**Initial `data/lloyd.txt`:**
+
+```text
+T | 0 | inspect foundations
+```
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+help
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Here's what I can do:
+
+Add tasks:
+  todo DESCRIPTION
+  deadline DESCRIPTION /by DD/MM/YYYY
+  event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+
+View tasks:
+  list
+  find KEYWORD
+  check DD/MM/YYYY
+  reminder
+
+Manage tasks:
+  mark TASK_NUMBER
+  unmark TASK_NUMBER
+  delete TASK_NUMBER
+
+Other commands:
+  help
+  bye
+
+Dates use DD/MM/YYYY.
+Times use the 24-hour HHMM format; for example, 1430 means 2:30 PM.
+____________________________________________________________
+
+```
+
+**Expected unchanged `data/lloyd.txt`:**
+
+```text
+T | 0 | inspect foundations
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Tasks:
+1. [T][ ] inspect foundations
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Goodbye! Your tasks will be waiting.
+____________________________________________________________
+
+```
+
+### UI-019: Reject help arguments
+
+**Aim:** Verify that `help` rejects additional information without changing
+the task list or ending the session.
+
+**Working directory:** `C:\Users\joshu\Code\ip\_temp\ui-help-arguments-test`
+
+**Program start command:** `java -ea -cp ..\..\build\classes\java\main lloyd.Lloyd`
+
+**Storage setup:** Ensure the working directory does not contain a `data` directory.
+
+**Expected startup output:** Same as UI-001.
+
+#### Step 1
+
+**Input:**
+
+```text
+help tasks
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Enter help without additional information.
+____________________________________________________________
+
+```
+
+#### Step 2
+
+**Input:**
+
+```text
+list
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Your task list is empty.
+____________________________________________________________
+
+```
+
+#### Step 3
+
+**Input:**
+
+```text
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+Goodbye! Your tasks will be waiting.
+____________________________________________________________
+
+```
+
 ### UI-015: Show overdue reminders without changing stored tasks
 
 **Aim:** Verify that `reminder` displays incomplete dated tasks in date order,
@@ -1407,7 +1569,7 @@ inspect foundations
 ```text
 ____________________________________________________________
 Enter a valid command.
-Commands: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, bye
+Commands: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, help, bye
 ____________________________________________________________
 
 ```
@@ -1619,7 +1781,7 @@ build tunnel
 ```text
 ____________________________________________________________
 Enter a valid command.
-Commands: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, bye
+Commands: todo, deadline, event, list, find, check, reminder, mark, unmark, delete, help, bye
 ____________________________________________________________
 
 ```

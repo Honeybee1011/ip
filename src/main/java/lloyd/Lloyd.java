@@ -77,6 +77,32 @@ public class Lloyd {
     private static final String CHECK_DATE_FORMAT_GUIDANCE =
             "Enter a date using DD/MM/YYYY (day/month/year).\n"
                     + "Example: check 06/08/2026";
+    private static final String HELP_MESSAGE =
+            """
+                    Here's what I can do:
+
+                    Add tasks:
+                      todo DESCRIPTION
+                      deadline DESCRIPTION /by DD/MM/YYYY
+                      event DESCRIPTION /from DD/MM/YYYY HHMM /to DD/MM/YYYY HHMM
+
+                    View tasks:
+                      list
+                      find KEYWORD
+                      check DD/MM/YYYY
+                      reminder
+
+                    Manage tasks:
+                      mark TASK_NUMBER
+                      unmark TASK_NUMBER
+                      delete TASK_NUMBER
+
+                    Other commands:
+                      help
+                      bye
+
+                    Dates use DD/MM/YYYY.
+                    Times use the 24-hour HHMM format; for example, 1430 means 2:30 PM.""";
 
     private final Storage storage;
     private final TaskList taskList;
@@ -180,6 +206,7 @@ public class Lloyd {
             case FIND -> findTasks(command);
             case CHECK -> checkDate(command);
             case REMINDER -> showReminders(command);
+            case HELP -> showHelp(command);
             case MARK -> markTask(command);
             case UNMARK -> unmarkTask(command);
             case DELETE -> deleteTask(command);
@@ -188,7 +215,7 @@ public class Lloyd {
             case EVENT -> addEvent(command);
             default -> annoyed("Enter a valid command.\n"
                     + "Commands: todo, deadline, event, list, find, check, reminder,"
-                    + " mark, unmark, delete, bye");
+                    + " mark, unmark, delete, help, bye");
         };
     }
 
@@ -327,6 +354,14 @@ public class Lloyd {
         appendReminderSection(
                 reminders, "Due within 3 days, including today", dueSoonTasks);
         return alarmed(reminders.toString());
+    }
+
+    /** Returns a summary of the supported commands and their input formats. */
+    private LloydResponse showHelp(ParsedCommand command) {
+        if (command.hasArguments()) {
+            return annoyed("Enter help without additional information.");
+        }
+        return confident(HELP_MESSAGE);
     }
 
     /** Returns the date used to classify a task for reminders, or {@code null} for todos. */
