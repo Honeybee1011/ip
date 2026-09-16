@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -31,6 +33,7 @@ public class Main extends Application {
     private final VBox dialogContainer = new VBox();
     private final TextField userInput = new TextField();
     private final Button sendButton = new Button("Send");
+    private final CommandHistory commandHistory = new CommandHistory();
 
     private Lloyd lloyd;
 
@@ -81,11 +84,28 @@ public class Main extends Application {
     private void configureInputArea() {
         userInput.setPromptText("Enter a command...");
         userInput.setOnAction(event -> handleUserInput());
+        userInput.setOnKeyPressed(this::handleHistoryNavigation);
         userInput.setMaxWidth(Double.MAX_VALUE);
         userInput.setPrefHeight(INPUT_HEIGHT);
 
         sendButton.setOnAction(event -> handleUserInput());
         sendButton.setPrefSize(70.0, INPUT_HEIGHT);
+    }
+
+    /** Moves backward or forward through submitted commands using the arrow keys. */
+    private void handleHistoryNavigation(KeyEvent event) {
+        String recalledInput;
+        if (event.getCode() == KeyCode.UP) {
+            recalledInput = commandHistory.previous(userInput.getText());
+        } else if (event.getCode() == KeyCode.DOWN) {
+            recalledInput = commandHistory.next(userInput.getText());
+        } else {
+            return;
+        }
+
+        userInput.setText(recalledInput);
+        userInput.positionCaret(recalledInput.length());
+        event.consume();
     }
 
     /**
@@ -121,6 +141,7 @@ public class Main extends Application {
             return;
         }
 
+        commandHistory.add(input);
         LloydResponse reply = lloyd.getReply(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.createUserDialog(input),
