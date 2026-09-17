@@ -4,7 +4,7 @@ Lloyd is a desktop task manager that helps you record todos, deadlines, and
 events using short typed commands. It also shows what is scheduled for a date
 and reminds you about urgent tasks.
 
-![The Lloyd chat window](UI.png)
+![The Lloyd chat window](Ui.png)
 
 - [Quick start](#quick-start)
 - [Features](#features)
