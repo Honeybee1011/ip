@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'com.gradleup.shadow' version '9.5.1'
 }
 
@@ -13,11 +12,6 @@ java {
 
 repositories {
     mavenCentral()
-}
-
-javafx {
-    version = '25'
-    modules = ['javafx.controls']
 }
 
 checkstyle {
@@ -63,7 +57,7 @@ test {
 }
 
 application {
-    mainClass = 'lloyd.gui.Launcher'
+    mainClass.set('lloyd.gui.Launcher')
     applicationDefaultJvmArgs = ['--enable-native-access=javafx.graphics']
 }
 
